@@ -34,6 +34,7 @@ CHANGELOG.md              # 版本记录（每完成一项 commit 一次）
 - ⏳ TQ 解耦改造（方案 1，正式改造目标）
 - ✅ 部署到训练机打通（uni_agent_ext + Python 3.10 兼容补丁 + 数据/凭据）
 - ✅ 沙箱→Gateway 访问打通（沙箱内 SSH 隧道走 22，v0.5.0）
+- ✅ 腾讯沙箱 SWE-bench 实例接入（StartSandboxInstance + E2B connect，v0.9.0）
 
 ## 使用
 

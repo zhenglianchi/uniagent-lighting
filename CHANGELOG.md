@@ -53,3 +53,10 @@
 
 - 补 E2B 环境映射：`E2B_API_KEY=${TENCENT_SANDBOX_E2B_TOKEN}` + `E2B_DOMAIN=ap-guangzhou.tencentags.com`
   （凭据文件只有 TENCENT_* 前缀，需显式映射后才被 e2b SDK 识别）
+
+## v0.9.0（2026-08-06）
+
+- **腾讯沙箱 SWE-bench 实例接入**：`tencent_agent_runtime` 对 `sweb.*` 镜像改走
+  Cloud API `StartSandboxInstance`（ToolName=swebench-v1、ImageRegistryType=system、
+  自动补 `swebench/` 前缀）+ E2B `Sandbox.connect(InstanceId)`；stop 时 E2B kill +
+  `StopSandboxInstance` 双保险；非 sweb 镜像仍走 E2B template 路径
