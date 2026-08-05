@@ -153,25 +153,29 @@ def build_mini_swe_config(
     base_url: str,
     model: str,
     max_turns: int,
-    environment_class: str = "local",
+    instance_id: str,
+    image: str,
+    environment_class: str = "tencent_e2b",
     cwd: str = "/testbed",
+    output_path: str = "/tmp/mini_swe_traj.json",
 ) -> str:
-    """生成 mini-swe-agent 的 YAML 配置（对齐其 agent/environment/model schema）。
-
-    ``environment_class=local`` 表示 agent 直接跑在沙箱内（/testbed 即题目仓库）；
-    ``base_url`` 指向训练 Gateway（``session.base_url``），model 为 Gateway 的 served model。
-    """
+    """生成 mini-swe-agent 配置：harness 在训练机，环境类 attach 已建沙箱实例。"""
     return (
         "agent:\n"
         f"  step_limit: {int(max_turns)}\n"
         "  cost_limit: 0.\n"
         "  mode: yolo\n"
         "  wall_time_limit_seconds: 0\n"
-        "  output_path: /tmp/mini_swe_traj.json\n"
+        f"  output_path: {output_path}\n"
         "environment:\n"
         f"  cwd: {cwd}\n"
         "  timeout: 60\n"
+        "  user: root\n"
         f"  environment_class: {environment_class}\n"
+        "  template: swebench-v1\n"
+        f"  image: {image}\n"
+        "  sandbox_timeout: 1800\n"
+        f"  attach_instance_id: {instance_id}\n"
         "model:\n"
         f"  model_name: {model}\n"
         "  cost_tracking: ignore_errors\n"
@@ -181,25 +185,24 @@ def build_mini_swe_config(
     )
 
 
-def build_agent_command(
+async def run_mini_swe_agent(
     *,
     task: dict[str, Any],
-    base_url: str,
-    model: str,
-    max_turns: int,
     config_path: str = "/tmp/mini_swe_config.yaml",
     traj_path: str = "/tmp/traj.json",
-    conda_env: str | None = "testbed",
-    install_agent: bool = DEFAULT_INSTALL_AGENT,
-) -> str:
-    """构造沙箱内执行 mini-swe-agent 的 shell 命令。"""
-    parts: list[str] = ["set -euo pipefail", "cd /testbed"]
-    if install_agent:
-        # 直接 pip 安装（非交互 shell 里 conda source activate 不可靠；
-        # sweb 镜像默认 python 通常就是 testbed env）
-        parts.append(f"pip install {MINI_SWE_AGENT_PACKAGE} -q")
+    run_timeout: int = DEFAULT_AGENT_RUN_TIMEOUT,
+) -> tuple[int, str]:
+    """在训练机本地驱动 mini-swe-agent（harness 在外、沙箱当环境）。
+
+    返回 ``(exit_code, log_tail)``；模型调用走配置里的 ``api_base``（隧道后的 Gateway），
+    轨迹由 Gateway session 记录，同时落盘 traj.json 备用。
+    """
+    import sys
+
     args = [
-        "mini-extra",
+        sys.executable,
+        "-m",
+        "minisweagent.run.utilities.mini_extra",
         "swebench-single",
         "-c",
         config_path,
@@ -210,8 +213,20 @@ def build_agent_command(
         "--exit-immediately",
         "-y",
     ]
-    parts.append(shlex.join(args))
-    return " && ".join(parts)
+    logger.info("[sample %s] run mini-swe-agent locally: %s", task["instance_id"], shlex.join(args))
+    proc = await asyncio.create_subprocess_exec(
+        *args,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.STDOUT,
+    )
+    try:
+        out, _ = await asyncio.wait_for(proc.communicate(), timeout=run_timeout)
+    except asyncio.TimeoutError:
+        proc.kill()
+        await proc.communicate()
+        return -1, f"mini-swe-agent timeout after {run_timeout}s"
+    log = out.decode(errors="replace")
+    return proc.returncode or 0, log[-4000:]
 
 
 # ---------------------------------------------------------------------------
@@ -287,10 +302,9 @@ async def mini_swe_agent_runner(
     tools_kwargs: dict[str, Any] | None = None,
     max_turns: int = DEFAULT_MAX_TURNS,
     run_timeout: int = DEFAULT_AGENT_RUN_TIMEOUT,
-    install_agent: bool = DEFAULT_INSTALL_AGENT,
     **_: Any,
 ) -> None:
-    """跑一条 mini-swe-agent 轨迹并上报 reward（黑盒、单样本）。"""
+    """跑一条 mini-swe-agent 轨迹并上报 reward（harness 在训练机，沙箱为执行环境）。"""
     tools_kwargs = tools_kwargs or {}
     task = extract_task(raw_prompt, tools_kwargs)
     env_config = tools_kwargs.get("env") or {}
@@ -305,27 +319,37 @@ async def mini_swe_agent_runner(
     sandbox = await asyncio.to_thread(create_task_sandbox, image=image, gateway_url=gateway_url)
     try:
         await sandbox.start()
+        if GATEWAY_TUNNEL_ENABLED:
+            gateway_url = await ensure_gateway_tunnel(sandbox, gateway_url)
+        instance_id = sandbox.instance_id
+        if not instance_id:
+            raise RuntimeError(f"sandbox instance_id empty for sample {sample_index}")
         config_path = "/tmp/mini_swe_config.yaml"
-        await sandbox.write_file(
-            config_path,
-            build_mini_swe_config(base_url=gateway_url, model="default", max_turns=max_turns).encode(),
-        )
-        command = build_agent_command(
-            task=task,
-            base_url=gateway_url,
-            model="default",
-            max_turns=max_turns,
-            install_agent=install_agent,
+        traj_path = "/tmp/mini_swe_traj.json"
+        Path(config_path).write_text(
+            build_mini_swe_config(
+                base_url=gateway_url,
+                model="default",
+                max_turns=max_turns,
+                instance_id=instance_id,
+                image=image,
+                output_path=traj_path,
+            ),
+            encoding="utf-8",
         )
         started = time.perf_counter()
-        result = await sandbox.exec_shell(command, timeout=run_timeout)
+        rc, log_tail = await run_mini_swe_agent(
+            task=task, config_path=config_path, traj_path=traj_path, run_timeout=run_timeout
+        )
         logger.info(
             "[sample %d] mini-swe-agent rc=%s elapsed=%.1fs traj=%s",
-            sample_index, result.exit_code, time.perf_counter() - started, task["instance_id"],
+            sample_index, rc, time.perf_counter() - started, task["instance_id"],
         )
+        if rc != 0:
+            logger.warning("[sample %d] mini-swe-agent failed rc=%s tail=%s", sample_index, rc, log_tail[-1500:])
 
         score, details = await evaluate_reward(sandbox, task)
-        reward_info = {"reward_score": score, "agent_exit_code": result.exit_code, **details}
+        reward_info = {"reward_score": score, "agent_exit_code": rc, **details}
         if not session.reward_info_url:
             raise ValueError(f"reward_info_url empty for session {session.session_id}")
         async with httpx.AsyncClient(timeout=30.0) as client:

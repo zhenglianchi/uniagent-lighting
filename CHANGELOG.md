@@ -67,3 +67,13 @@
   卡在 mini-extra rc=127（沙箱未装 mini-swe-agent）
 - `MSA_INSTALL_AGENT=1`（沙箱内 pip install mini-swe-agent）；安装命令去掉 conda source
   activation（非交互 shell 不可靠）
+
+## v0.12.0（2026-08-06）
+
+- **Agent 部署形态修正（对齐思路 1.9，防跑偏）**：mini-swe-agent harness 在**训练机本地**驱动，
+  沙箱只是执行环境（不再在沙箱内装/跑 agent——黑盒模式是 claude-code 那类自包含 CLI 的形态）
+- runner：建沙箱 → 隧道 → 取 instance_id → **本地 subprocess 跑 `mini-extra swebench-single`**
+  （environment_class=tencent_e2b，`attach_instance_id` 连接已建实例）→ 同沙箱 reward → 上报
+- `tencent_e2b` 环境类新增 attach 模式（跳过 StartSandboxInstance 直接 connect）；
+  `tencent_agent_runtime` 暴露 `instance_id` 属性
+- 思路.md 新增 1.9「Agent 部署形态」
