@@ -44,3 +44,7 @@
   `ray_import_test.py` 验证 MAIN-OK + RAY-WORKER-OK
 - 训练机补装沙箱 SDK：`e2b-code-interpreter==2.9.0` + `tencentcloud-sdk-python-ags`（模块路径 v20250920）
 - agentic 冒烟成本控制：train_batch_size 2→1、max_prompt_length 2048→4096（防过滤）
+
+## v0.7.0（2026-08-05）
+
+- agentic 训练脚本 source `tencent_sandbox.env`（修复 runner 建沙箱时 E2B_API_KEY 缺失）

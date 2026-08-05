@@ -19,6 +19,10 @@ export VLLM_USE_V1=1
 export RAY_memory_monitor_refresh_ms=0
 export HF_ENDPOINT=https://hf-mirror.com
 export HF_HUB_DISABLE_XET=1
+# 腾讯云沙箱凭据（E2B_API_KEY / E2B_DOMAIN / TENCENT_*）
+set -a
+source /home/ubuntu/swe-rl/tencent_sandbox.env
+set +a
 # Gateway 隧道：腾讯沙箱内 ssh -L 走训练机 22 端口访问 Gateway（公网只开 22）
 export MSA_GATEWAY_SSH_HOST="${MSA_GATEWAY_SSH_HOST:-117.50.197.46}"
 
