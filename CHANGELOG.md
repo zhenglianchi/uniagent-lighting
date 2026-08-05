@@ -48,3 +48,8 @@
 ## v0.7.0（2026-08-05）
 
 - agentic 训练脚本 source `tencent_sandbox.env`（修复 runner 建沙箱时 E2B_API_KEY 缺失）
+
+## v0.8.0（2026-08-05）
+
+- 补 E2B 环境映射：`E2B_API_KEY=${TENCENT_SANDBOX_E2B_TOKEN}` + `E2B_DOMAIN=ap-guangzhou.tencentags.com`
+  （凭据文件只有 TENCENT_* 前缀，需显式映射后才被 e2b SDK 识别）
