@@ -195,10 +195,9 @@ def build_agent_command(
     """构造沙箱内执行 mini-swe-agent 的 shell 命令。"""
     parts: list[str] = ["set -euo pipefail", "cd /testbed"]
     if install_agent:
-        parts.append(
-            f"{'source activate ' + shlex.quote(conda_env) + ' && ' if conda_env else ''}"
-            f"pip install {MINI_SWE_AGENT_PACKAGE} -q"
-        )
+        # 直接 pip 安装（非交互 shell 里 conda source activate 不可靠；
+        # sweb 镜像默认 python 通常就是 testbed env）
+        parts.append(f"pip install {MINI_SWE_AGENT_PACKAGE} -q")
     args = [
         "mini-extra",
         "swebench-single",

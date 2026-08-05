@@ -60,3 +60,10 @@
   Cloud API `StartSandboxInstance`（ToolName=swebench-v1、ImageRegistryType=system、
   自动补 `swebench/` 前缀）+ E2B `Sandbox.connect(InstanceId)`；stop 时 E2B kill +
   `StopSandboxInstance` 双保险；非 sweb 镜像仍走 E2B template 路径
+
+## v0.11.0（2026-08-06）
+
+- **首条 agentic 链路全通验证**（沙箱实例→文件写入回退→隧道→runner→reward→销毁）：
+  卡在 mini-extra rc=127（沙箱未装 mini-swe-agent）
+- `MSA_INSTALL_AGENT=1`（沙箱内 pip install mini-swe-agent）；安装命令去掉 conda source
+  activation（非交互 shell 不可靠）
