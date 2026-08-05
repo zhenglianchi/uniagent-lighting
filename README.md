@@ -32,6 +32,7 @@ CHANGELOG.md              # 版本记录（每完成一项 commit 一次）
 - ✅ 7.3 agentic 训练脚本（`scripts/run_grpo_single_agentic_ucloud.sh`，待上机验证）
 - ⏳ 轨迹异步上传 + 云端重放训练（方案 2）
 - ⏳ TQ 解耦改造（方案 1，正式改造目标）
+- ✅ 部署到训练机打通（uni_agent_ext + Python 3.10 兼容补丁 + 数据/凭据）
 
 ## 使用
 

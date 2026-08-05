@@ -1,0 +1,10 @@
+--- a/uni_agent/gateway/adapters/types.py
++++ b/uni_agent/gateway/adapters/types.py
+@@ -9,7 +9,10 @@ from __future__ import annotations
+ 
+-from typing import Any, Literal, NotRequired, TypedDict
++try:
++    from typing import Any, Literal, NotRequired, TypedDict
++except ImportError:  # Python 3.10: typing.NotRequired 是 3.11+ 才有的
++    from typing import Any, Literal, TypedDict
++    from typing_extensions import NotRequired

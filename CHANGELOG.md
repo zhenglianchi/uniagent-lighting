@@ -23,3 +23,10 @@
   （runner_fqn=uni_agent_ext.agents.mini_swe_agent_runner，dispatch=ray_task，
   concurrency 可控沙箱成本）；reward 走 naive manager（TQ rm_scores）；续训已启用
 - 对齐官方 quickstart 接线（train_qwen3p5_dense.sh），待上机验证 TOOL_PARSER 与数据 schema
+
+## v0.4.0（2026-08-05）
+
+- 部署实测：uni_agent_ext 部署到训练机（tar + .pth 进 PYTHONPATH）+ agentic 数据 + 腾讯沙箱凭据
+- **修复 uni-agent Python 3.10 兼容 bug**：`typing.NotRequired`（3.11+）→ typing_extensions 回退
+  （`patches/uni_agent_py310_compat.patch`）；runner import 验证通过
+- 新增 `docs/deployment.md`（部署步骤）
