@@ -222,34 +222,23 @@ def build_mini_swe_config(
     max_turns: int,
     instance_id: str,
     image: str,
-    environment_class: str = "tencent_e2b",
-    cwd: str = "/testbed",
     output_path: str = "/tmp/mini_swe_traj.json",
 ) -> str:
-    """生成 mini-swe-agent 配置：harness 在训练机，环境类 attach 已建沙箱实例。"""
-    return (
-        "agent:\n"
-        f"  step_limit: {int(max_turns)}\n"
-        "  cost_limit: 0.\n"
-        "  mode: yolo\n"
-        "  wall_time_limit_seconds: 0\n"
-        f"  output_path: {output_path}\n"
-        "environment:\n"
-        f"  cwd: {cwd}\n"
-        "  timeout: 60\n"
-        "  user: root\n"
-        f"  environment_class: {environment_class}\n"
-        "  template: swebench-v1\n"
-        f"  image: {image}\n"
-        "  sandbox_timeout: 1800\n"
-        f"  attach_instance_id: {instance_id}\n"
-        "model:\n"
-        f"  model_name: {model}\n"
-        "  cost_tracking: ignore_errors\n"
-        "  model_kwargs:\n"
-        "    custom_llm_provider: openai\n"
-        f"    api_base: {base_url}\n"
-    )
+    """生成 mini-swe-agent 配置：harness 在训练机，环境类 attach 已建沙箱实例。
+
+    基于随包模板（含必填的 system/instance_template），只覆写运行期参数。
+    """
+    import yaml
+
+    template_path = Path(__file__).with_name("mini_swe_config.template.yaml")
+    cfg = yaml.safe_load(template_path.read_text(encoding="utf-8"))
+    cfg["agent"]["step_limit"] = int(max_turns)
+    cfg["agent"]["output_path"] = output_path
+    cfg["environment"]["attach_instance_id"] = instance_id
+    cfg["environment"]["image"] = image
+    cfg["model"]["model_name"] = model
+    cfg["model"]["model_kwargs"]["api_base"] = base_url
+    return yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False)
 
 
 async def run_mini_swe_agent(
