@@ -26,7 +26,8 @@ CHANGELOG.md              # 版本记录（每完成一项 commit 一次）
 - ✅ 单机 LoRA GRPO 训练引擎跑通（纯 verl，无 agent；step ~50s，训练显存峰值 18.8G）
 - ✅ verl 续训机制确认并启用（`resume_mode=auto` + `save_freq` + `default_local_dir`）
 - ✅ mini-swe-agent 训练 runner 骨架（`uni_agent_ext/agents/mini_swe_agent_runner.py`）
-- ⏳ 7.2 任务数据（SWE-bench Lite → `raw_prompt + tools_kwargs`）
+- ✅ 7.2 任务数据（`scripts/make_agentic_data.py`，schema 待上机对齐）
+- ✅ vLLM 访问方案（`docs/vllm_access.md`：SSH 隧道走 22 端口 + `scripts/vllm_tunnel.sh`）
 - ⏳ 7.3 agentic 训练配置（multi_turn + agent_framework）
 - ⏳ 轨迹异步上传 + 云端重放训练（方案 2）
 - ⏳ TQ 解耦改造（方案 1，正式改造目标）
