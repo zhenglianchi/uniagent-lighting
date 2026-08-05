@@ -105,14 +105,15 @@ class TencentAgentRuntimeSandbox(Sandbox):
             )
             logger.info("tencent sandbox created id=%s template=%s", self._sbx.sandbox_id, self.template)
 
-        # uni-agent shell 工具在无原生 shell 时用 tmux 会话，这里预装依赖
-        result = await self.exec_shell(
-            "DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
-            "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq tmux",
-            timeout=300.0,
-        )
-        if result.exit_code != 0:
-            logger.warning("tencent sandbox tmux install failed: %s", result.stderr.strip()[-500:])
+        # uni-agent shell 工具在无原生 shell 时用 tmux；sweb 镜像直接跑黑盒 agent，跳过
+        if not self._is_swebench_image(self.image):
+            result = await self.exec_shell(
+                "which tmux >/dev/null 2>&1 || (DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
+                "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq tmux)",
+                timeout=180.0,
+            )
+            if result.exit_code != 0:
+                logger.warning("tencent sandbox tmux install failed: %s", result.stderr.strip()[-500:])
 
     async def stop(self) -> None:
         sbx, self._sbx = self._sbx, None
@@ -248,8 +249,19 @@ class TencentAgentRuntimeSandbox(Sandbox):
 
     async def write_file(self, path: str, content: bytes | str) -> None:
         data = content.encode("utf-8") if isinstance(content, str) else content
-        await self._ensure_parent_dir(path)
-        await asyncio.to_thread(self._require_sandbox().files.write, path, data)
+        try:
+            await self._ensure_parent_dir(path)
+            await asyncio.to_thread(self._require_sandbox().files.write, path, data)
+        except Exception as exc:
+            # sweb 镜像没有默认 'user' 用户，e2b filesystem API 会报
+            # "error looking up user 'user'" → 退回 base64-exec 写入
+            import base64
+
+            logger.warning("files.write failed (%s); fallback to base64-exec", exc)
+            b64 = base64.b64encode(data).decode()
+            result = await self.exec_shell(f"echo {b64} | base64 -d > {path}", timeout=60)
+            if result.exit_code != 0:
+                raise RuntimeError(f"base64 write failed: {result.stderr[:500]}")
 
     async def read_file(self, path: str) -> bytes:
         data = await asyncio.to_thread(self._require_sandbox().files.read, path, "bytes")
