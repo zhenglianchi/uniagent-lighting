@@ -29,6 +29,7 @@ CHANGELOG.md              # 版本记录（每完成一项 commit 一次）
 - ✅ 7.2 任务数据（`scripts/make_agentic_data.py`，schema 待上机对齐）
 - ✅ vLLM 访问方案（`docs/vllm_access.md`：SSH 隧道走 22 端口 + `scripts/vllm_tunnel.sh`）
 - ⏳ 7.3 agentic 训练配置（multi_turn + agent_framework）
+- ✅ 7.3 agentic 训练脚本（`scripts/run_grpo_single_agentic_ucloud.sh`，待上机验证）
 - ⏳ 轨迹异步上传 + 云端重放训练（方案 2）
 - ⏳ TQ 解耦改造（方案 1，正式改造目标）
 
