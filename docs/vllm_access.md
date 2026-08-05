@@ -35,3 +35,7 @@ ssh -N -L 127.0.0.1:8000:127.0.0.1:8000 ubuntu@<云端公网IP>
 - 沙箱内 agent 的 `api_base = http://127.0.0.1:8000/v1`
 - 环境变量：`MSA_GATEWAY_SSH_HOST`（训练机公网 IP）、`MSA_GATEWAY_SSH_KEY_PATH`、
   `MSA_GATEWAY_LOCAL_PORT`（默认 8000）
+
+> **v0.14.0 更新**：agent-harness-outside 模式（思路 1.9）下 harness 在训练机本地，
+> 直接调 `session.base_url`（本机 Gateway），**不再需要沙箱内隧道**（`MSA_GATEWAY_TUNNEL=0`）；
+> 隧道方案仅作黑盒模式（agent 装进沙箱）的历史备选。

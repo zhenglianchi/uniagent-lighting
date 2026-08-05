@@ -26,8 +26,8 @@ set +a
 # E2B 兼容端点映射（凭据文件里是 TENCENT_SANDBOX_E2B_TOKEN）
 export E2B_DOMAIN="${E2B_DOMAIN:-ap-guangzhou.tencentags.com}"
 export E2B_API_KEY="${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}"
-# Gateway 隧道：腾讯沙箱内 ssh -L 走训练机 22 端口访问 Gateway（公网只开 22）
-export MSA_GATEWAY_SSH_HOST="${MSA_GATEWAY_SSH_HOST:-117.50.197.46}"
+# harness 在训练机本地，直接调本机 Gateway（session.base_url），不需要沙箱内隧道
+export MSA_GATEWAY_TUNNEL=0
 export MSA_INSTALL_AGENT=1   # 沙箱内现场 pip install mini-swe-agent（预装镜像后可关）
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl

@@ -84,3 +84,10 @@
   否则 mini-extra 退出会停实例，reward 写 test_patch 报资源不存在）；部署文档 §6 记录
 - agentic 链路实测进度：沙箱实例→隧道→本地 mini-extra（attach）→agent 运行 4.5min→
   reward 阶段被此坑拦截，已修
+
+## v0.14.0（2026-08-06）
+
+- **修正隧道方向**：harness 在训练机本地，直接调 `session.base_url`（本机 Gateway），
+  无需沙箱内隧道（`MSA_GATEWAY_TUNNEL=0`）——此前隧道（沙箱→node2）是黑盒模式遗留，
+  导致模型调用打到 node2 空端口 → 空轨迹
+- runner 用真实 `model_name`（runner_kwargs 注入的 Gateway served model），不再写死 "default"

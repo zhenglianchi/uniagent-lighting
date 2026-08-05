@@ -358,9 +358,14 @@ async def mini_swe_agent_runner(
     tools_kwargs: dict[str, Any] | None = None,
     max_turns: int = DEFAULT_MAX_TURNS,
     run_timeout: int = DEFAULT_AGENT_RUN_TIMEOUT,
+    model_name: str = "default",
     **_: Any,
 ) -> None:
-    """跑一条 mini-swe-agent 轨迹并上报 reward（harness 在训练机，沙箱为执行环境）。"""
+    """跑一条 mini-swe-agent 轨迹并上报 reward（harness 在训练机，沙箱为执行环境）。
+
+    ``model_name`` 由 agent_framework 的 runner_kwargs.model_name 注入（Gateway served model）；
+    harness 在训练机本地，直接调 ``session.base_url``（本机 Gateway），不需要沙箱内隧道。
+    """
     tools_kwargs = tools_kwargs or {}
     task = extract_task(raw_prompt, tools_kwargs)
     env_config = tools_kwargs.get("env") or {}
@@ -375,8 +380,6 @@ async def mini_swe_agent_runner(
     sandbox = await asyncio.to_thread(create_task_sandbox, image=image, gateway_url=gateway_url)
     try:
         await sandbox.start()
-        if GATEWAY_TUNNEL_ENABLED:
-            gateway_url = await ensure_gateway_tunnel(sandbox, gateway_url)
         instance_id = sandbox.instance_id
         if not instance_id:
             raise RuntimeError(f"sandbox instance_id empty for sample {sample_index}")
@@ -385,7 +388,7 @@ async def mini_swe_agent_runner(
         Path(config_path).write_text(
             build_mini_swe_config(
                 base_url=gateway_url,
-                model="default",
+                model=model_name,
                 max_turns=max_turns,
                 instance_id=instance_id,
                 image=image,
