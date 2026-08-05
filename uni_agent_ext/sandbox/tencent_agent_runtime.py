@@ -73,12 +73,14 @@ class TencentAgentRuntimeSandbox(Sandbox):
         startup_timeout: float = 180.0,
         template: str | None = None,
     ) -> None:
+        self.image = image
         self.template = (
             template or os.getenv("TENCENT_SANDBOX_TEMPLATE") or _to_tencent_template(image)
         )
         self.runtime_timeout = runtime_timeout
         self.startup_timeout = startup_timeout
         self._sbx: Any = None  # e2b_code_interpreter.Sandbox（阻塞 SDK，经 to_thread 调用）
+        self._cloud_instance_id: str = ""  # SWE-bench 实例（Cloud API）的 InstanceId
 
     @classmethod
     def from_config(cls, config: SandboxConfig) -> TencentAgentRuntimeSandbox:
@@ -95,10 +97,13 @@ class TencentAgentRuntimeSandbox(Sandbox):
 
         from e2b_code_interpreter import Sandbox
 
-        self._sbx = await asyncio.to_thread(
-            Sandbox.create, template=self.template, timeout=int(self.runtime_timeout)
-        )
-        logger.info("tencent sandbox created id=%s template=%s", self._sbx.sandbox_id, self.template)
+        if self._is_swebench_image(self.image):
+            await self._start_swebench_instance(Sandbox)
+        else:
+            self._sbx = await asyncio.to_thread(
+                Sandbox.create, template=self.template, timeout=int(self.runtime_timeout)
+            )
+            logger.info("tencent sandbox created id=%s template=%s", self._sbx.sandbox_id, self.template)
 
         # uni-agent shell 工具在无原生 shell 时用 tmux 会话，这里预装依赖
         result = await self.exec_shell(
@@ -117,6 +122,70 @@ class TencentAgentRuntimeSandbox(Sandbox):
                 logger.info("tencent sandbox killed")
             except Exception:
                 logger.debug("tencent sandbox kill failed", exc_info=True)
+        if self._cloud_instance_id:
+            try:
+                await asyncio.to_thread(self._stop_cloud_instance, self._cloud_instance_id)
+                logger.info("tencent swebench instance stopped: %s", self._cloud_instance_id)
+            except Exception:
+                logger.debug("StopSandboxInstance failed", exc_info=True)
+            self._cloud_instance_id = ""
+
+    # ----- SWE-bench 实例（Cloud API StartSandboxInstance + E2B connect）-----
+    @staticmethod
+    def _is_swebench_image(image: str) -> bool:
+        return image.startswith("sweb.") or image.startswith("swebench/") or "sweb.eval" in image
+
+    @staticmethod
+    def _normalize_swebench_image(image: str) -> str:
+        """StartSandboxInstance 需要系统仓库前缀 ``swebench/``。"""
+        image = image.replace("docker.io/", "").replace("__", "_1776_")
+        return image if image.startswith("swebench/") else f"swebench/{image}"
+
+    def _ags_client(self, region: str):
+        from tencentcloud.common import credential
+        from tencentcloud.common.profile.client_profile import ClientProfile
+        from tencentcloud.common.profile.http_profile import HttpProfile
+        from tencentcloud.ags.v20250920 import ags_client
+
+        cred = credential.Credential(
+            os.environ["TENCENT_SECRET_ID"], os.environ["TENCENT_SECRET_KEY"]
+        )
+        http_profile = HttpProfile(endpoint="ags.tencentcloudapi.com")
+        return ags_client.AgsClient(cred, region, ClientProfile(httpProfile=http_profile))
+
+    async def _start_swebench_instance(self, sandbox_cls) -> None:
+        from tencentcloud.ags.v20250920 import models
+
+        region = os.getenv("TENCENT_SANDBOX_REGION", "ap-guangzhou")
+        tool_name = os.getenv("TENCENT_SANDBOX_SWEBENCH_TOOL", "swebench-v1")
+        image = self._normalize_swebench_image(self.image)
+        client = await asyncio.to_thread(self._ags_client, region)
+
+        def _start() -> str:
+            req = models.StartSandboxInstanceRequest()
+            req.ToolName = tool_name
+            req.Timeout = os.getenv("TENCENT_SANDBOX_TIMEOUT", "10m")
+            req.CustomConfiguration = models.CustomConfiguration()
+            req.CustomConfiguration.Image = image
+            req.CustomConfiguration.ImageRegistryType = "system"
+            resp = client.StartSandboxInstance(req)
+            return resp.Instance.InstanceId
+
+        instance_id = await asyncio.to_thread(_start)
+        self._cloud_instance_id = instance_id
+        self._sbx = await asyncio.to_thread(
+            sandbox_cls.connect, sandbox_id=instance_id, api_key=os.environ.get("E2B_API_KEY")
+        )
+        logger.info("tencent swebench instance connected id=%s image=%s", instance_id, image)
+
+    def _stop_cloud_instance(self, instance_id: str) -> None:
+        from tencentcloud.ags.v20250920 import models
+
+        region = os.getenv("TENCENT_SANDBOX_REGION", "ap-guangzhou")
+        client = self._ags_client(region)
+        req = models.StopSandboxInstanceRequest()
+        req.InstanceId = instance_id
+        client.StopSandboxInstance(req)
 
     def _require_sandbox(self) -> Any:
         if self._sbx is None:
