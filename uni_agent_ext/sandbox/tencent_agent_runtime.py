@@ -193,6 +193,11 @@ class TencentAgentRuntimeSandbox(Sandbox):
             raise RuntimeError("TencentAgentRuntimeSandbox not started; call start() first")
         return self._sbx
 
+    @property
+    def instance_id(self) -> str:
+        """底层实例 id（sweb 走 Cloud API InstanceId；其它走 E2B sandbox_id）。"""
+        return self._cloud_instance_id or getattr(self._sbx, "sandbox_id", "")
+
     # ----- 数据面 -----
     async def is_alive(self) -> bool:
         sbx = self._sbx
