@@ -56,6 +56,14 @@ DEFAULT_MAX_TURNS = int(os.getenv("MSA_AGENT_MAX_TURNS", "60"))
 DEFAULT_INSTALL_AGENT = os.getenv("MSA_INSTALL_AGENT", "0") == "1"
 MINI_SWE_AGENT_PACKAGE = "mini-swe-agent"
 
+# Gateway 隧道（沙箱内 ssh -L 走训练机 22 端口，转发 Gateway 端口到沙箱本地）
+GATEWAY_TUNNEL_ENABLED = os.getenv("MSA_GATEWAY_TUNNEL", "1") == "1"
+GATEWAY_SSH_KEY_PATH = os.getenv("MSA_GATEWAY_SSH_KEY_PATH", "/home/ubuntu/.ssh/gateway_tunnel_key")
+GATEWAY_SSH_USER = os.getenv("MSA_GATEWAY_SSH_USER", "ubuntu")
+GATEWAY_SSH_HOST = os.getenv("MSA_GATEWAY_SSH_HOST", "")
+GATEWAY_LOCAL_PORT = int(os.getenv("MSA_GATEWAY_LOCAL_PORT", "8000"))
+GATEWAY_TUNNEL_WAIT = int(os.getenv("MSA_GATEWAY_TUNNEL_WAIT", "60"))
+
 
 # ---------------------------------------------------------------------------
 # 任务解析
@@ -143,6 +151,65 @@ def create_task_sandbox(
     )
     sandbox = build_sandbox(config)
     return sandbox
+
+
+async def ensure_gateway_tunnel(
+    sandbox: Sandbox,
+    gateway_url: str,
+    *,
+    ssh_key_path: str = GATEWAY_SSH_KEY_PATH,
+    ssh_host: str = GATEWAY_SSH_HOST,
+    ssh_user: str = GATEWAY_SSH_USER,
+    local_port: int = GATEWAY_LOCAL_PORT,
+    wait_seconds: int = GATEWAY_TUNNEL_WAIT,
+) -> str:
+    """在沙箱内建立到训练机的 SSH 隧道，返回沙箱本地可用的 Gateway URL。
+
+    背景：训练机公网只开放 22 端口，腾讯沙箱无法直连 Gateway 自定义端口；
+    方案：沙箱内 `ssh -N -L 127.0.0.1:<local>:127.0.0.1:<gateway_port>` 走 22，
+    把 Gateway 端口转发到沙箱本地。返回 ``http://127.0.0.1:<local><path>``。
+    """
+    from urllib.parse import urlparse
+
+    parsed = urlparse(gateway_url)
+    gateway_port = parsed.port or 80
+    gateway_path = parsed.path or "/v1"
+    if not ssh_host:
+        raise ValueError("MSA_GATEWAY_SSH_HOST 未设置（训练机公网 IP），无法建立隧道")
+
+    key_b64 = Path(ssh_key_path).read_bytes()
+    key_dst = "/root/.ssh/id_gateway"
+    await sandbox.exec_shell("mkdir -p /root/.ssh && chmod 700 /root/.ssh", timeout=30)
+    await sandbox.write_file(key_dst, key_b64)
+    await sandbox.exec_shell(f"chmod 600 {key_dst}", timeout=30)
+
+    # openssh-client 缺失时补装（幂等）
+    await sandbox.exec_shell(
+        "which ssh >/dev/null 2>&1 || (DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
+        "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq openssh-client)",
+        timeout=300,
+    )
+
+    cmd = (
+        f"nohup ssh -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes "
+        f"-o ServerAliveInterval=15 -N -L 127.0.0.1:{local_port}:127.0.0.1:{gateway_port} "
+        f"-i {key_dst} {ssh_user}@{ssh_host} > /tmp/gw_tunnel.log 2>&1 &"
+    )
+    await sandbox.exec_shell(cmd, timeout=60)
+
+    ok = False
+    for _ in range(wait_seconds):
+        probe = await sandbox.exec_shell(f"bash -c '</dev/tcp/127.0.0.1/{local_port}' && echo UP || echo DOWN", timeout=30)
+        if probe.stdout.strip().endswith("UP"):
+            ok = True
+            break
+        await asyncio.sleep(1)
+    if not ok:
+        log = await sandbox.exec_shell("cat /tmp/gw_tunnel.log 2>/dev/null || true", timeout=30)
+        raise RuntimeError(f"gateway tunnel failed: {log.stdout[-2000:]}{log.stderr[-2000:]}")
+
+    logger.info("gateway tunnel up: 127.0.0.1:%s -> %s:%s", local_port, ssh_host, gateway_port)
+    return f"http://127.0.0.1:{local_port}{gateway_path}"
 
 
 # ---------------------------------------------------------------------------
@@ -306,6 +373,8 @@ async def mini_swe_agent_runner(
     sandbox = await asyncio.to_thread(create_task_sandbox, image=image, gateway_url=gateway_url)
     try:
         await sandbox.start()
+        if GATEWAY_TUNNEL_ENABLED:
+            gateway_url = await ensure_gateway_tunnel(sandbox, gateway_url)
         config_path = "/tmp/mini_swe_config.yaml"
         await sandbox.write_file(
             config_path,

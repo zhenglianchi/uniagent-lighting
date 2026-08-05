@@ -25,3 +25,13 @@ ssh -N -L 127.0.0.1:8000:127.0.0.1:8000 ubuntu@<云端公网IP>
   走公网，隧道可省；
 - 腾讯云沙箱 → 云端 Gateway 的访问路径同理（沙箱内 `api_base=http://<云端公网IP>:<端口>`，
   需确认沙箱出口能到达对应端口；必要时也走 SSH 隧道方案的服务端侧）。
+
+## 沙箱侧隧道（已实现，v0.5.0）
+
+实测训练机公网仅 22 开放（3389/80/443/8000 均 filtered），故 runner 改为**沙箱内起 SSH 隧道**：
+
+- runner 把专用密钥（`/home/ubuntu/.ssh/gateway_tunnel_key`，公钥已在训练机 authorized_keys）
+  注入沙箱，执行 `ssh -N -L 127.0.0.1:8000:127.0.0.1:<gateway_port> ubuntu@<公网IP>`
+- 沙箱内 agent 的 `api_base = http://127.0.0.1:8000/v1`
+- 环境变量：`MSA_GATEWAY_SSH_HOST`（训练机公网 IP）、`MSA_GATEWAY_SSH_KEY_PATH`、
+  `MSA_GATEWAY_LOCAL_PORT`（默认 8000）
