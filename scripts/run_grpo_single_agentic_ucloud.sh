@@ -39,9 +39,9 @@ ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
   algorithm.use_kl_in_reward=False \
   data.train_files="$TRAIN_FILE" \
   data.val_files="$VAL_FILE" \
-  data.train_batch_size=2 \
+  data.train_batch_size=1 \
   data.val_batch_size=1 \
-  data.max_prompt_length=2048 \
+  data.max_prompt_length=4096 \
   data.max_response_length=4096 \
   data.filter_overlong_prompts=True \
   data.truncation=error \

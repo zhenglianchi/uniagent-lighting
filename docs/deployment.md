@@ -11,6 +11,18 @@ echo "/home/ubuntu/uni_agent_ext" > \
   /home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/uni_agent_ext.pth
 ```
 
+> ⚠️ **.pth 内容必须是包的父目录**（`/home/ubuntu`），不是包目录本身
+> （`/home/ubuntu/uni_agent_ext`）——否则 `import uni_agent_ext` 会去找
+> `/home/ubuntu/uni_agent_ext/uni_agent_ext/__init__.py`，报 No module named
+> （v0.6.0 实测踩坑）。
+
+## 1b. 沙箱 SDK（runner 创建腾讯沙箱需要）
+
+```bash
+pip install "e2b-code-interpreter==2.9.0" tencentcloud-sdk-python-ags
+# 注意：ags 模块版本路径随 SDK 版本变化（3.1.149 是 tencentcloud.ags.v20250920）
+```
+
 ## 2. uni-agent Python 3.10 兼容补丁
 
 uni-agent 一处误用 `typing.NotRequired`（3.11+ 才有）→ 3.10 下 import 失败。
