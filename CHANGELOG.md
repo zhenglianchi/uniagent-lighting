@@ -77,3 +77,10 @@
 - `tencent_e2b` 环境类新增 attach 模式（跳过 StartSandboxInstance 直接 connect）；
   `tencent_agent_runtime` 暴露 `instance_id` 属性
 - 思路.md 新增 1.9「Agent 部署形态」
+
+## v0.13.1（2026-08-06）
+
+- mini-swe-agent tencent_e2b **attach 模式 cleanup 不销毁实例**（生命周期归 runner，
+  否则 mini-extra 退出会停实例，reward 写 test_patch 报资源不存在）；部署文档 §6 记录
+- agentic 链路实测进度：沙箱实例→隧道→本地 mini-extra（attach）→agent 运行 4.5min→
+  reward 阶段被此坑拦截，已修

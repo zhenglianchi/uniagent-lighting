@@ -51,3 +51,14 @@ print(mini_swe_agent_runner.__name__)"
 
 `bash /home/ubuntu/swe-rl/run_grpo_single_agentic_ucloud.sh`（脚本见 scripts/）。
 注意：腾讯沙箱需能访问训练机 Gateway（公网端口，见 docs/vllm_access.md）。
+
+## 6. mini-swe-agent tencent_e2b attach 补丁（训练机必做）
+
+训练机安装的 `mini-swe-agent` 里的 `tencent_e2b` 环境类需两处改动：
+
+1. `TencentE2BEnvironmentConfig` 增加 `attach_instance_id`；`_create()` 有 attach id 时
+   直接 `Sandbox.connect`（跳过 StartSandboxInstance）——可整文件覆盖自
+   `mini-swe-agent/src/minisweagent/environments/extra/tencent_e2b.py`
+2. `cleanup()` 在 attach 模式下**只断开、不 kill/不停实例**（生命周期归 runner，
+   reward 评估还要用）——否则 mini-extra 退出会停实例，reward 写 test_patch 报
+   "The requested resource does not exist"（v0.13.1 实测踩坑）
