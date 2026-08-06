@@ -156,3 +156,15 @@
   tencent_e2b 环境补丁，此前只在本地 mini-swe-agent 源码里，新机器无法获取）；
   部署流程第 4 步含安装 mini-swe-agent 2.4.6 + 覆盖补丁的命令
 - README「当前进度」同步最新状态（agentic 全链路已验证、部署 git 化）
+
+## v0.20.0（2026-08-06）
+
+- **训练基座切换 Qwen/Qwen3-8B**（Qwen2.5-Coder-7B 不支持标准 function calling，
+  导致 agent 只写散文、reward 恒 0、LoRA 不更新）：
+  - `run_grpo_single_agentic_ucloud.sh`：MODEL=/home/ubuntu/models/Qwen3-8B、
+    **TOOL_PARSER 改回 hermes**（Qwen3 官方推荐工具格式）、新增
+    `++data.apply_chat_template_kwargs.enable_thinking=false`（gateway codec 渲染时关 thinking）
+  - 全部训练/冒烟/安装脚本模型路径同步改为 Qwen3-8B
+    （`run_grpo_smoke/multinode/single_lora/dualgpu_ucloud.sh`、`upgrade_vllm_0111.sh`、
+    `install_ucloud_from_scratch.sh` 模型下载）
+- 本地 + node2 已删除 Qwen2.5-Coder-7B-Instruct（15G×2），Qwen3-8B（15.27GiB）已下载并验证

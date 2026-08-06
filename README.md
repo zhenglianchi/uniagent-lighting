@@ -62,7 +62,7 @@ verl 0.9.0.dev / ray 2.56.1**）：
 - Miniforge + `swe-rl` env（Python 3.10）、清华 pip 源、HF 镜像（永久写入 `~/.bashrc`）
 - clone `verl-project/uni-agent`（含 verl 子模块）+ `pip install -e`
 - verl 三处补丁：StrEnum（py3.10）、fsdp2 单卡跳过 state_dict 拷贝、IPC CPU 大权重
-- 模型 `Qwen2.5-Coder-7B-Instruct` 下载到 `~/models/`（hf-mirror，约 15GB）
+- 模型 `Qwen3-8B` 下载到 `~/models/`（hf-mirror，约 15.3GB；BF16，支持 function calling）
 - 结束时打印 `SETUP_COMPLETE` 与版本验证
 
 ### 2. 部署改造仓（git 管理）

@@ -130,9 +130,9 @@ PYEOF
 
 echo "== 8/8 模型（hf-mirror，15GB；已存在则跳过）=="
 mkdir -p "$HOME/models"
-if [ ! -f "$HOME/models/Qwen2.5-Coder-7B-Instruct/config.json" ]; then
+if [ ! -f "$HOME/models/Qwen3-8B/config.json" ]; then
   HF_ENDPOINT=https://hf-mirror.com HF_HUB_DISABLE_XET=1 "$PY" -c \
-    "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen2.5-Coder-7B-Instruct', local_dir='$HOME/models/Qwen2.5-Coder-7B-Instruct')"
+    "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen3-8B', local_dir='$HOME/models/Qwen3-8B')"
 fi
 
 mkdir -p "$HOME/swe-rl/data"

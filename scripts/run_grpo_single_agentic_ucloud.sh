@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # 单机 agentic GRPO 训练（uni-agent agent framework + 自定义 mini-swe-agent runner）
+# 2026-08-06 v0.20.0：基座切换 Qwen3-8B（支持 function calling）
+#   - 关 thinking：data.apply_chat_template_kwargs.enable_thinking=false
+#     （uni-agent gateway codec 渲染 chat template 时生效，entry.py 读取）
+#   - TOOL_PARSER=hermes：Qwen3 官方推荐工具格式（vllm ToolParserManager）
 # 2026-08-05 v0.3.0：对齐官方 examples/quickstart/training/train_qwen3p5_dense.sh 的接线
 #   （multi_turn + AgentFrameworkRolloutAdapter + agent_framework.agent_runners），
 #   runner 换成我们自己的 uni_agent_ext.agents.mini_swe_agent_runner。
@@ -31,10 +35,10 @@ export MSA_GATEWAY_TUNNEL=0
 export MSA_INSTALL_AGENT=1   # 沙箱内现场 pip install mini-swe-agent（预装镜像后可关）
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
-MODEL=/home/ubuntu/models/Qwen2.5-Coder-7B-Instruct
+MODEL=/home/ubuntu/models/Qwen3-8B
 TRAIN_FILE=/home/ubuntu/swe-rl/data/agentic_train.jsonl
 VAL_FILE=/home/ubuntu/swe-rl/data/agentic_val.jsonl
-TOOL_PARSER=${TOOL_PARSER:-qwen3_coder}    # gateway tool-call parser；Qwen2.5-Coder 用 qwen3_coder（hermes 不匹配）
+TOOL_PARSER=${TOOL_PARSER:-hermes}         # gateway tool-call parser；Qwen3-8B 用 hermes（官方推荐格式）
 GATEWAY_COUNT=${GATEWAY_COUNT:-1}          # 单机冒烟 1 个 gateway actor
 CONCURRENCY=${CONCURRENCY:-2}              # 并发 rollout sessions（= 同时跑的沙箱数，控制成本）
 SERVED_MODEL_NAME=${SERVED_MODEL_NAME:-"$(basename "$MODEL")"}
@@ -49,6 +53,7 @@ ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
   data.val_files="$VAL_FILE" \
   data.train_batch_size=1 \
   data.val_batch_size=1 \
+  ++data.apply_chat_template_kwargs.enable_thinking=false \
   data.max_prompt_length=4096 \
   data.max_response_length=4096 \
   data.filter_overlong_prompts=True \

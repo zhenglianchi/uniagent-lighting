@@ -19,7 +19,7 @@
 set -xeuo pipefail
 
 export RAY_ADDRESS=10.60.173.163:6379
-export MODEL_PATH=/home/ubuntu/models/Qwen2.5-Coder-7B-Instruct
+export MODEL_PATH=/home/ubuntu/models/Qwen3-8B
 export TRAIN_FILE=/home/ubuntu/swe-rl/data/smoke_train.jsonl
 export VAL_FILE=/home/ubuntu/swe-rl/data/smoke_val.jsonl
 export REWARD_PATH=/home/ubuntu/swe-rl/reward_smoke.py

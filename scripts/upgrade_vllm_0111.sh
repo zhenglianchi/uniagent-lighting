@@ -43,10 +43,10 @@ print("verl / uni_agent import OK")
 PYEOF
 
 if [ "${RUN_VLLM_SMOKE:-0}" = "1" ]; then
-  echo "== 可选：vLLM 引擎冒烟（Qwen2.5-Coder-7B / tp=2 / FLASH_ATTN）=="
+  echo "== 可选：vLLM 引擎冒烟（Qwen3-8B / tp=2 / FLASH_ATTN）=="
   "$PY" - <<'PYEOF'
 from vllm import LLM, SamplingParams
-llm = LLM(model="/home/ubuntu/models/Qwen2.5-Coder-7B-Instruct",
+llm = LLM(model="/home/ubuntu/models/Qwen3-8B",
           tensor_parallel_size=2, enforce_eager=True,
           dtype="bfloat16", gpu_memory_utilization=0.5)
 out = llm.generate(["def add(a, b):"], SamplingParams(max_tokens=32))

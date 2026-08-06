@@ -17,7 +17,7 @@ export HF_ENDPOINT=https://hf-mirror.com
 export HF_HUB_DISABLE_XET=1
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
-MODEL=/home/ubuntu/models/Qwen2.5-Coder-7B-Instruct
+MODEL=/home/ubuntu/models/Qwen3-8B
 TRAIN_FILE=/home/ubuntu/swe-rl/data/smoke_train.jsonl
 VAL_FILE=/home/ubuntu/swe-rl/data/smoke_val.jsonl
 REWARD_PATH=/home/ubuntu/swe-rl/reward_smoke.py

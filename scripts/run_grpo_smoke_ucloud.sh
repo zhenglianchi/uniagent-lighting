@@ -11,7 +11,7 @@ export HF_ENDPOINT=https://hf-mirror.com
 export HF_HUB_DISABLE_XET=1
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
-MODEL=/home/ubuntu/models/Qwen2.5-Coder-7B-Instruct
+MODEL=/home/ubuntu/models/Qwen3-8B
 cd /home/ubuntu/uni-agent/verl
 
 "$ENV/bin/python" -m verl.trainer.main_ppo \
