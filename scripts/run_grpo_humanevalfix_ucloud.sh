@@ -31,9 +31,9 @@ export MSA_INSTALL_AGENT=1   # 沙箱内现场 pip install mini-swe-agent（预�
 export MSA_REWARD_INCLUDE_P2P=0
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
-MODEL=/home/ubuntu/models/Qwen3-8B
-TRAIN_FILE=/home/ubuntu/swe-rl/data/humanevalfix_train.jsonl
-VAL_FILE=/home/ubuntu/swe-rl/data/humanevalfix_val.jsonl
+MODEL=${MODEL:-/home/ubuntu/models/Qwen3-8B}
+TRAIN_FILE=${TRAIN_FILE:-/home/ubuntu/swe-rl/data/humanevalfix_train.jsonl}
+VAL_FILE=${VAL_FILE:-/home/ubuntu/swe-rl/data/humanevalfix_val.jsonl}
 TOOL_PARSER=${TOOL_PARSER:-hermes}         # gateway tool-call parser；Qwen3-8B 用 hermes（官方推荐格式）
 GATEWAY_COUNT=${GATEWAY_COUNT:-1}          # 单机冒烟 1 个 gateway actor
 CONCURRENCY=${CONCURRENCY:-4}              # 并发 rollout sessions（= 同时跑的沙箱数，控制成本）

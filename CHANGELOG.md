@@ -2,6 +2,14 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.28.2（2026-08-06）
+
+- `run_grpo_humanevalfix_ucloud.sh`：`MODEL / TRAIN_FILE / VAL_FILE` 改为环境变量可覆盖
+  （默认路径不变），便于阶段一扩冒烟数据（5~8 条）直接换数据跑
+- 路线定稿（写入 TODO §8）：阶段一单机 48G+96G 验证 Qwen3-8B 有可训练 reward
+  （验收：部分样本 reward>0、advantage≠0）→ 阶段二双机 24G+96G 多机测试
+  （同 VPC/子网硬前提，offload=True + 16G swap）
+
 ## v0.28.1（2026-08-06）
 
 - 新增 `scripts/run_humanevalfix_local.py`：本地开发用冒烟采样脚本
