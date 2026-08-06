@@ -422,14 +422,14 @@ async def _run_tests_batch(
 ) -> dict[str, bool]:
     """一次 pytest 批量跑所有测试，解析 ``-q`` 输出返回 ``node_id -> passed``。
 
-    pytest -q 每测试输出一行 ``<node_id> PASSED/FAILED/ERROR [ xx%]``；
-    相比逐个测试启动 pytest（P2P 几十条时会非常慢），批量执行并解析文本。
+    ``-v`` 让 pytest 每测试输出一行 ``<node_id> PASSED/FAILED/ERROR [ xx%]``；
+    注意不要用 ``-q``（点号进度条无法解析，曾导致 reward 恒 0，v0.22.1 修复）。
     """
     # 测试名写入文件避免 shell 长度/转义问题；空格分隔传给 pytest
     listfile = "/tmp/_reward_tests.txt"
     await env.write_file(listfile, "\n".join(test_names))
     result = await env.exec_shell(
-        f"cd /testbed && {test_python} -m pytest -q --no-header -p no:cacheprovider --tb=no "
+        f"cd /testbed && {test_python} -m pytest -v --no-header -p no:cacheprovider --tb=no "
         f"$(cat {listfile} | tr '\\n' ' ')",
         timeout=timeout,
     )
