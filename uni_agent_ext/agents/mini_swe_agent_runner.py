@@ -4,6 +4,14 @@
 mini-swe-agent，模型端点指向训练 Gateway（``session.base_url``），完成后在同一沙箱内
 按 SWE-bench ``FAIL_TO_PASS`` 评估 reward 并上报 ``reward_info``。
 
+支持两种任务口径（按 ``tools_kwargs.task.name`` 区分，互不影响）：
+
+- ``swe_bench``（原始方案，保留）：SWE-bench Lite 实例镜像沙箱 + ``swebench-single``
+  数据集路径 + test_patch 评估；
+- ``humaneval_fix``（2026-08-06 新增）：python:3.12 E2B 沙箱 + 任务文件注入
+  （``tools_kwargs.env.files``，仅 solution.py，无测试泄露）+ mini-swe-agent API 直连
+  绕开 swebench-single 的数据集硬编码 + 隐藏测试（``metadata.hidden_files``）评估。
+
 与 ``examples/blackbox_recipes/claude_code/claude_code_runner.py`` 同构，职责划分：
 
 1. :func:`extract_task`          —— 从 raw_prompt / tools_kwargs 解析任务（issue、测试、实例 id）
@@ -150,10 +158,12 @@ def extract_task(raw_prompt: Any, tools_kwargs: dict[str, Any] | None) -> dict[s
     test_patch = metadata.get("test_patch") or ""
     return {
         "instance_id": str(instance_id),
+        "task_type": str((tools_kwargs.get("task") or {}).get("name", "swe_bench")),
         "issue": issue,
         "fail_to_pass": fail_to_pass,
         "pass_to_pass": pass_to_pass,
         "test_patch": test_patch,
+        "hidden_files": metadata.get("hidden_files") or {},
         "task_text": task_text,
     }
 
@@ -322,6 +332,47 @@ async def run_mini_swe_agent(
     return proc.returncode or 0, log[-4000:]
 
 
+async def run_mini_swe_agent_api(
+    *,
+    task: dict[str, Any],
+    config_path: str,
+    run_timeout: int = DEFAULT_AGENT_RUN_TIMEOUT,
+) -> tuple[int, str]:
+    """自定义任务（humaneval_fix）：绕开 swebench-single 的数据集加载，直接调
+    mini-swe-agent Python API（``get_sb_environment`` + ``get_agent``）。
+
+    runner 已把任务文件注入沙箱（``tools_kwargs.env.files``），这里用
+    ``build_mini_swe_config`` 生成的 yaml（attach 已建沙箱）构造 environment + agent。
+    轨迹由 Gateway session 记录（模型调用都走 session.base_url）。
+    """
+    import yaml
+
+    from minisweagent.agents import get_agent
+    from minisweagent.models import get_model
+    from minisweagent.run.benchmarks.swebench import get_sb_environment
+
+    config = yaml.safe_load(Path(config_path).read_text(encoding="utf-8"))
+    instance = {
+        "instance_id": task["instance_id"],
+        "problem_statement": task["issue"],
+        "image_name": config.get("environment", {}).get("image", "python:3.12"),
+    }
+
+    def _run() -> tuple[int, str]:
+        env = get_sb_environment(config, instance)
+        agent = get_agent(get_model(config=config["model"]), env, config["agent"])
+        try:
+            agent.run(instance["problem_statement"])
+            return 0, ""
+        except Exception as exc:  # noqa: BLE001 - 转成 (rc, log) 由调用方记录
+            return 1, f"{type(exc).__name__}: {exc}"
+
+    try:
+        return await asyncio.to_thread(_run)
+    except Exception as exc:  # noqa: BLE001
+        return -1, f"run_mini_swe_agent_api failed: {type(exc).__name__}: {exc}"
+
+
 # ---------------------------------------------------------------------------
 # Reward 评估（扩展点）
 # ---------------------------------------------------------------------------
@@ -385,7 +436,12 @@ async def evaluate_reward(
         logger.warning("evaluate_reward: no FAIL_TO_PASS for %s", task["instance_id"])
         return 0.0, details
 
-    if task["test_patch"]:
+    if task.get("task_type") == "humaneval_fix":
+        # 隐藏测试只在 reward 阶段写入（无测试泄露）；测试文件由
+        # make_humanevalfix_data.py 生成（test_solution.py::test_all）
+        for rel_path, content in (task.get("hidden_files") or {}).items():
+            await env.write_file(f"/testbed/{rel_path}", content)
+    elif task["test_patch"]:
         await env.write_file("/testbed/test_patch.diff", task["test_patch"])
         apply = await env.exec_shell("cd /testbed && git apply --3way test_patch.diff", timeout=120)
         if apply.exit_code != 0:
@@ -495,6 +551,22 @@ async def mini_swe_agent_runner(
         instance_id = sandbox.instance_id
         if not instance_id:
             raise RuntimeError(f"sandbox instance_id empty for sample {sample_index}")
+        # 任务文件注入（humaneval_fix）：沙箱预置 /testbed git 仓库 + solution.py。
+        # 只注入任务文件，隐藏测试由 evaluate_reward 在完成后写入（无测试泄露）。
+        env_files = env_config.get("files") or {}
+        if env_files:
+            await sandbox.exec_shell(
+                "mkdir -p /testbed && cd /testbed && "
+                "(git --version >/dev/null 2>&1 || "
+                "(DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
+                "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git)) && "
+                "git init -q && git config user.email t@example.com && git config user.name t",
+                timeout=300,
+            )
+            for rel_path, content in env_files.items():
+                await sandbox.write_file(f"/testbed/{rel_path}", content)
+            # 让 solution.py 被 git 跟踪，否则 agent 提交时 `git diff` 拿不到 patch
+            await sandbox.exec_shell("cd /testbed && git add -A", timeout=60)
         # 并发 session 必须用唯一临时路径，否则配置/轨迹互相覆盖（v0.22.0 修复：
         # CONCURRENCY=2 时两个 session 写同一个 /tmp/mini_swe_config.yaml，
         # agent 可能 attach 到错误沙箱实例、读到错误任务配置）
@@ -515,9 +587,15 @@ async def mini_swe_agent_runner(
             encoding="utf-8",
         )
         started = time.perf_counter()
-        rc, log_tail = await run_mini_swe_agent(
-            task=task, config_path=config_path, traj_path=traj_path, run_timeout=run_timeout
-        )
+        if env_files:
+            # 自定义任务：不走 swebench-single（数据集硬编码 SWE-bench），直接 API 跑
+            rc, log_tail = await run_mini_swe_agent_api(
+                task=task, config_path=config_path, run_timeout=run_timeout
+            )
+        else:
+            rc, log_tail = await run_mini_swe_agent(
+                task=task, config_path=config_path, traj_path=traj_path, run_timeout=run_timeout
+            )
         logger.info(
             "[sample %d] mini-swe-agent rc=%s elapsed=%.1fs traj=%s",
             sample_index, rc, time.perf_counter() - started, task["instance_id"],

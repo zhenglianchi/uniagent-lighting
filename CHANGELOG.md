@@ -260,3 +260,16 @@
 
 - 按用户要求删除黑盒 agent（Claude Code 类）调研记录：TODO §8、`docs/ROADMAP.md` §1、
   `docs/architecture.md` 决策清单中的相关条目（思路.md 1.10 调研留档暂保留）
+
+## v0.28.0（2026-08-06）
+
+- **HumanEvalFix 数据构造**：新增 `scripts/make_humanevalfix_data.py`（原 SWE-bench
+  `make_agentic_data.py` 保留不动）——humanevalpack python 子集 → `solution.py` +
+  `test_solution.py`（check(candidate) 转 pytest 单测 `test_all`，`from solution import *`
+  兼容测试引用同文件辅助函数）+ 本地 verify（buggy rc=1 / canonical rc=0，死循环超时跳过）
+- 冒烟数据入库：`work/data/humanevalfix_train.jsonl`（3 条）+ `humanevalfix_val.jsonl`（2 条）
+- runner 新增 `humaneval_fix` 任务类型（swe_bench 原路径不变）：沙箱 /testbed git 仓库 +
+  solution.py 注入（`git add -A` 保证 patch 可 diff）+ mini-swe-agent API 直连（绕开
+  swebench-single 数据集硬编码）+ reward 阶段写隐藏测试（无测试泄露）
+- 新增 `scripts/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录与 agentic 区分）
+- 待上机验证：8B 通过率与 GRPO reward 组内差异（node2 恢复后 git pull 即可跑）

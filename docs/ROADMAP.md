@@ -11,19 +11,18 @@ simple-bench 极简实验已回滚）。**用户拍板：agent 不改（保持 m
 
 - 数据集：`bigcode/humanevalpack` Python 修复子集——单函数 buggy 代码 + 单元测试，
   8B 级模型有公开 pass@1 基准（Granite 8B ≈ 25~48%），60 轮内可出结果
-- 构造步骤（本地可做，无需 GPU）：
-  1. hf-mirror 拉 `bigcode/humanevalpack`（`HF_HUB_DISABLE_XET=1`），过滤 Python 子集
-  2. 每样本生成 `solution.py`（buggy 代码）+ `test_solution.py`（隐藏测试）+
-     FAIL_TO_PASS / PASS_TO_PASS 清单
-  3. 转 verl agentic 数据：`raw_prompt` + `tools_kwargs.task`（文件注入：预写
-     solution.py + test_solution.py 到沙箱工作目录）+ `reward_model.ground_truth` +
-     `ability`（沿用 `scripts/make_agentic_data.py` 的 schema）
-  4. 冒烟 2 条 → 3~5 条验证 8B 通过率（预期 ≥50%）
-- runner 改动：`uni_agent_ext/agents/mini_swe_agent_runner.py` 恢复/新增"任务文件注入"
-  路径（建沙箱后先写 solution.py / test_solution.py 再启动 agent）；reward 沿用已通的
-  pytest FAIL_TO_PASS 真实打分（无测试泄露：test_solution.py 只在 reward 阶段注入）
-- 验收：3~5 条样本至少 1 条修出通过补丁 → 跑一轮 GRPO 观察 reward 出现组内差异
-  （advantage ≠ 0）→ 支撑完整训练链路，作为校招亮点（agentic 修复 + 沙箱系统）
+- ✅ 数据构造 `scripts/make_humanevalfix_data.py`（2026-08-06，原 SWE-bench
+  `make_agentic_data.py` 保留不动）：humanevalpack python 子集 → solution.py +
+  test_solution.py（check(candidate) → pytest 单测 `test_all`，`from solution import *`
+  兼容同文件辅助函数）+ 本地 verify（buggy rc=1 / canonical rc=0，死循环超时自动跳过）
+- ✅ 冒烟数据 `work/data/humanevalfix_train.jsonl`（3 条）+ `humanevalfix_val.jsonl`（2 条）入库
+- ✅ runner 支持 `humaneval_fix` 任务类型（swe_bench 原路径不变）：沙箱 /testbed git
+  仓库 + solution.py 注入（`git add -A`）+ mini-swe-agent API 直连 + reward 阶段写隐藏
+  测试（无测试泄露）
+- ✅ 训练脚本 `scripts/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录区分）
+- ⏳ 上机验证：node2 恢复镜像后 git pull → 数据拷到 `/home/ubuntu/swe-rl/data/` →
+  跑 run_grpo_humanevalfix_ucloud.sh；验收 3~5 条样本至少 1 条修出通过补丁、reward 出现
+  组内差异（advantage ≠ 0）→ 支撑完整训练链路，作为校招亮点（agentic 修复 + 沙箱系统）
 
 ## 2. 双机 TQ + Mooncake（双机网络就绪后第一优先）
 
