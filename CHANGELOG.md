@@ -139,3 +139,11 @@
   `setup_ssh_trust.py` 改为从 `SSH_PASS`/`NODE1_IP`/`NODE2_IP` 环境变量读取，仓库内不再含任何明文凭据
 - 不归档（已弃用）：HAI 时代脚本（`ssh_hai.py`/`setup_hai_uniagent.sh`/`run_grpo_multinode.sh`/`run_grpo_single_node.sh`）、
   vllm 0.8.5 兼容补丁（`fix_vllm085_compat.py`）、旧 StrEnum 脚本（`fix_strenum.sh`）
+
+## v0.18.1（2026-08-06）
+
+- **node2 部署 git 化（已上线）**：`/home/ubuntu/uniagent-lighting` = 仓库 clone（v0.18.0），
+  `uni_agent_ext` 与 `swe-rl` 下全部脚本改为指向仓库的软链（旧拷贝备份为
+  `uni_agent_ext.bak-20260806`）；import 验证通过（runner / reward env / 腾讯沙箱适配器）
+- 更新 `docs/deployment.md`：新增「仓库管理」章节，更新流程 = 本地 commit+push → 服务器
+  `git pull`；swe-rl 仅保留非仓库内容（凭据/数据/checkpoint/日志）
