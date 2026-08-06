@@ -3,7 +3,9 @@
 # 目标链：torch 2.9.0+cu128 / vllm 0.11.1 / transformers 4.57.6 / verl 0.9.0.dev / ray 2.56.1
 # 前置：Ubuntu 24.04 + NVIDIA 驱动（570+，CUDA 12.8）
 # 包含：miniforge + swe-rl env、清华 pip/HF 镜像、uni-agent、verl 三处补丁
-#       （StrEnum + fsdp2 单卡 + IPC CPU 大权重）、模型下载（hf-mirror 15G）
+#       （StrEnum + fsdp2 单卡 + IPC CPU 大权重）、uni-agent codec 补丁（vllm 0.11.1
+#       hermes 工具解析）、mini-swe-agent 2.4.6 + tencent_e2b/swebench 补丁、
+#       模型下载（Qwen3-8B，hf-mirror 15G）
 # 用法：
 #   bash install_ucloud_from_scratch.sh
 #   CREATE_SWAP_SIZE_GB=20 bash install_ucloud_from_scratch.sh  # 可选加 swap
@@ -128,12 +130,30 @@ if marker not in src3:
     print("[patch] IPC CPU-weight fix applied")
 PYEOF
 
-echo "== 8/8 模型（hf-mirror，15GB；已存在则跳过）=="
+echo "== 8/9 模型（hf-mirror，15GB；已存在则跳过）=="
 mkdir -p "$HOME/models"
 if [ ! -f "$HOME/models/Qwen3-8B/config.json" ]; then
   HF_ENDPOINT=https://hf-mirror.com HF_HUB_DISABLE_XET=1 "$PY" -c \
     "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen3-8B', local_dir='$HOME/models/Qwen3-8B')"
 fi
+
+echo "== 9/9 mini-swe-agent + 补丁（v0.26.0：tencent_e2b / swebench 镜像注入 / codec 路径）=="
+"$PIP" install "mini-swe-agent==2.4.6"
+SP="$ENV/lib/python3.10/site-packages"
+REPO_RAW=https://raw.githubusercontent.com/zhenglianchi/uniagent-lighting/main
+for i in 1 2 3; do
+  curl -fsSL --max-time 60 -o /tmp/tencent_e2b.py "$REPO_RAW/patches/tencent_e2b.py" && break || { echo "retry $i"; sleep 3; }
+done
+cp /tmp/tencent_e2b.py "$SP/minisweagent/environments/extra/tencent_e2b.py"
+for i in 1 2 3; do
+  curl -fsSL --max-time 60 -o /tmp/miniswe_swebench.py "$REPO_RAW/patches/miniswe_swebench.py" && break || { echo "retry $i"; sleep 3; }
+done
+cp /tmp/miniswe_swebench.py "$SP/minisweagent/run/benchmarks/swebench.py"
+# uni-agent gateway codec：vllm 0.11.1 的 ChatCompletionToolsParam 路径修复（hermes 工具解析）
+for i in 1 2 3; do
+  curl -fsSL --max-time 60 -o /tmp/uni_agent_vllm0111.patch "$REPO_RAW/patches/uni_agent_vllm0111_toolparsers.patch" && break || { echo "retry $i"; sleep 3; }
+done
+cd "$HOME/uni-agent" && patch -p1 -N < /tmp/uni_agent_vllm0111.patch || true
 
 mkdir -p "$HOME/swe-rl/data"
 
