@@ -124,3 +124,18 @@
     见 `patches/uni_agent_vllm0111_toolparsers.patch`
   - TOOL_PARSER 由 hermes 改为 **qwen3_coder**（匹配 Qwen2.5-Coder 工具格式）
 - 待验证：若模型仍不发工具调用（写散文），说明 tools 未渲染进 prompt，需继续修 backend 层
+
+## v0.18.0（2026-08-06）
+
+- **scripts/ 全量归档**：补齐此前只在本地/服务器上的有效脚本（24 个），覆盖四类：
+  - UCloud 部署/升级：`install_ucloud_from_scratch.sh`（最终版本链 torch 2.9+cu128 / vllm 0.11.1 直装）、
+    `upgrade_vllm_0111.sh`、`fix_strenum_ucloud.sh`、`patch_verl_ipc_cpu.py`、`fix_otel.sh`
+  - 多机/集群（node1 备用，含 UCloud 版）：`run_grpo_multinode_ucloud.sh`、`run_grpo_dualgpu_ucloud.sh`、
+    `fix_multinode_hosts.sh`、`nccl_multinode_test.py`、`ray_cluster_setup/join/restart.sh`、`setup_ssh_trust.py`
+  - 腾讯沙箱工具：`tencent_create_sandbox_tool.py`、`tencent_list_sandbox_tools.py`、`tencent_start_swebench.py`、
+    `tencent_sandbox_demo.py`、`run_tencent_sandbox_demo.py`
+  - 运维/采样：`ssh_ucloud.py`、`proxy.sh`、`cc_connect.sh`、`start_sampling.sh`、`ssh_poll_node1.py`、`run_grpo_smoke_ucloud.sh`
+- **凭据安全修复**：`setup_ssh_trust.py` 与 `check_node1.py` 曾硬编码旧机器明文密码 → `check_node1.py` 不入仓（废弃），
+  `setup_ssh_trust.py` 改为从 `SSH_PASS`/`NODE1_IP`/`NODE2_IP` 环境变量读取，仓库内不再含任何明文凭据
+- 不归档（已弃用）：HAI 时代脚本（`ssh_hai.py`/`setup_hai_uniagent.sh`/`run_grpo_multinode.sh`/`run_grpo_single_node.sh`）、
+  vllm 0.8.5 兼容补丁（`fix_vllm085_compat.py`）、旧 StrEnum 脚本（`fix_strenum.sh`）
