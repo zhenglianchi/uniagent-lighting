@@ -34,7 +34,7 @@ ENV=/home/ubuntu/miniforge3/envs/swe-rl
 MODEL=/home/ubuntu/models/Qwen2.5-Coder-7B-Instruct
 TRAIN_FILE=/home/ubuntu/swe-rl/data/agentic_train.jsonl
 VAL_FILE=/home/ubuntu/swe-rl/data/agentic_val.jsonl
-TOOL_PARSER=${TOOL_PARSER:-hermes}        # gateway tool-call parser，需匹配 Qwen2.5-Coder chat template（上机验证）
+TOOL_PARSER=${TOOL_PARSER:-qwen3_coder}    # gateway tool-call parser；Qwen2.5-Coder 用 qwen3_coder（hermes 不匹配）
 GATEWAY_COUNT=${GATEWAY_COUNT:-1}          # 单机冒烟 1 个 gateway actor
 CONCURRENCY=${CONCURRENCY:-2}              # 并发 rollout sessions（= 同时跑的沙箱数，控制成本）
 SERVED_MODEL_NAME=${SERVED_MODEL_NAME:-"$(basename "$MODEL")"}
