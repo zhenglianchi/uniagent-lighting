@@ -33,6 +33,8 @@ import asyncio
 import json
 import logging
 import os
+import random
+import re
 import shlex
 import time
 from pathlib import Path
@@ -67,6 +69,7 @@ GATEWAY_TUNNEL_WAIT = int(os.getenv("MSA_GATEWAY_TUNNEL_WAIT", "60"))
 # Reward 评估（真实 SWE-bench 口径）
 REWARD_TEST_TIMEOUT = int(os.getenv("MSA_REWARD_TEST_TIMEOUT", "300"))
 REWARD_INCLUDE_P2P = os.getenv("MSA_REWARD_INCLUDE_P2P", "0") == "1"
+REWARD_P2P_SAMPLE = int(os.getenv("MSA_REWARD_P2P_SAMPLE", "20"))
 REWARD_PYTHON = os.getenv("MSA_REWARD_PYTHON", "python")
 
 
@@ -345,12 +348,15 @@ async def evaluate_reward(
     *,
     timeout: int = REWARD_TEST_TIMEOUT,
     include_p2p: bool = REWARD_INCLUDE_P2P,
+    p2p_sample: int = REWARD_P2P_SAMPLE,
     test_python: str = REWARD_PYTHON,
 ) -> tuple[float, dict[str, Any]]:
-    """真实 SWE-bench reward：写入 test_patch，跑 FAIL_TO_PASS（可选 PASS_TO_PASS）的 pytest。
+    """真实 SWE-bench reward：写入 test_patch，批量跑 FAIL_TO_PASS + 抽样 PASS_TO_PASS。
 
-    返回 ``(score, details)``，score = 通过测试数 / 总测试数（0.0~1.0，分级）；
-    ``resolved`` 表示全部通过。测试列表解析兼容 list/JSON 字符串/换行分隔。
+    返回 ``(score, details)``，score = 通过测试数 / 总测试数（0.0~1.0，连续）；
+    ``resolved`` 表示 FAIL_TO_PASS 全过（且启用 P2P 时抽样回归也全过）。
+    P2P 按 ``instance_id`` 固定抽样（可复现），默认 20 条，提供细粒度梯度且防回归破坏。
+    测试列表解析兼容 list/JSON 字符串/换行分隔。
     注意：``test_patch`` 只用于评估，**不注入给 agent**（无测试泄露约定）。
     """
     env = SandboxEnvForReward(sandbox)
@@ -363,7 +369,14 @@ async def evaluate_reward(
     if fail_to_pass and all(len(str(x)) == 1 for x in fail_to_pass):
         fail_to_pass = _as_list("".join(str(x) for x in fail_to_pass))
         logger.info("evaluate_reward: FAIL_TO_PASS was char-split, merged -> %d tests", len(fail_to_pass))
-    test_names = fail_to_pass + (task["pass_to_pass"] if include_p2p else [])
+    pass_to_pass = task["pass_to_pass"] or []
+    if pass_to_pass and all(len(str(x)) == 1 for x in pass_to_pass):
+        pass_to_pass = _as_list("".join(str(x) for x in pass_to_pass))
+    p2p_used: list[str] = []
+    if include_p2p and pass_to_pass:
+        rng = random.Random(task["instance_id"])
+        p2p_used = rng.sample(pass_to_pass, min(p2p_sample, len(pass_to_pass)))
+    test_names = fail_to_pass + p2p_used
     if not test_names:
         logger.warning("evaluate_reward: no FAIL_TO_PASS for %s", task["instance_id"])
         return 0.0, details
@@ -379,25 +392,52 @@ async def evaluate_reward(
         if apply.exit_code != 0:
             logger.warning("evaluate_reward: test_patch apply failed (%s)", details["apply_status"])
 
-    passed = 0
-    logs: list[str] = []
-    for test in test_names:
-        result = await env.exec_shell(
-            f"cd /testbed && {test_python} -m pytest {shlex.quote(test)} -q --no-header -p no:cacheprovider",
-            timeout=timeout,
-        )
-        ok = result.exit_code == 0
-        passed += int(ok)
-        logs.append(f"{test}: {'PASS' if ok else 'FAIL'}")
-        if not ok:
-            details["log"] = (result.stdout or "")[-2000:] + (result.stderr or "")[-2000:]
-
+    passed_map = await _run_tests_batch(env, test_names, timeout=timeout, test_python=test_python)
+    f2p_passed = sum(1 for t in fail_to_pass if passed_map.get(t))
+    p2p_passed = sum(1 for t in p2p_used if passed_map.get(t))
+    passed = f2p_passed + p2p_passed
     score = passed / len(test_names)
+    logs = [f"{t}: {'PASS' if passed_map.get(t) else 'FAIL'}" for t in test_names]
     details.update(
-        {"resolved": score == 1.0, "passed": passed, "total": len(test_names), "per_test": logs}
+        {
+            "resolved": f2p_passed == len(fail_to_pass) and (not include_p2p or p2p_passed == len(p2p_used)),
+            "passed": passed,
+            "total": len(test_names),
+            "per_test": logs,
+            "p2p_sampled": len(p2p_used),
+        }
     )
     logger.info("evaluate_reward: %s -> %s (%s)", task["instance_id"], score, "; ".join(logs))
     return score, details
+
+
+async def _run_tests_batch(
+    env: SandboxEnvForReward,
+    test_names: list[str],
+    *,
+    timeout: int,
+    test_python: str,
+) -> dict[str, bool]:
+    """一次 pytest 批量跑所有测试，解析 ``-q`` 输出返回 ``node_id -> passed``。
+
+    pytest -q 每测试输出一行 ``<node_id> PASSED/FAILED/ERROR [ xx%]``；
+    相比逐个测试启动 pytest（P2P 几十条时会非常慢），批量执行并解析文本。
+    """
+    # 测试名写入文件避免 shell 长度/转义问题；空格分隔传给 pytest
+    listfile = "/tmp/_reward_tests.txt"
+    await env.write_file(listfile, "\n".join(test_names))
+    result = await env.exec_shell(
+        f"cd /testbed && {test_python} -m pytest -q --no-header -p no:cacheprovider --tb=no "
+        f"$(cat {listfile} | tr '\\n' ' ')",
+        timeout=timeout,
+    )
+    passed_map: dict[str, bool] = {}
+    if result.stdout:
+        for line in result.stdout.splitlines():
+            m = re.match(r"^(\S+)\s+(PASSED|FAILED|ERROR)\s*\[", line.strip())
+            if m:
+                passed_map[m.group(1)] = m.group(2) == "PASSED"
+    return passed_map
 
 
 # ---------------------------------------------------------------------------

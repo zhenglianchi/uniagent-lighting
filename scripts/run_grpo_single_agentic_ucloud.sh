@@ -33,6 +33,9 @@ export E2B_API_KEY="${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}"
 # harness 在训练机本地，直接调本机 Gateway（session.base_url），不需要沙箱内隧道
 export MSA_GATEWAY_TUNNEL=0
 export MSA_INSTALL_AGENT=1   # 沙箱内现场 pip install mini-swe-agent（预装镜像后可关）
+# reward：F2P 全量 + P2P 固定抽样 20 条（连续梯度，防回归破坏）
+export MSA_REWARD_INCLUDE_P2P=1
+export MSA_REWARD_P2P_SAMPLE=20
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
 MODEL=/home/ubuntu/models/Qwen3-8B
