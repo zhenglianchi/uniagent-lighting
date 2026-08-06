@@ -109,6 +109,9 @@ runner 在训练机本地驱动 mini-swe-agent（harness 在外、腾讯沙箱�
 SP=/home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages
 cp /home/ubuntu/uniagent-lighting/patches/tencent_e2b.py \
    "$SP/minisweagent/environments/extra/tencent_e2b.py"
+# pip 官方版 swebench.py 的镜像注入列表不含 tencent_e2b（否则沙箱实例无 /testbed）：
+cp /home/ubuntu/uniagent-lighting/patches/miniswe_swebench.py \
+   "$SP/minisweagent/run/benchmarks/swebench.py"
 ```
 
 ### 5. 验证

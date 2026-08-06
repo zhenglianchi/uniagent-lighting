@@ -89,3 +89,8 @@ print(mini_swe_agent_runner.__name__)"
 2. `cleanup()` 在 attach 模式下**只断开、不 kill/不停实例**（生命周期归 runner，
    reward 评估还要用）——否则 mini-extra 退出会停实例，reward 写 test_patch 报
    "The requested resource does not exist"（v0.13.1 实测踩坑）
+
+另外 pip 官方版 `minisweagent/run/benchmarks/swebench.py` 的镜像注入列表只有
+`["docker", "swerex_modal"]`，**不含 `tencent_e2b`**，需覆盖为补丁版
+（`patches/miniswe_swebench.py`），否则腾讯沙箱实例启动时 image 为空、无 `/testbed`
+（v0.20.1 实测踩坑）。

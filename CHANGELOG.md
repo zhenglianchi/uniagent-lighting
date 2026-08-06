@@ -168,3 +168,11 @@
     （`run_grpo_smoke/multinode/single_lora/dualgpu_ucloud.sh`、`upgrade_vllm_0111.sh`、
     `install_ucloud_from_scratch.sh` 模型下载）
 - 本地 + node2 已删除 Qwen2.5-Coder-7B-Instruct（15G×2），Qwen3-8B（15.27GiB）已下载并验证
+
+## v0.20.1（2026-08-06）
+
+- **修复腾讯沙箱采样无 /testbed**：pip 官方版 `swebench.py` 的镜像注入列表不含
+  `tencent_e2b`（只有 docker/swerex_modal），导致实例启动时 image 为空、沙箱内无代码库。
+  归档本地补丁版 `patches/miniswe_swebench.py`，README 部署第 4 步与 deployment.md §6
+  补充覆盖该文件
+- node2 已验证：补丁后沙箱实例正常注入 SWE-bench 镜像，agent 开始读代码
