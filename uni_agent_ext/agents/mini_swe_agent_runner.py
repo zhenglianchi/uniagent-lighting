@@ -64,23 +64,44 @@ GATEWAY_SSH_HOST = os.getenv("MSA_GATEWAY_SSH_HOST", "")
 GATEWAY_LOCAL_PORT = int(os.getenv("MSA_GATEWAY_LOCAL_PORT", "8000"))
 GATEWAY_TUNNEL_WAIT = int(os.getenv("MSA_GATEWAY_TUNNEL_WAIT", "60"))
 
+# Reward 评估（真实 SWE-bench 口径）
+REWARD_TEST_TIMEOUT = int(os.getenv("MSA_REWARD_TEST_TIMEOUT", "300"))
+REWARD_INCLUDE_P2P = os.getenv("MSA_REWARD_INCLUDE_P2P", "0") == "1"
+REWARD_PYTHON = os.getenv("MSA_REWARD_PYTHON", "python")
+
 
 # ---------------------------------------------------------------------------
 # 任务解析
 # ---------------------------------------------------------------------------
 def _as_list(value: Any) -> list[str]:
-    """把字符串 / list / JSON 字符串统一成 list[str]。"""
+    """把 list/tuple / JSON 字符串 / 换行或逗号分隔字符串统一成 list[str]。
+
+    SWE-bench 数据集字段经 verl tensordict 序列化后可能变成字符串，
+    这里做多种格式的容错解析（单个测试名也可能含逗号，优先按换行拆）。
+    """
     if not value:
         return []
-    if isinstance(value, list):
-        return [str(item) for item in value]
+    if isinstance(value, (list, tuple)):
+        return [str(item).strip() for item in value if str(item).strip()]
     if isinstance(value, str):
+        v = value.strip()
+        if not v:
+            return []
         try:
-            parsed = json.loads(value)
+            parsed = json.loads(v)
+            if isinstance(parsed, (list, tuple)):
+                return [str(x).strip() for x in parsed if str(x).strip()]
         except json.JSONDecodeError:
-            return [value]
-        if isinstance(parsed, list):
-            return [str(item) for item in parsed]
+            pass
+        if "\n" in v:
+            parts = [p.strip() for p in v.split("\n") if p.strip()]
+            if len(parts) > 1:
+                return parts
+        if "," in v:
+            parts = [p.strip() for p in v.split(",") if p.strip()]
+            if len(parts) > 1:
+                return parts
+        return [v]
     return [str(value)]
 
 
@@ -116,11 +137,13 @@ def extract_task(raw_prompt: Any, tools_kwargs: dict[str, Any] | None) -> dict[s
     instance_id = metadata.get("instance_id") or metadata.get("task_id") or ""
     issue = metadata.get("problem_statement") or _extract_issue_text(task_text)
     fail_to_pass = _as_list(metadata.get("FAIL_TO_PASS"))
+    pass_to_pass = _as_list(metadata.get("PASS_TO_PASS"))
     test_patch = metadata.get("test_patch") or ""
     return {
         "instance_id": str(instance_id),
         "issue": issue,
         "fail_to_pass": fail_to_pass,
+        "pass_to_pass": pass_to_pass,
         "test_patch": test_patch,
         "task_text": task_text,
     }
@@ -315,36 +338,55 @@ async def evaluate_reward(
     sandbox: Sandbox,
     task: dict[str, Any],
     *,
-    timeout: int = 1800,
+    timeout: int = REWARD_TEST_TIMEOUT,
+    include_p2p: bool = REWARD_INCLUDE_P2P,
+    test_python: str = REWARD_PYTHON,
 ) -> tuple[float, dict[str, Any]]:
-    """SWE-bench 式 reward：写入 test_patch，跑 FAIL_TO_PASS 的 pytest。
+    """真实 SWE-bench reward：写入 test_patch，跑 FAIL_TO_PASS（可选 PASS_TO_PASS）的 pytest。
 
-    返回 ``(score, details)``，score 为通过比例（0.0~1.0）；后续可换分级 reward。
+    返回 ``(score, details)``，score = 通过测试数 / 总测试数（0.0~1.0，分级）；
+    ``resolved`` 表示全部通过。测试列表解析兼容 list/JSON 字符串/换行分隔。
     注意：``test_patch`` 只用于评估，**不注入给 agent**（无测试泄露约定）。
     """
     env = SandboxEnvForReward(sandbox)
-    details: dict[str, Any] = {"resolved": False, "passed": 0, "total": 0, "log": ""}
+    details: dict[str, Any] = {
+        "resolved": False, "passed": 0, "total": 0,
+        "per_test": [], "log": "", "apply_status": "",
+    }
     fail_to_pass = task["fail_to_pass"]
-    if not fail_to_pass:
+    test_names = fail_to_pass + (task["pass_to_pass"] if include_p2p else [])
+    if not test_names:
         logger.warning("evaluate_reward: no FAIL_TO_PASS for %s", task["instance_id"])
         return 0.0, details
 
     if task["test_patch"]:
         await env.write_file("/testbed/test_patch.diff", task["test_patch"])
-        await env.communicate("cd /testbed && git apply test_patch.diff", timeout=120)
+        apply = await env.exec_shell("cd /testbed && git apply --3way test_patch.diff", timeout=120)
+        if apply.exit_code != 0:
+            apply = await env.exec_shell("cd /testbed && patch -p1 < test_patch.diff", timeout=120)
+        details["apply_status"] = "ok" if apply.exit_code == 0 else (
+            "failed: " + (apply.stderr or apply.stdout or "")[-300:]
+        )
+        if apply.exit_code != 0:
+            logger.warning("evaluate_reward: test_patch apply failed (%s)", details["apply_status"])
 
     passed = 0
     logs: list[str] = []
-    for test in fail_to_pass:
-        result = await env.exec_shell(f"cd /testbed && python -m pytest {shlex.quote(test)} -x -q", timeout=timeout)
+    for test in test_names:
+        result = await env.exec_shell(
+            f"cd /testbed && {test_python} -m pytest {shlex.quote(test)} -q --no-header -p no:cacheprovider",
+            timeout=timeout,
+        )
         ok = result.exit_code == 0
         passed += int(ok)
         logs.append(f"{test}: {'PASS' if ok else 'FAIL'}")
         if not ok:
             details["log"] = (result.stdout or "")[-2000:] + (result.stderr or "")[-2000:]
 
-    score = passed / len(fail_to_pass)
-    details.update({"resolved": score == 1.0, "passed": passed, "total": len(fail_to_pass)})
+    score = passed / len(test_names)
+    details.update(
+        {"resolved": score == 1.0, "passed": passed, "total": len(test_names), "per_test": logs}
+    )
     logger.info("evaluate_reward: %s -> %s (%s)", task["instance_id"], score, "; ".join(logs))
     return score, details
 
