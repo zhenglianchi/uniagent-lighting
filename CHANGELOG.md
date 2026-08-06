@@ -206,3 +206,25 @@
   真实 SWE-bench reward → GRPO step 2 完成 → checkpoint 保存（global_step_1/2）
 - ⚠️ 遗留：两条冒烟样本 reward 全 0 → advantage 全 0 → LoRA 未更新
   （`lora_B` 全 0、step1/2 权重逐字节相同）。链路已通，缺的是**正样本/学习信号**
+
+## v0.23.0（2026-08-06）
+
+- GRPO `n=2 → 4`：8B 对同一任务失败模式一致（reward 组内恒等），更大组提高
+  组内差异概率（制造 advantage 非 0 的信号）
+
+## v0.23.1（2026-08-06）
+
+- **参数化测试名传递修复**：pytest 测试名经 shell `$(...)` 展开会被分词/转义破坏
+  （如 `test_string_format_uninferable["I\ns"]`），改为 python 脚本列表传参
+- **发现官方 SWE-bench Lite 数据集缺陷**：`pylint-dev__astroid-1866` 的
+  PASS_TO_PASS 在官方数据里被截断（`test_string_format_uninferable["I` 处），
+  该样本评估注定全 ERROR → 换样本
+
+## v0.22.x（2026-08-06）
+
+- v0.22.0：修复 runner 并发 session 共用固定 `/tmp/mini_swe_config.yaml` 导致
+  agent attach 错沙箱/配置串扰（改 session 唯一路径）
+- v0.22.1：**核心 reward 解析 bug**——`pytest -q` 输出点号进度条而非每测试一行，
+  正则解析失败 → score 恒 0（真实 21 测试 20 过 = 0.9523）；改 `-v`
+- v0.22.2：reward_info 键名不匹配——runner 上报 `reward_score`，framework 消费
+  `reward` → rm_scores 恒 0；补 `reward` 键
