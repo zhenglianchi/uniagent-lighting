@@ -393,6 +393,7 @@ async def evaluate_reward(
             logger.warning("evaluate_reward: test_patch apply failed (%s)", details["apply_status"])
 
     passed_map = await _run_tests_batch(env, test_names, timeout=timeout, test_python=test_python)
+    details["log"] = passed_map.pop("_log_tail", "")
     f2p_passed = sum(1 for t in fail_to_pass if passed_map.get(t))
     p2p_passed = sum(1 for t in p2p_used if passed_map.get(t))
     passed = f2p_passed + p2p_passed
@@ -437,6 +438,13 @@ async def _run_tests_batch(
             m = re.match(r"^(\S+)\s+(PASSED|FAILED|ERROR)\s*\[", line.strip())
             if m:
                 passed_map[m.group(1)] = m.group(2) == "PASSED"
+    # 保留失败诊断（尾部输出），挂到结果对象上由调用方写入 details["log"]
+    tail = ""
+    if result.stdout:
+        tail += (result.stdout or "")[-2500:]
+    if result.stderr:
+        tail += (result.stderr or "")[-1500:]
+    passed_map["_log_tail"] = tail
     return passed_map
 
 
