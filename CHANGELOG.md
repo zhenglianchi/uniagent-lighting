@@ -102,3 +102,15 @@
 
 - **验证通过**：单机 agentic GRPO 全链路跑通——`num_success_sessions=2 / outputs=2 / failed=0`，
   Training Progress 100% 2/2，agent 5 轮多轮轨迹，LoRA 更新 + adapter 同步 + checkpoint 全执行
+
+## v0.16.0（2026-08-06）
+
+- **真实 SWE-bench reward**：健壮测试列表解析（兼容 list/JSON/换行/逗号/字符级乱码）、
+  test_patch `git apply --3way` + `patch -p1` 回退、分级打分（通过数/总数）、可选 PASS_TO_PASS、
+  可配 testbed python 与超时
+
+## v0.16.1（2026-08-06）
+
+- **实测修复并验证**：FAIL_TO_PASS 经 verl tensordict 序列化到达 runner 时是**字符级列表**
+  （JSON 字符串被逐字符拆散）→ runner 防御性合并后重解析，还原真实测试名；
+  实测输出 `tests/unittest_nodes.py::AsStringTest::test_as_string_unknown: FAIL`（评分 0，agent 未修出补丁）

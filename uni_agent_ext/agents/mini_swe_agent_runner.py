@@ -138,6 +138,11 @@ def extract_task(raw_prompt: Any, tools_kwargs: dict[str, Any] | None) -> dict[s
     issue = metadata.get("problem_statement") or _extract_issue_text(task_text)
     fail_to_pass = _as_list(metadata.get("FAIL_TO_PASS"))
     pass_to_pass = _as_list(metadata.get("PASS_TO_PASS"))
+    raw_ftp = metadata.get("FAIL_TO_PASS")
+    logger.info(
+        "extract_task[%s]: FAIL_TO_PASS raw type=%s repr=%r (parsed %d items)",
+        instance_id, type(raw_ftp).__name__, str(raw_ftp)[:300], len(fail_to_pass),
+    )
     test_patch = metadata.get("test_patch") or ""
     return {
         "instance_id": str(instance_id),
@@ -354,6 +359,10 @@ async def evaluate_reward(
         "per_test": [], "log": "", "apply_status": "",
     }
     fail_to_pass = task["fail_to_pass"]
+    # 防御：若被序列化成字符级列表，先合并重解析
+    if fail_to_pass and all(len(str(x)) == 1 for x in fail_to_pass):
+        fail_to_pass = _as_list("".join(str(x) for x in fail_to_pass))
+        logger.info("evaluate_reward: FAIL_TO_PASS was char-split, merged -> %d tests", len(fail_to_pass))
     test_names = fail_to_pass + (task["pass_to_pass"] if include_p2p else [])
     if not test_names:
         logger.warning("evaluate_reward: no FAIL_TO_PASS for %s", task["instance_id"])
