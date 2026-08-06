@@ -238,6 +238,7 @@ def build_mini_swe_config(
     cfg["environment"]["image"] = image
     cfg["model"]["model_name"] = model
     cfg["model"]["model_kwargs"]["api_base"] = base_url
+    cfg["model"]["model_kwargs"]["api_key"] = "EMPTY"  # LiteLLM/OpenAI provider 必须有 key；Gateway 接受任意非空值
     return yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False)
 
 
@@ -270,6 +271,7 @@ async def run_mini_swe_agent(
         "-y",
     ]
     logger.info("[sample %s] run mini-swe-agent locally: %s", task["instance_id"], shlex.join(args))
+    os.environ.setdefault("OPENAI_API_KEY", "EMPTY")  # LiteLLM 兜底，防 Missing credentials
     proc = await asyncio.create_subprocess_exec(
         *args,
         stdout=asyncio.subprocess.PIPE,

@@ -91,3 +91,9 @@
   无需沙箱内隧道（`MSA_GATEWAY_TUNNEL=0`）——此前隧道（沙箱→node2）是黑盒模式遗留，
   导致模型调用打到 node2 空端口 → 空轨迹
 - runner 用真实 `model_name`（runner_kwargs 注入的 Gateway served model），不再写死 "default"
+
+## v0.15.0（2026-08-06）
+
+- **修复 LiteLLM Missing credentials**：mini-swe-agent 走 LiteLLM/OpenAI provider 必须带
+  api_key（Gateway 接受任意非空值，用 "EMPTY"）；配置 model_kwargs + 子进程
+  `OPENAI_API_KEY=EMPTY` 双保险——此前 1 次 API call 直接 Missing credentials → 空轨迹
