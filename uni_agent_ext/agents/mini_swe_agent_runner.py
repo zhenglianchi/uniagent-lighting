@@ -322,6 +322,47 @@ async def run_mini_swe_agent(
     return proc.returncode or 0, log[-4000:]
 
 
+async def run_mini_swe_agent_api(
+    *,
+    task: dict[str, Any],
+    config_path: str,
+    run_timeout: int = DEFAULT_AGENT_RUN_TIMEOUT,
+) -> tuple[int, str]:
+    """极简任务：绕开 swebench-single 的数据集加载（v0.25.2），直接调 mini-swe-agent API。
+
+    runner 已在沙箱内注入任务文件（tools_kwargs.env.files），这里用 build_mini_swe_config
+    生成的 yaml（attach 已建沙箱）直接构造 environment + agent 并 run。
+    """
+    import yaml
+
+    from minisweagent.agents import get_agent
+    from minisweagent.models import get_model
+    from minisweagent.run.benchmarks.swebench import get_sb_environment
+
+    config = yaml.safe_load(Path(config_path).read_text(encoding="utf-8"))
+    instance = {
+        "instance_id": task["instance_id"],
+        "problem_statement": task["issue"],
+        "image_name": config.get("environment", {}).get("image", "python:3.12"),
+    }
+
+    def _run() -> tuple[int, str]:
+        import asyncio
+
+        env = get_sb_environment(config, instance)
+        agent = get_agent(get_model(config=config["model"]), env, config["agent"])
+        try:
+            agent.run(instance["problem_statement"])
+            return 0, ""
+        except Exception as exc:  # noqa: BLE001 - 转成 (rc, log) 由调用方记录
+            return 1, f"{type(exc).__name__}: {exc}"
+
+    try:
+        return await asyncio.to_thread(_run)
+    except Exception as exc:
+        return -1, f"run_mini_swe_agent_api failed: {type(exc).__name__}: {exc}"
+
+
 # ---------------------------------------------------------------------------
 # Reward 评估（扩展点）
 # ---------------------------------------------------------------------------
@@ -524,9 +565,15 @@ async def mini_swe_agent_runner(
             encoding="utf-8",
         )
         started = time.perf_counter()
-        rc, log_tail = await run_mini_swe_agent(
-            task=task, config_path=config_path, traj_path=traj_path, run_timeout=run_timeout
-        )
+        if env_files:
+            # 极简任务：不走 swebench-single（数据集硬编码 SWE-bench），直接 API 跑
+            rc, log_tail = await run_mini_swe_agent_api(
+                task=task, config_path=config_path, run_timeout=run_timeout
+            )
+        else:
+            rc, log_tail = await run_mini_swe_agent(
+                task=task, config_path=config_path, traj_path=traj_path, run_timeout=run_timeout
+            )
         logger.info(
             "[sample %d] mini-swe-agent rc=%s elapsed=%.1fs traj=%s",
             sample_index, rc, time.perf_counter() - started, task["instance_id"],
