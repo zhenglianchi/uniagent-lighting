@@ -2,6 +2,23 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.28.1（2026-08-06）
+
+- 新增 `scripts/run_humanevalfix_local.py`：本地开发用冒烟采样脚本
+  （腾讯 E2B `code-interpreter-v1` 沙箱 + 阿里云百炼 API，不走 Gateway/训练机），
+  复用单个沙箱实例逐样本重置 `/testbed`，轨迹落 `work/swebench/` + 汇总 JSON
+- runner 修复（对正式训练路径同样生效）：
+  - `SessionHandle` 改为守卫导入：无 ray 环境也能 import runner 纯函数部分
+  - `run_mini_swe_agent_api` 先在主线程预导入 `tencent_e2b`
+    （模块顶层 `signal.signal()` 只能主线程执行，否则 to_thread 里首次导入报
+    `ValueError: signal only works in main thread`）
+  - `get_agent(..., default_type="default")`：模板 yaml 无 `agent_class` 时
+    `get_agent_class("")` 报 "Unknown agent type"
+  - agent 失败返回附带 `traceback.format_exc`，便于定位
+- 实测（qwen3.7-plus，3 条 train 样本全过）：交互轮数 **7 轮**（读码→复现→改→验证→提交，
+  每轮 1 个 bash 调用），单条 35~43s，reward=1.0 / resolved=true；
+  轨迹：`work/swebench/humanevalfix_humanevalfix-Python-{61,104,105}.traj.json`
+
 ## v0.1.0（2026-08-05）
 
 - 初始化仓库：README / CHANGELOG / 架构文档

@@ -51,7 +51,10 @@ from typing import Any, Callable
 
 import httpx
 
-from uni_agent.gateway.session import SessionHandle
+try:
+    from uni_agent.gateway.session import SessionHandle
+except Exception:  # noqa: BLE001 - 本地开发（无 ray）也能 import runner 的纯函数部分
+    SessionHandle = Any  # type: ignore[misc,assignment] - 仅用于类型注解
 from uni_agent.sandbox import Sandbox, SandboxConfig, build_sandbox
 
 logger = logging.getLogger(__name__)
@@ -350,6 +353,10 @@ async def run_mini_swe_agent_api(
     from minisweagent.agents import get_agent
     from minisweagent.models import get_model
     from minisweagent.run.benchmarks.swebench import get_sb_environment
+    # tencent_e2b 模块顶层有 signal.signal()，只能在主线程执行；
+    # 先在主线程 import，避免 to_thread 里首次导入抛
+    # "ValueError: signal only works in main thread"（v0.28.1 修复）
+    import minisweagent.environments.extra.tencent_e2b  # noqa: F401
 
     config = yaml.safe_load(Path(config_path).read_text(encoding="utf-8"))
     instance = {
@@ -360,7 +367,10 @@ async def run_mini_swe_agent_api(
 
     def _run() -> tuple[int, str]:
         env = get_sb_environment(config, instance)
-        agent = get_agent(get_model(config=config["model"]), env, config["agent"])
+        # 模板 yaml 的 agent 节不含 agent_class，默认取 default（v0.28.1 修复）
+        agent = get_agent(
+            get_model(config=config["model"]), env, config["agent"], default_type="default"
+        )
         try:
             agent.run(instance["problem_statement"])
             return 0, ""
@@ -370,7 +380,13 @@ async def run_mini_swe_agent_api(
     try:
         return await asyncio.to_thread(_run)
     except Exception as exc:  # noqa: BLE001
-        return -1, f"run_mini_swe_agent_api failed: {type(exc).__name__}: {exc}"
+        import traceback
+
+        return (
+            -1,
+            "run_mini_swe_agent_api failed: "
+            f"{type(exc).__name__}: {exc}\n{traceback.format_exc(limit=8)}",
+        )
 
 
 # ---------------------------------------------------------------------------
