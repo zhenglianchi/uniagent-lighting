@@ -186,3 +186,23 @@
   RepeatedFormatError（Qwen3-8B 输出是正确的 `<tool_call>` JSON）
 - 更新 `patches/uni_agent_vllm0111_toolparsers.patch`（含两处 import 回退）；
   node2 已应用并验证：`_process_tool_calls_vllm` 解析出 `('bash', '{"command": "echo hi"}')`
+
+## v0.20.3（2026-08-06）
+
+- `run_grpo_single_agentic_ucloud.sh` 增加 `actor_rollout_ref.rollout.max_model_len=8192`：
+  Qwen3-8B 最大上下文 40960，vLLM 按此预留 KV cache 会超显存（prompt+response 实际只需 8192）
+
+## v0.20.4（2026-08-06）
+
+- `actor_rollout_ref.rollout.load_format=safetensors`：HYBRID 引擎默认 dummy 加载，
+  首次权重同步峰值（dummy+真实+FSDP）超 48GB；改为直接加载真实权重
+
+## v0.20.5（2026-08-06）
+
+- FSDP2 **CPU offload 全开**（offload_policy/param_offload/optimizer_offload=True）：
+  解决 Qwen3-8B + HYBRID 引擎在 48GB 卡上的 OOM（实测训练显存峰值 15.7GB、CPU ~62GB）；
+  LoRA 场景基座权重放 CPU 是安全取舍，训练吞吐下降但验证可接受
+- **单机 agentic GRPO 完整跑通（Qwen3-8B）**：agent 真实工具调用 8~62 轮 →
+  真实 SWE-bench reward → GRPO step 2 完成 → checkpoint 保存（global_step_1/2）
+- ⚠️ 遗留：两条冒烟样本 reward 全 0 → advantage 全 0 → LoRA 未更新
+  （`lora_B` 全 0、step1/2 权重逐字节相同）。链路已通，缺的是**正样本/学习信号**
