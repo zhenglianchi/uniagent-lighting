@@ -322,47 +322,6 @@ async def run_mini_swe_agent(
     return proc.returncode or 0, log[-4000:]
 
 
-async def run_mini_swe_agent_api(
-    *,
-    task: dict[str, Any],
-    config_path: str,
-    run_timeout: int = DEFAULT_AGENT_RUN_TIMEOUT,
-) -> tuple[int, str]:
-    """极简任务：绕开 swebench-single 的数据集加载（v0.25.2），直接调 mini-swe-agent API。
-
-    runner 已在沙箱内注入任务文件（tools_kwargs.env.files），这里用 build_mini_swe_config
-    生成的 yaml（attach 已建沙箱）直接构造 environment + agent 并 run。
-    """
-    import yaml
-
-    from minisweagent.agents import get_agent
-    from minisweagent.models import get_model
-    from minisweagent.run.benchmarks.swebench import get_sb_environment
-
-    config = yaml.safe_load(Path(config_path).read_text(encoding="utf-8"))
-    instance = {
-        "instance_id": task["instance_id"],
-        "problem_statement": task["issue"],
-        "image_name": config.get("environment", {}).get("image", "python:3.12"),
-    }
-
-    def _run() -> tuple[int, str]:
-        import asyncio
-
-        env = get_sb_environment(config, instance)
-        agent = get_agent(get_model(config=config["model"]), env, config["agent"])
-        try:
-            agent.run(instance["problem_statement"])
-            return 0, ""
-        except Exception as exc:  # noqa: BLE001 - 转成 (rc, log) 由调用方记录
-            return 1, f"{type(exc).__name__}: {exc}"
-
-    try:
-        return await asyncio.to_thread(_run)
-    except Exception as exc:
-        return -1, f"run_mini_swe_agent_api failed: {type(exc).__name__}: {exc}"
-
-
 # ---------------------------------------------------------------------------
 # Reward 评估（扩展点）
 # ---------------------------------------------------------------------------
@@ -536,15 +495,6 @@ async def mini_swe_agent_runner(
         instance_id = sandbox.instance_id
         if not instance_id:
             raise RuntimeError(f"sandbox instance_id empty for sample {sample_index}")
-        # 任务文件注入（极简任务，v0.25.1）：非 SWE-bench 镜像的沙箱预置代码仓库
-        env_files = (tools_kwargs.get("env") or {}).get("files") or {}
-        if env_files:
-            await sandbox.exec_shell(
-                "mkdir -p /testbed && cd /testbed && git init -q && "
-                "git config user.email t@example.com && git config user.name t"
-            )
-            for rel_path, content in env_files.items():
-                await sandbox.write_file(f"/testbed/{rel_path}", content)
         # 并发 session 必须用唯一临时路径，否则配置/轨迹互相覆盖（v0.22.0 修复：
         # CONCURRENCY=2 时两个 session 写同一个 /tmp/mini_swe_config.yaml，
         # agent 可能 attach 到错误沙箱实例、读到错误任务配置）
@@ -565,15 +515,9 @@ async def mini_swe_agent_runner(
             encoding="utf-8",
         )
         started = time.perf_counter()
-        if env_files:
-            # 极简任务：不走 swebench-single（数据集硬编码 SWE-bench），直接 API 跑
-            rc, log_tail = await run_mini_swe_agent_api(
-                task=task, config_path=config_path, run_timeout=run_timeout
-            )
-        else:
-            rc, log_tail = await run_mini_swe_agent(
-                task=task, config_path=config_path, traj_path=traj_path, run_timeout=run_timeout
-            )
+        rc, log_tail = await run_mini_swe_agent(
+            task=task, config_path=config_path, traj_path=traj_path, run_timeout=run_timeout
+        )
         logger.info(
             "[sample %d] mini-swe-agent rc=%s elapsed=%.1fs traj=%s",
             sample_index, rc, time.perf_counter() - started, task["instance_id"],

@@ -228,3 +228,15 @@
   正则解析失败 → score 恒 0（真实 21 测试 20 过 = 0.9523）；改 `-v`
 - v0.22.2：reward_info 键名不匹配——runner 上报 `reward_score`，framework 消费
   `reward` → rm_scores 恒 0；补 `reward` 键
+
+## v0.26.0（2026-08-06）
+
+- **回滚极简任务实验（simple-bench）**：删除 `scripts/run_simple_bench.py` /
+  `scripts/make_simple_data.py` / runner 的 API 分支与任务文件注入，恢复 SWE-bench
+  方案（`make_agentic_data.py`，temperature 回 0.8）
+- **保留的修复/调参**：并发 /tmp 唯一路径（v0.22.0）、pytest -v 解析（v0.22.1）、
+  reward 键（v0.22.2）、参数化测试列表传参（v0.23.1）、`n=4`、`CONCURRENCY=4`、
+  `trainer.val_before_train=False`（跳过 val 验证，TQ val 查询对简单数据崩溃）
+- **实验结论（入档）**：Qwen3-8B 在 SWE-bench 长程任务行为退化（60 轮不修改代码、
+  死循环）；极简单函数任务可部分修复（simple_reverse 0.5）但组内无梯度；
+  8B 模型能力是当前瓶颈，待换 Qwen3-Coder-30B-A3B 或 SFT 预热

@@ -40,7 +40,7 @@ def task_config_for(instance_id: str) -> dict:
         "name": "swe_bench",
         "sandbox": {"provider": "tencent_agent_runtime", "image": sweb_image_for(instance_id)},
         "agent": {"name": "mini_swe_agent", "max_steps": 60},
-        "model": {"temperature": 1.0, "max_total_tokens": 65536},
+        "model": {"temperature": 0.8, "max_total_tokens": 65536},
     }
 
 
