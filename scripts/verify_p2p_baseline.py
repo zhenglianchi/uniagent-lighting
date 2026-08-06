@@ -58,9 +58,15 @@ async def main() -> None:
     await sb.start()
     try:
         await sb.write_file("/tmp/_p2p.txt", "\n".join(sample))
+        runner_script = (
+            "import sys, pytest\n"
+            "names = [line.rstrip('\\n') for line in open('/tmp/_p2p.txt')]\n"
+            "rc = pytest.main(['-v', '--no-header', '-p', 'no:cacheprovider', '--tb=short'] + names)\n"
+            "sys.exit(rc)\n"
+        )
+        await sb.write_file("/tmp/_run_p2p.py", runner_script)
         res = await sb.exec_shell(
-            "cd /testbed && python -m pytest -q --no-header -p no:cacheprovider --tb=short "
-            "$(cat /tmp/_p2p.txt | tr '\\n' ' ')",
+            "cd /testbed && python /tmp/_run_p2p.py",
             timeout=600,
         )
         out = (res.stdout or "")[-4000:]

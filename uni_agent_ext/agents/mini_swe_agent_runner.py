@@ -425,12 +425,19 @@ async def _run_tests_batch(
     ``-v`` 让 pytest 每测试输出一行 ``<node_id> PASSED/FAILED/ERROR [ xx%]``；
     注意不要用 ``-q``（点号进度条无法解析，曾导致 reward 恒 0，v0.22.1 修复）。
     """
-    # 测试名写入文件避免 shell 长度/转义问题；空格分隔传给 pytest
+    # 测试名写入文件，再由 python 脚本读取并直接传给 pytest.main（列表参数，
+    # 避免 shell 分词/转义破坏参数化测试名，如 ``test_x["a\nb"]``，v0.23.1 修复）
     listfile = "/tmp/_reward_tests.txt"
     await env.write_file(listfile, "\n".join(test_names))
+    runner_script = (
+        "import sys, pytest\n"
+        "names = [line.rstrip('\\n') for line in open('/tmp/_reward_tests.txt')]\n"
+        "rc = pytest.main(['-v', '--no-header', '-p', 'no:cacheprovider', '--tb=no'] + names)\n"
+        "sys.exit(rc)\n"
+    )
+    await env.write_file("/tmp/_run_reward_tests.py", runner_script)
     result = await env.exec_shell(
-        f"cd /testbed && {test_python} -m pytest -v --no-header -p no:cacheprovider --tb=no "
-        f"$(cat {listfile} | tr '\\n' ' ')",
+        f"cd /testbed && {test_python} /tmp/_run_reward_tests.py",
         timeout=timeout,
     )
     passed_map: dict[str, bool] = {}
