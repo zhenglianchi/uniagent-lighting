@@ -1,0 +1,12 @@
+--- a/uni_agent/gateway/session/codec.py
++++ b/uni_agent/gateway/session/codec.py
+@@ -78,7 +78,10 @@ def _process_tool_calls_vllm(
+ ) -> tuple[str, list[Any]]:
+     from vllm.entrypoints.openai.chat_completion.protocol import ChatCompletionToolsParam
+-    from vllm.tool_parsers import ToolParserManager
++    try:
++        from vllm.entrypoints.openai.tool_parsers import ToolParserManager  # vllm >= 0.11
++    except ImportError:
++        from vllm.tool_parsers import ToolParserManager  # vllm < 0.11
+ 
+     parser_cls = ToolParserManager.get_tool_parser(parser_name)

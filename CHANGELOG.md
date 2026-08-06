@@ -114,3 +114,13 @@
 - **实测修复并验证**：FAIL_TO_PASS 经 verl tensordict 序列化到达 runner 时是**字符级列表**
   （JSON 字符串被逐字符拆散）→ runner 防御性合并后重解析，还原真实测试名；
   实测输出 `tests/unittest_nodes.py::AsStringTest::test_as_string_unknown: FAIL`（评分 0，agent 未修出补丁）
+
+## v0.17.0（2026-08-06）
+
+- **修复 agent 只交互 5-6 轮（RepeatedFormatError）的代码层根因**：
+  - uni-agent gateway codec 引用的 `vllm.tool_parsers` 在 vllm 0.11.1 不存在 →
+    工具调用解码失败 → 响应无 tool_calls → mini-swe-agent 连续 3 次格式错误退出；
+    补丁：改从 `vllm.entrypoints.openai.tool_parsers` 导入（带旧版回退），
+    见 `patches/uni_agent_vllm0111_toolparsers.patch`
+  - TOOL_PARSER 由 hermes 改为 **qwen3_coder**（匹配 Qwen2.5-Coder 工具格式）
+- 待验证：若模型仍不发工具调用（写散文），说明 tools 未渲染进 prompt，需继续修 backend 层
