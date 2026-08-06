@@ -97,3 +97,8 @@
 - **修复 LiteLLM Missing credentials**：mini-swe-agent 走 LiteLLM/OpenAI provider 必须带
   api_key（Gateway 接受任意非空值，用 "EMPTY"）；配置 model_kwargs + 子进程
   `OPENAI_API_KEY=EMPTY` 双保险——此前 1 次 API call 直接 Missing credentials → 空轨迹
+
+## v0.15.1（2026-08-06）
+
+- **验证通过**：单机 agentic GRPO 全链路跑通——`num_success_sessions=2 / outputs=2 / failed=0`，
+  Training Progress 100% 2/2，agent 5 轮多轮轨迹，LoRA 更新 + adapter 同步 + checkpoint 全执行
