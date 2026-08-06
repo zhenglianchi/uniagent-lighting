@@ -52,7 +52,6 @@
 - **无测试泄露**：`test_patch` 只用于 reward 评估，不注入 agent
 - **腾讯云只用于沙箱**（HAI/COS 弃用）；训练在 UCloud；模型/数据/checkpoint 走 UCloud 本地
 - **数据集（2026-08-06）**：换 HumanEvalFix（单函数修复，8B 60 轮内可出结果）；agent 不改
-  （黑盒 agent 调研见思路 1.10，决定不引入）
 - **多机**：VPC 网络未通（node1/node2 不同 VPC）；网络就绪后只改并行参数 + Ray
 - **改造仓约定**：每完成一项 commit + CHANGELOG + 语义化版本递增，推 main
 

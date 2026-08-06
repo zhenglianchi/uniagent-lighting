@@ -255,3 +255,8 @@
   技术路线与 ToS 风险详见思路 1.10）
 - **工作流**：服务器已关机、node2 镜像已保存；后续所有本地改动 commit + push 本仓，
   服务器恢复后 `git pull` 即可
+
+## v0.27.1（2026-08-06）
+
+- 按用户要求删除黑盒 agent（Claude Code 类）调研记录：TODO §8、`docs/ROADMAP.md` §1、
+  `docs/architecture.md` 决策清单中的相关条目（思路.md 1.10 调研留档暂保留）

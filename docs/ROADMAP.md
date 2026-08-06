@@ -7,8 +7,7 @@
 
 背景：Qwen3-8B 在 SWE-bench 长程任务上行为退化已实证（60 轮不修改代码、循环执行命令；
 simple-bench 极简实验已回滚）。**用户拍板：agent 不改（保持 mini-swe-agent harness），
-通过降低任务难度换取 8B 可出结果。** 黑盒 agent（Claude Code 类）调研结论 = 可做但
-决定不改（详见思路 1.10：Anthropic 官方 unsupported + ToS 灰色 + 格式桥工作量数天）。
+通过降低任务难度换取 8B 可出结果。**
 
 - 数据集：`bigcode/humanevalpack` Python 修复子集——单函数 buggy 代码 + 单元测试，
   8B 级模型有公开 pass@1 基准（Granite 8B ≈ 25~48%），60 轮内可出结果
