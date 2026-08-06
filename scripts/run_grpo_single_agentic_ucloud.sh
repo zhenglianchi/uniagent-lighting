@@ -43,7 +43,7 @@ TRAIN_FILE=/home/ubuntu/swe-rl/data/agentic_train.jsonl
 VAL_FILE=/home/ubuntu/swe-rl/data/agentic_val.jsonl
 TOOL_PARSER=${TOOL_PARSER:-hermes}         # gateway tool-call parser；Qwen3-8B 用 hermes（官方推荐格式）
 GATEWAY_COUNT=${GATEWAY_COUNT:-1}          # 单机冒烟 1 个 gateway actor
-CONCURRENCY=${CONCURRENCY:-2}              # 并发 rollout sessions（= 同时跑的沙箱数，控制成本）
+CONCURRENCY=${CONCURRENCY:-4}              # 并发 rollout sessions（= 同时跑的沙箱数，控制成本）
 SERVED_MODEL_NAME=${SERVED_MODEL_NAME:-"$(basename "$MODEL")"}
 cd /home/ubuntu/uni-agent/verl
 

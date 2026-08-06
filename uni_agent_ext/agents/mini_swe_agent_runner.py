@@ -254,6 +254,7 @@ def build_mini_swe_config(
     max_turns: int,
     instance_id: str,
     image: str,
+    temperature: float | None = None,
     output_path: str = "/tmp/mini_swe_traj.json",
 ) -> str:
     """生成 mini-swe-agent 配置：harness 在训练机，环境类 attach 已建沙箱实例。
@@ -271,6 +272,8 @@ def build_mini_swe_config(
     cfg["model"]["model_name"] = model
     cfg["model"]["model_kwargs"]["api_base"] = base_url
     cfg["model"]["model_kwargs"]["api_key"] = "EMPTY"  # LiteLLM/OpenAI provider 必须有 key；Gateway 接受任意非空值
+    if temperature is not None:
+        cfg["model"]["model_kwargs"]["temperature"] = float(temperature)
     return yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False)
 
 
@@ -498,6 +501,7 @@ async def mini_swe_agent_runner(
         run_id = uuid.uuid4().hex
         config_path = f"/tmp/mini_swe_config_{run_id}.yaml"
         traj_path = f"/tmp/mini_swe_traj_{run_id}.json"
+        task_model_cfg = (task.get("tools_kwargs") or {}).get("task", {}).get("model", {})
         Path(config_path).write_text(
             build_mini_swe_config(
                 base_url=gateway_url,
@@ -505,6 +509,7 @@ async def mini_swe_agent_runner(
                 max_turns=max_turns,
                 instance_id=instance_id,
                 image=image,
+                temperature=task_model_cfg.get("temperature"),
                 output_path=traj_path,
             ),
             encoding="utf-8",
