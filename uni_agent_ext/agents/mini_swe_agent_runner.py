@@ -495,6 +495,15 @@ async def mini_swe_agent_runner(
         instance_id = sandbox.instance_id
         if not instance_id:
             raise RuntimeError(f"sandbox instance_id empty for sample {sample_index}")
+        # 任务文件注入（极简任务，v0.25.1）：非 SWE-bench 镜像的沙箱预置代码仓库
+        env_files = (tools_kwargs.get("env") or {}).get("files") or {}
+        if env_files:
+            await sandbox.exec_shell(
+                "mkdir -p /testbed && cd /testbed && git init -q && "
+                "git config user.email t@example.com && git config user.name t"
+            )
+            for rel_path, content in env_files.items():
+                await sandbox.write_file(f"/testbed/{rel_path}", content)
         # 并发 session 必须用唯一临时路径，否则配置/轨迹互相覆盖（v0.22.0 修复：
         # CONCURRENCY=2 时两个 session 写同一个 /tmp/mini_swe_config.yaml，
         # agent 可能 attach 到错误沙箱实例、读到错误任务配置）
