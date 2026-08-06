@@ -176,3 +176,13 @@
   归档本地补丁版 `patches/miniswe_swebench.py`，README 部署第 4 步与 deployment.md §6
   补充覆盖该文件
 - node2 已验证：补丁后沙箱实例正常注入 SWE-bench 镜像，agent 开始读代码
+
+## v0.20.2（2026-08-06）
+
+- **修复 gateway hermes 工具解析静默失败**：uni-agent codec 里
+  `vllm.entrypoints.openai.chat_completion.protocol` 在 vllm 0.11.1 不存在
+  （已移到 `openai.protocol`），导致 `_process_tool_calls_vllm` 抛 ImportError 被
+  吞掉、直接返回原始 XML 文本 → mini-swe-agent "No tool calls found" →
+  RepeatedFormatError（Qwen3-8B 输出是正确的 `<tool_call>` JSON）
+- 更新 `patches/uni_agent_vllm0111_toolparsers.patch`（含两处 import 回退）；
+  node2 已应用并验证：`_process_tool_calls_vllm` 解析出 `('bash', '{"command": "echo hi"}')`
