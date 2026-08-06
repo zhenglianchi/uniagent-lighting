@@ -147,3 +147,12 @@
   `uni_agent_ext.bak-20260806`）；import 验证通过（runner / reward env / 腾讯沙箱适配器）
 - 更新 `docs/deployment.md`：新增「仓库管理」章节，更新流程 = 本地 commit+push → 服务器
   `git pull`；swe-rl 仅保留非仓库内容（凭据/数据/checkpoint/日志）
+
+## v0.19.0（2026-08-06）
+
+- **README 新增「从零部署」完整流程**：新机器从环境安装（`install_ucloud_from_scratch.sh`）
+  到跑通 agentic GRPO 训练的 7 步指南 + 常见排坑 + 多机可选分支
+- **补齐部署缺口**：`patches/tencent_e2b.py` 入仓（训练机 mini-swe-agent 必打的
+  tencent_e2b 环境补丁，此前只在本地 mini-swe-agent 源码里，新机器无法获取）；
+  部署流程第 4 步含安装 mini-swe-agent 2.4.6 + 覆盖补丁的命令
+- README「当前进度」同步最新状态（agentic 全链路已验证、部署 git 化）
