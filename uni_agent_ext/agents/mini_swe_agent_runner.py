@@ -514,7 +514,9 @@ async def mini_swe_agent_runner(
             logger.warning("[sample %d] mini-swe-agent failed rc=%s tail=%s", sample_index, rc, log_tail[-1500:])
 
         score, details = await evaluate_reward(sandbox, task)
-        reward_info = {"reward_score": score, "agent_exit_code": rc, **details}
+        # framework._score_from_reward_info 消费的是 "reward" 键（reward_score 只是
+        # 我们的兼容字段）；缺失会导致 reward 恒 None -> rm_scores=0（v0.22.2 修复）
+        reward_info = {"reward": score, "reward_score": score, "agent_exit_code": rc, **details}
         if not session.reward_info_url:
             raise ValueError(f"reward_info_url empty for session {session.session_id}")
         async with httpx.AsyncClient(timeout=30.0) as client:
