@@ -66,9 +66,9 @@ ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
   actor_rollout_ref.model.lora_alpha=32 \
   actor_rollout_ref.model.use_fused_kernels=False \
   actor_rollout_ref.actor.strategy=fsdp2 \
-  actor_rollout_ref.actor.fsdp_config.offload_policy=False \
-  actor_rollout_ref.actor.fsdp_config.param_offload=False \
-  actor_rollout_ref.actor.fsdp_config.optimizer_offload=False \
+  actor_rollout_ref.actor.fsdp_config.offload_policy=True \
+  actor_rollout_ref.actor.fsdp_config.param_offload=True \
+  actor_rollout_ref.actor.fsdp_config.optimizer_offload=True \
   actor_rollout_ref.actor.fsdp_config.model_dtype=bf16 \
   actor_rollout_ref.actor.optim.optimizer=AdamW \
   actor_rollout_ref.actor.optim.optimizer_impl=torch.optim \
