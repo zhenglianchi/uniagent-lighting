@@ -37,6 +37,7 @@ import random
 import re
 import shlex
 import time
+import uuid
 from pathlib import Path
 from typing import Any, Callable
 
@@ -484,8 +485,12 @@ async def mini_swe_agent_runner(
         instance_id = sandbox.instance_id
         if not instance_id:
             raise RuntimeError(f"sandbox instance_id empty for sample {sample_index}")
-        config_path = "/tmp/mini_swe_config.yaml"
-        traj_path = "/tmp/mini_swe_traj.json"
+        # 并发 session 必须用唯一临时路径，否则配置/轨迹互相覆盖（v0.22.0 修复：
+        # CONCURRENCY=2 时两个 session 写同一个 /tmp/mini_swe_config.yaml，
+        # agent 可能 attach 到错误沙箱实例、读到错误任务配置）
+        run_id = uuid.uuid4().hex
+        config_path = f"/tmp/mini_swe_config_{run_id}.yaml"
+        traj_path = f"/tmp/mini_swe_traj_{run_id}.json"
         Path(config_path).write_text(
             build_mini_swe_config(
                 base_url=gateway_url,
