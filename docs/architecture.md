@@ -2,8 +2,9 @@
 
 ## 1. 项目定位
 
-分布式**代码智能体强化学习平台**：mini-swe-agent 在 SWE-bench 沙箱里解决任务（多轮工具交互），
-用 GRPO（LoRA 微调）训练模型，权重回传让"采样用的就是正在训练的模型"。
+分布式**代码智能体强化学习平台**：mini-swe-agent 在代码沙箱里解决任务（多轮工具交互；
+数据 = SWE-bench Lite → **HumanEvalFix，2026-08-06 定稿**，见 ROADMAP），用 GRPO
+（LoRA 微调）训练模型，权重回传让"采样用的就是正在训练的模型"。
 
 - **训练方式不是项目重点**：LoRA 保持轻量可扩展；
 - **项目亮点在 rollout 侧优化**：LoRA 引擎常驻（adapter 热插）/ 投机解码 / PD 分离；
@@ -20,7 +21,7 @@
 
 ## 3. 训练链路（agentic GRPO，v0.15.1 起实测跑通 2/2 步）
 
-1. **数据**：SWE-bench Lite → `agentic_train/val.jsonl`
+1. **数据**：SWE-bench Lite（→ HumanEvalFix，2026-08-06 定稿）→ `agentic_train/val.jsonl`
    （`raw_prompt + tools_kwargs{task/env/reward metadata} + reward_model.ground_truth`）
 2. **训练入口**：`verl.trainer.main_ppo`（FSDP2 + LoRA），
    `rollout.multi_turn.enable=True` + `AgentFrameworkRolloutAdapter` + `agent_framework` 配置
@@ -50,6 +51,8 @@
 - **agent harness 在沙箱外**（思路 1.9）：沙箱只是执行环境，不把 agent 装进沙箱
 - **无测试泄露**：`test_patch` 只用于 reward 评估，不注入 agent
 - **腾讯云只用于沙箱**（HAI/COS 弃用）；训练在 UCloud；模型/数据/checkpoint 走 UCloud 本地
+- **数据集（2026-08-06）**：换 HumanEvalFix（单函数修复，8B 60 轮内可出结果）；agent 不改
+  （黑盒 agent 调研见思路 1.10，决定不引入）
 - **多机**：VPC 网络未通（node1/node2 不同 VPC）；网络就绪后只改并行参数 + Ray
 - **改造仓约定**：每完成一项 commit + CHANGELOG + 语义化版本递增，推 main
 
@@ -62,6 +65,8 @@
 ## 7. 状态
 
 - ✅ 单机 agentic GRPO 全链路（数据→沙箱→agent 轨迹→真实 reward→LoRA 更新）v0.15.1/v0.16.1
-- ⏳ 扩大冒烟样本量、观察 reward 分布
+- ⏳ 换数据集 HumanEvalFix（agent 不改；数据构造 + runner 文件注入，见 ROADMAP）
+- ⏳ 扩大冒烟样本量（HumanEvalFix 口径）、观察 reward 分布
 - ⏳ 多机（VPC 网络）
+- ⏳ 双机 TQ + Mooncake（VPC 就绪后第一优先）→ 投机解码（详见 ROADMAP / TODO §C 6.5）
 - ⏳ agentlighting 异步改造（方案 1）

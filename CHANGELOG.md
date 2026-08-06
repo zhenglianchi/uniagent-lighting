@@ -240,3 +240,18 @@
 - **实验结论（入档）**：Qwen3-8B 在 SWE-bench 长程任务行为退化（60 轮不修改代码、
   死循环）；极简单函数任务可部分修复（simple_reverse 0.5）但组内无梯度；
   8B 模型能力是当前瓶颈，待换 Qwen3-Coder-30B-A3B 或 SFT 预热
+
+## v0.27.0（2026-08-06）
+
+- **路线定稿（用户拍板）**：agent 不改（保持 mini-swe-agent harness），**换数据集
+  HumanEvalFix**（`bigcode/humanevalpack` Python 修复子集：单函数 buggy 代码 + 单测，
+  8B 60 轮内可出结果，绕开 SWE-bench 长程探索退化）；SWE-bench Lite 留作对比基准
+- **优化路线确认**：双机 TQ + Mooncake（双机网络就绪后第一优先）→ 投机解码
+  （PD 分离为后续亮点），详见 `docs/ROADMAP.md` 与 TODO §C 6.5
+- 新增 `docs/ROADMAP.md`（换数据集构造步骤 / 双机 TQ+Mooncake / 投机解码 /
+  PD 分离 / 服务器恢复 checklist）
+- 更新 `docs/architecture.md`（数据口径 → HumanEvalFix；状态与关键决策）
+- 思路.md V4.3：黑盒 agent（Claude Code 类）调研结论留档（决定不改 agent，
+  技术路线与 ToS 风险详见思路 1.10）
+- **工作流**：服务器已关机、node2 镜像已保存；后续所有本地改动 commit + push 本仓，
+  服务器恢复后 `git pull` 即可
