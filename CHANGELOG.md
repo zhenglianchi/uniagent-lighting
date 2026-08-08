@@ -46,6 +46,11 @@
     新增 `VLLM_MAX_NUM_SEQS`（默认 4）与 `CONCURRENCY`（默认 4，原已有）配套调高，
     例如 `CONCURRENCY=8 VLLM_MAX_NUM_SEQS=8` → rollout 吞吐约 2×
 
+## v0.30.2（2026-08-08）
+
+- `run_grpo_humanevalfix_ucloud.sh`：新增 `VLLM_GPU_MEM_UTIL`（默认 0.5）可覆盖，
+  16 路并发建议 0.7（更多 KV cache，避免 vLLM 排队）
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、

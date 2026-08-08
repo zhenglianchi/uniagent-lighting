@@ -47,6 +47,7 @@ PPO_MINI_BATCH=${PPO_MINI_BATCH:-2}      # 训练更新 mini-batch（可随 trai
 PPO_MICRO_BATCH=${PPO_MICRO_BATCH:-1}    # 每 GPU micro-batch（48G + offload 可调高到 2）
 MAX_CKPT_KEEP=${MAX_CKPT_KEEP:-}         # 只保留最近 N 个 checkpoint（如 1 = 一直覆盖最新）
 VLLM_MAX_NUM_SEQS=${VLLM_MAX_NUM_SEQS:-4}  # vLLM 并发序列数，与 CONCURRENCY 同步调高（如 8）
+VLLM_GPU_MEM_UTIL=${VLLM_GPU_MEM_UTIL:-0.5}  # vLLM 显存利用率（16 并发建议 0.7）
 cd /home/ubuntu/uni-agent/verl
 
 ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
@@ -92,7 +93,7 @@ fi
   actor_rollout_ref.rollout.name=vllm \
   actor_rollout_ref.rollout.mode=async \
   actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
-  actor_rollout_ref.rollout.gpu_memory_utilization=0.5 \
+  actor_rollout_ref.rollout.gpu_memory_utilization="$VLLM_GPU_MEM_UTIL" \
   actor_rollout_ref.rollout.max_model_len=8192 \
   actor_rollout_ref.rollout.load_format=safetensors \
   actor_rollout_ref.rollout.n=4 \
