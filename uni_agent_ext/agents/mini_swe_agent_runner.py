@@ -378,7 +378,11 @@ async def run_mini_swe_agent_api(
             return 1, f"{type(exc).__name__}: {exc}"
 
     try:
-        return await asyncio.to_thread(_run)
+        # agent 循环本身没有超时（E2B 工具调用可能挂起）；
+        # 用 run_timeout 做硬上限，超时返回失败由调用方收尾（v0.30.6 修复）
+        return await asyncio.wait_for(asyncio.to_thread(_run), timeout=run_timeout)
+    except asyncio.TimeoutError:
+        return -1, f"mini-swe-agent run timed out after {run_timeout}s"
     except Exception as exc:  # noqa: BLE001
         import traceback
 

@@ -232,6 +232,8 @@ class TencentAgentRuntimeSandbox(Sandbox):
                 envs=env or None,
                 user="root",
                 timeout=cmd_timeout,
+                # E2B 命令超时后 HTTP 请求仍可能无限挂；request_timeout 兜底
+                request_timeout=cmd_timeout + 60,
             )
             return ExecResult(
                 exit_code=int(result.exit_code),

@@ -77,6 +77,18 @@
 - 实测：step 1/2 正常完成（reward mean 0.267 → 0.465，10 epoch 50 步 ETA ≈ 38h），
   step 3 被死循环样本 Python-10 的 reward 评估卡住 → 用补丁 + resume 从 global_step_2 续跑
 
+## v0.30.6（2026-08-08）
+
+- **修复 agent 工具调用/循环挂死**（step 3 复现：Python-10 死循环命令让 E2B 请求无限挂）：
+  - `tencent_e2b.py` / `tencent_agent_runtime.py`：`commands.run` 显式传
+    `request_timeout=timeout+60`，命令超时后 HTTP 请求也强退，工具调用必返回
+    （tmux 同款"Request timed out"无限挂的根因）
+  - `run_mini_swe_agent_api`：`asyncio.wait_for(run_timeout)` 硬上限，agent 循环
+    卡死时由 runner 收尾并上报失败
+- 计划：等 step 3 完成后按用户要求加并发（32→64）+ 降 `MSA_AGENT_MAX_TURNS`（60→40）
+  从 checkpoint 续训；step 3 被挂死会话阻塞无法出 checkpoint → 改为从 global_step_2
+  续跑并重跑 step 3（带修复 + 新参数）
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、
