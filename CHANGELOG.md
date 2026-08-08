@@ -51,6 +51,14 @@
 - `run_grpo_humanevalfix_ucloud.sh`：新增 `VLLM_GPU_MEM_UTIL`（默认 0.5）可覆盖，
   16 路并发建议 0.7（更多 KV cache，避免 vLLM 排队）
 
+## v0.30.3（2026-08-08）
+
+- 新增 `patches/verl_debug_metrics_logprobs_guard.patch`：修复全样本 batch=16 崩溃
+  `KeyError: 'rollout_log_probs' not found`——多轮批次中重试/失败的 episode 缺
+  rollout logprobs，导致整个 batch 缺该键；debug 指标非必需，缺键时跳过并记 warning
+- 实测：并发 16 + 跳过 tmux 后 rollout 提速明显（step1 的 64+ 会话 ~25 分钟完成），
+  CPU 内存稳定 62G/94G；崩溃发生在 step 完成后 debug metrics 阶段（非 OOM）
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、

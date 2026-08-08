@@ -1,0 +1,24 @@
+--- a/verl/verl/utils/debug/metrics.py
++++ b/verl/verl/utils/debug/metrics.py
+@@ -80,7 +80,19 @@ def calculate_debug_metrics(data: DataProto) -> dict:
+     """
+ 
+-    rollout_old_log_probs = data.batch["rollout_log_probs"]
++    if "rollout_log_probs" not in data.batch.keys():
++        # 多轮 agentic 批次里若有重试/失败的 episode（缺 rollout logprobs），
++        # 整个 batch 会缺该键 → KeyError 崩训练。debug 指标非必需，缺键时跳过。
++        logger.warning(
++            "rollout_log_probs not in batch (multi-turn episode missing logprobs); "
++            "skip rollout-vs-actor debug metrics"
++        )
++        return {
++            "training/rollout_probs_diff_valid": 0,
++            "training/rollout_probs_diff_max": float("nan"),
++            "training/rollout_probs_diff_mean": float("nan"),
++            "training/rollout_probs_diff_std": float("nan"),
++            "training/rollout_actor_probs_pearson_corr": float("nan"),
++        }
++    rollout_old_log_probs = data.batch["rollout_log_probs"]
+     actor_old_log_probs = data.batch["old_log_probs"]
+     if "response_mask" in data.batch:
+         logger.debug("response mask found, use it to mask log probs")
