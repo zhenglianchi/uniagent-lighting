@@ -32,7 +32,7 @@ from pathlib import Path
 
 # verl step 指标行：step:3 - key:val - key:val ...
 _STEP_RE = re.compile(r"step:(\d+)\s+-")
-_KV_RE = re.compile(r"([a-z_][\w/]*):(-?(?:\d+\.?\d*|np\.float64\([\d.eE+-]+\)))")
+_KV_RE = re.compile(r"([a-z_][\w/]*):(-?(?:\d+\.?\d*|np\.(?:float64|int64)\([\d.eE+-]+\)))")
 
 # AgentFrameworkWorker 每 batch 汇总
 _SUMMARY_RE = re.compile(
@@ -48,7 +48,7 @@ _SUMMARY_RE = re.compile(
 # 会话日志：evaluate_reward: <instance> -> <score> (...)
 _REWARD_RE = re.compile(r"evaluate_reward:\s*(\S+)\s*->\s*([\d.]+)\s*\(")
 
-_FLOAT_RE = re.compile(r"np\.float64\(([\d.eE+-]+)\)")
+_FLOAT_RE = re.compile(r"np\.(?:float64|int64)\(([\d.eE+-]+)\)")
 
 
 def _num(value: str) -> float:

@@ -59,6 +59,15 @@
 - 实测：并发 16 + 跳过 tmux 后 rollout 提速明显（step1 的 64+ 会话 ~25 分钟完成），
   CPU 内存稳定 62G/94G；崩溃发生在 step 完成后 debug metrics 阶段（非 OOM）
 
+## v0.30.4（2026-08-08）
+
+- `collect_grpo_stats.py`：KV 解析支持 `np.int64(...)`（verl num_turns min/max 是这个
+  类型，此前只匹配 float64 导致 min/max 为 null）
+- 全样本首步实测（step 1，并发 16）：16 样本 / 64 会话 / 19 条 reward=1.0（30%），
+  reward mean 0.247 / advantage≠0；每步 34 分钟（rollout 22min + update 8.3min + 存盘），
+  吞吐 213.7 tok/s（并发 4 时代的 3.4×）；CPU 峰值 63.8G 稳定；100 步 ETA ≈ 56h
+  （164 样本 × n=4 × 10 epoch = 6560 会话，会话数是硬瓶颈）
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、
