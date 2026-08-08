@@ -20,6 +20,21 @@
   `TOTAL_EPOCHS=20 bash run_grpo_humanevalfix_ucloud.sh`；`resume_mode=auto` 保持默认
   （长训中断可从 checkpoint 续）
 
+## v0.30.0（2026-08-08）
+
+- `make_humanevalfix_data.py`：
+  - 新增 `--include-unverified`：本地验证失败（buggy 版死循环超时）的样本也保留进
+    数据集，`metadata.verified=false / deadloop=true` 标记，训练时按 reward=0 计入指标
+    （全样本 164 条 = 161 已验证 + 3 死循环：Python-160/10/156）
+  - 正常样本 metadata 增加 `verified=true / deadloop=false`
+- `run_grpo_humanevalfix_ucloud.sh`：新增环境变量覆盖
+  `TRAIN_BATCH_SIZE`（默认 1）/ `PPO_MINI_BATCH`（默认 2）/
+  `PPO_MICRO_BATCH`（默认 1）/ `MAX_CKPT_KEEP`（默认不设 = 不轮换），
+  全样本跑法示例：
+  `TOTAL_EPOCHS=10 TRAIN_BATCH_SIZE=16 PPO_MINI_BATCH=8 PPO_MICRO_BATCH=2 \
+   MAX_CKPT_KEEP=1 TRAIN_FILE=.../humanevalfix_train164.jsonl bash run_grpo_humanevalfix_ucloud.sh`
+  （checkpoint 只保留最近 1 个 = 一直覆盖最新，磁盘稳定 ~16G）
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、

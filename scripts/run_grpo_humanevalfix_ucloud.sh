@@ -39,16 +39,25 @@ GATEWAY_COUNT=${GATEWAY_COUNT:-1}          # 单机冒烟 1 个 gateway actor
 CONCURRENCY=${CONCURRENCY:-4}              # 并发 rollout sessions（= 同时跑的沙箱数，控制成本）
 SERVED_MODEL_NAME=${SERVED_MODEL_NAME:-"$(basename "$MODEL")"}
 TOTAL_EPOCHS=${TOTAL_EPOCHS:-1}          # 全样本长训可覆盖（如 20），resume_mode=auto 已默认开启
+TRAIN_BATCH_SIZE=${TRAIN_BATCH_SIZE:-1}  # 每 step 样本数（全样本 164 条建议 16）
+PPO_MINI_BATCH=${PPO_MINI_BATCH:-2}      # 训练更新 mini-batch（可随 train_batch 调高，如 8）
+PPO_MICRO_BATCH=${PPO_MICRO_BATCH:-1}    # 每 GPU micro-batch（48G + offload 可调高到 2）
+MAX_CKPT_KEEP=${MAX_CKPT_KEEP:-}         # 只保留最近 N 个 checkpoint（如 1 = 一直覆盖最新）
 cd /home/ubuntu/uni-agent/verl
 
 ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
+
+EXTRA_ARGS=()
+if [ -n "$MAX_CKPT_KEEP" ]; then
+  EXTRA_ARGS+=(trainer.max_actor_ckpt_to_keep="$MAX_CKPT_KEEP")
+fi
 
 "$ENV/bin/python" -m verl.trainer.main_ppo \
   algorithm.adv_estimator=grpo \
   algorithm.use_kl_in_reward=False \
   data.train_files="$TRAIN_FILE" \
   data.val_files="$VAL_FILE" \
-  data.train_batch_size=1 \
+  data.train_batch_size="$TRAIN_BATCH_SIZE" \
   data.val_batch_size=1 \
   ++data.apply_chat_template_kwargs.enable_thinking=false \
   data.max_prompt_length=4096 \
@@ -70,8 +79,8 @@ ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
   actor_rollout_ref.actor.optim.optimizer=AdamW \
   actor_rollout_ref.actor.optim.optimizer_impl=torch.optim \
   actor_rollout_ref.actor.optim.lr=1e-5 \
-  actor_rollout_ref.actor.ppo_mini_batch_size=2 \
-  actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=1 \
+  actor_rollout_ref.actor.ppo_mini_batch_size="$PPO_MINI_BATCH" \
+  actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu="$PPO_MICRO_BATCH" \
   actor_rollout_ref.actor.use_dynamic_bsz=True \
   actor_rollout_ref.actor.ppo_max_token_len_per_gpu=8192 \
   actor_rollout_ref.actor.use_kl_loss=False \
@@ -112,3 +121,4 @@ ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
   trainer.total_epochs=$TOTAL_EPOCHS \
   trainer.test_freq=-1 \
   trainer.val_before_train=False \
+  "${EXTRA_ARGS[@]}" \

@@ -154,6 +154,9 @@ def to_agentic_record(row: dict, *, max_steps: int, temperature: float, max_tota
         "task_type": "humaneval_fix",
         "entry_point": entry_point,
         "problem_statement": problem_statement,
+        # 本地验证结果：正常 True；死循环/不可验证但保留计入指标的样本为 False
+        "verified": True,
+        "deadloop": False,
         "FAIL_TO_PASS": ["test_solution.py::test_all"],
         "PASS_TO_PASS": [],
         "test_patch": "",
@@ -191,6 +194,12 @@ def main() -> None:
     p.add_argument("--max-total-tokens", type=int, default=8192)
     p.add_argument("--verify", action=argparse.BooleanOptionalAction, default=True)
     p.add_argument("--verify-timeout", type=int, default=20)
+    p.add_argument(
+        "--include-unverified",
+        action="store_true",
+        help="本地验证失败（如 buggy 版死循环超时）的样本也保留进数据集，"
+        "metadata.verified=False / deadloop=True 标记，训练时计入指标（reward=0 口径）",
+    )
     args = p.parse_args()
 
     from datasets import load_dataset
@@ -223,10 +232,24 @@ def main() -> None:
                 expect_pass=True, timeout=args.verify_timeout,
             )
             if not (buggy_ok and canon_ok):
-                skipped.append(
-                    f"{instance_id}: verify buggy_rc={buggy_rc} canon_rc={canon_rc} "
-                    f"(buggy:{buggy_tail[:100]} canon:{canon_tail[:100]})"
-                )
+                if args.include_unverified:
+                    rec = to_agentic_record(
+                        row, max_steps=args.max_steps, temperature=args.temperature,
+                        max_total_tokens=args.max_total_tokens,
+                    )
+                    meta = rec["extra_info"]["tools_kwargs"]["reward"]["metadata"]
+                    meta["verified"] = False
+                    meta["deadloop"] = buggy_rc == -1
+                    selected.append((instance_id, rec))
+                    skipped.append(
+                        f"{instance_id}: include-unverified (buggy_rc={buggy_rc} "
+                        f"canon_rc={canon_rc})"
+                    )
+                else:
+                    skipped.append(
+                        f"{instance_id}: verify buggy_rc={buggy_rc} canon_rc={canon_rc} "
+                        f"(buggy:{buggy_tail[:100]} canon:{canon_tail[:100]})"
+                    )
                 continue
         selected.append((instance_id, to_agentic_record(
             row, max_steps=args.max_steps, temperature=args.temperature,
