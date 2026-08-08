@@ -43,6 +43,12 @@ The buggy implementation is already in /testbed/solution.py.
 Requirements:
 1. Read /testbed/solution.py.
 2. Edit /testbed/solution.py to fix the bug. Prefix every command with `cd /testbed &&`.
+   Keep the change minimal: fix only the buggy logic, do not rewrite the docstring or unchanged code.
+   If you must rewrite the whole file, write it with ONE heredoc command, for example:
+   cat > /testbed/solution.py <<'PYEOF'
+   ...complete file content...
+   PYEOF
+   NEVER build the file line by line with `echo ... >> solution.py` — that wastes turns and breaks on quotes.
 3. Verify your fix yourself (e.g., run the docstring examples). Hidden tests will be run after submission.
 4. When done, submit with EXACTLY this command:
    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && cd /testbed && git diff -- solution.py > patch.txt && cat patch.txt

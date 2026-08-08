@@ -2,6 +2,19 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.28.3（2026-08-08）
+
+- `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、
+  不要重写 docstring/未改动代码；必须整文件重写时用**一条 heredoc**
+  （`cat > /testbed/solution.py <<'PYEOF' ... PYEOF`），禁止 `echo ... >> solution.py`
+  逐行拼接
+- 背景（阶段一首跑实测，8 样本 GRPO 单机 48G）：链路与工具调用格式**正常**
+  （hermes parser 解析成功、bash 工具全部执行成功），但 **Qwen3-8B 行为退化是唯一瓶颈**：
+  用 `echo ... >> solution.py` 逐行重建整个文件，13+ 轮连 docstring 都没写完，中途引号
+  报错重试、两次触发 "No tool calls found"，最终 solution.py 语法不完整 → 4/4 reward=0
+- 处理：按 TODO §8 规则止损停训 → 提示词修复 → 先跑 3 条（Python-61/104/105，qwen3.7-plus
+  全过的对照组）快速验证 8B 是否有可训练 reward
+
 ## v0.28.2（2026-08-06）
 
 - `run_grpo_humanevalfix_ucloud.sh`：`MODEL / TRAIN_FILE / VAL_FILE` 改为环境变量可覆盖
