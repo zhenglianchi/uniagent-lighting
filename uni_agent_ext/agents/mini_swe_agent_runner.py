@@ -505,16 +505,30 @@ async def _run_tests_batch(
     listfile = "/tmp/_reward_tests.txt"
     await env.write_file(listfile, "\n".join(test_names))
     runner_script = (
-        "import sys, pytest\n"
+        "import signal, sys, pytest\n"
         "names = [line.rstrip('\\n') for line in open('/tmp/_reward_tests.txt')]\n"
+        "# 死循环样本的 buggy 版会让 pytest 无限挂起；SIGALRM 兜底强退（E2B 请求本身\n"
+        "# 可能比命令超时更久地挂住，导致整个 step 卡死，v0.30.5 修复）\n"
+        "def _timeout(sig, frm):\n"
+        "    sys.stderr.write('reward pytest timed out (SIGALRM)\\n')\n"
+        "    sys.exit(124)\n"
+        "signal.signal(signal.SIGALRM, _timeout)\n"
+        f"signal.alarm({max(int(timeout) - 20, 30)})\n"
         "rc = pytest.main(['-v', '--no-header', '-p', 'no:cacheprovider', '--tb=no'] + names)\n"
         "sys.exit(rc)\n"
     )
     await env.write_file("/tmp/_run_reward_tests.py", runner_script)
-    result = await env.exec_shell(
-        f"cd /testbed && {test_python} /tmp/_run_reward_tests.py",
-        timeout=timeout,
-    )
+    try:
+        result = await asyncio.wait_for(
+            env.exec_shell(
+                f"cd /testbed && {test_python} /tmp/_run_reward_tests.py",
+                timeout=timeout,
+            ),
+            timeout=timeout + 90,
+        )
+    except asyncio.TimeoutError:
+        logger.warning("evaluate_reward: sandbox exec hung beyond %ss, treat as reward 0", timeout + 90)
+        return {"_log_tail": f"reward eval hung beyond {timeout + 90}s"}
     passed_map: dict[str, bool] = {}
     if result.stdout:
         for line in result.stdout.splitlines():

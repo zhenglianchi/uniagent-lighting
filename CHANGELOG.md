@@ -68,6 +68,15 @@
   吞吐 213.7 tok/s（并发 4 时代的 3.4×）；CPU 峰值 63.8G 稳定；100 步 ETA ≈ 56h
   （164 样本 × n=4 × 10 epoch = 6560 会话，会话数是硬瓶颈）
 
+## v0.30.5（2026-08-08）
+
+- **修复死循环样本 reward 评估挂死**：`mini_swe_agent_runner.py` 的 `_run_tests_batch`
+  在 pytest 脚本里加 `SIGALRM` 超时（`timeout-20` 秒强退 exit 124）+ `asyncio.wait_for`
+  兜底（超时返回 reward 0）。根因：死循环样本 buggy 版会让 pytest 无限挂起，而 E2B
+  命令超时后请求本身还可能无限挂（tmux 同款问题），导致整个 step 卡死
+- 实测：step 1/2 正常完成（reward mean 0.267 → 0.465，10 epoch 50 步 ETA ≈ 38h），
+  step 3 被死循环样本 Python-10 的 reward 评估卡住 → 用补丁 + resume 从 global_step_2 续跑
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、
