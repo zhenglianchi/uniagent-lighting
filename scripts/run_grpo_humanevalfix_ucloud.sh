@@ -27,6 +27,9 @@ export E2B_API_KEY="${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}"
 # harness 在训练机本地，直接调本机 Gateway（session.base_url），不需要沙箱内隧道
 export MSA_GATEWAY_TUNNEL=0
 export MSA_INSTALL_AGENT=1   # 沙箱内现场 pip install mini-swe-agent（预装镜像后可关）
+# 跳过沙箱内 tmux 安装（mini-swe-agent harness 自带 pexpect shell，不需要 tmux；
+# 该 apt-get 经常等到 E2B 180s 超时，白耗每会话 3 分钟）
+export TENCENT_SANDBOX_SKIP_TMUX=1
 # HumanEvalFix 无 PASS_TO_PASS，P2P 抽样不适用
 export MSA_REWARD_INCLUDE_P2P=0
 
@@ -43,6 +46,7 @@ TRAIN_BATCH_SIZE=${TRAIN_BATCH_SIZE:-1}  # 每 step 样本数（全样本 164 �
 PPO_MINI_BATCH=${PPO_MINI_BATCH:-2}      # 训练更新 mini-batch（可随 train_batch 调高，如 8）
 PPO_MICRO_BATCH=${PPO_MICRO_BATCH:-1}    # 每 GPU micro-batch（48G + offload 可调高到 2）
 MAX_CKPT_KEEP=${MAX_CKPT_KEEP:-}         # 只保留最近 N 个 checkpoint（如 1 = 一直覆盖最新）
+VLLM_MAX_NUM_SEQS=${VLLM_MAX_NUM_SEQS:-4}  # vLLM 并发序列数，与 CONCURRENCY 同步调高（如 8）
 cd /home/ubuntu/uni-agent/verl
 
 ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
@@ -94,7 +98,7 @@ fi
   actor_rollout_ref.rollout.n=4 \
   actor_rollout_ref.rollout.enforce_eager=True \
   actor_rollout_ref.rollout.free_cache_engine=True \
-  actor_rollout_ref.rollout.max_num_seqs=4 \
+  actor_rollout_ref.rollout.max_num_seqs="$VLLM_MAX_NUM_SEQS" \
   actor_rollout_ref.rollout.multi_turn.enable=True \
   actor_rollout_ref.rollout.multi_turn.max_parallel_calls=1 \
   ++actor_rollout_ref.rollout.multi_turn.format=${TOOL_PARSER} \

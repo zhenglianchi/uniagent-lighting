@@ -105,8 +105,11 @@ class TencentAgentRuntimeSandbox(Sandbox):
             )
             logger.info("tencent sandbox created id=%s template=%s", self._sbx.sandbox_id, self.template)
 
-        # uni-agent shell 工具在无原生 shell 时用 tmux；sweb 镜像直接跑黑盒 agent，跳过
-        if not self._is_swebench_image(self.image):
+        # uni-agent shell 工具在无原生 shell 时用 tmux；sweb 镜像直接跑黑盒 agent，跳过。
+        # mini-swe-agent harness 自带 pexpect shell，不需要沙箱内 tmux ——
+        # 该 apt-get 安装经常等到 E2B 180s 请求超时，白耗每会话 3 分钟。
+        # TENCENT_SANDBOX_SKIP_TMUX=1 时跳过（训练脚本默认开启）。
+        if not self._is_swebench_image(self.image) and not os.getenv("TENCENT_SANDBOX_SKIP_TMUX") == "1":
             result = await self.exec_shell(
                 "which tmux >/dev/null 2>&1 || (DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
                 "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq tmux)",

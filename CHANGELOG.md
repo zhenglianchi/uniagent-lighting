@@ -35,6 +35,17 @@
    MAX_CKPT_KEEP=1 TRAIN_FILE=.../humanevalfix_train164.jsonl bash run_grpo_humanevalfix_ucloud.sh`
   （checkpoint 只保留最近 1 个 = 一直覆盖最新，磁盘稳定 ~16G）
 
+## v0.30.1（2026-08-08）
+
+- **采样提速**（全样本 164 条跑太慢的根因修复）：
+  - `tencent_agent_runtime.py`：新增 `TENCENT_SANDBOX_SKIP_TMUX=1` 跳过沙箱内
+    tmux apt-get 安装——该步骤经常等到 E2B 180s 请求超时，白耗每会话 ~3 分钟；
+    mini-swe-agent harness 自带 pexpect shell，实际不需要沙箱内 tmux（会话一直能跑通
+    即为证明）
+  - `run_grpo_humanevalfix_ucloud.sh`：默认 `export TENCENT_SANDBOX_SKIP_TMUX=1`；
+    新增 `VLLM_MAX_NUM_SEQS`（默认 4）与 `CONCURRENCY`（默认 4，原已有）配套调高，
+    例如 `CONCURRENCY=8 VLLM_MAX_NUM_SEQS=8` → rollout 吞吐约 2×
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、
