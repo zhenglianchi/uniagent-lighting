@@ -1,9 +1,11 @@
---- a/verl/verl/utils/debug/metrics.py
-+++ b/verl/verl/utils/debug/metrics.py
-@@ -80,7 +80,19 @@ def calculate_debug_metrics(data: DataProto) -> dict:
+diff --git a/verl/utils/debug/metrics.py b/verl/utils/debug/metrics.py
+index 706a7f9..6175184 100644
+--- a/verl/utils/debug/metrics.py
++++ b/verl/utils/debug/metrics.py
+@@ -80,6 +80,20 @@ def calculate_debug_metrics(data: DataProto) -> dict:
+             "training/rollout_actor_probs_pearson_corr": logprob's pearson corrcoef of rollout vs. actor, reference to https://arxiv.org/pdf/2506.13585
      """
  
--    rollout_old_log_probs = data.batch["rollout_log_probs"]
 +    if "rollout_log_probs" not in data.batch.keys():
 +        # 多轮 agentic 批次里若有重试/失败的 episode（缺 rollout logprobs），
 +        # 整个 batch 会缺该键 → KeyError 崩训练。debug 指标非必需，缺键时跳过。
@@ -18,7 +20,6 @@
 +            "training/rollout_probs_diff_std": float("nan"),
 +            "training/rollout_actor_probs_pearson_corr": float("nan"),
 +        }
-+    rollout_old_log_probs = data.batch["rollout_log_probs"]
+     rollout_old_log_probs = data.batch["rollout_log_probs"]
      actor_old_log_probs = data.batch["old_log_probs"]
      if "response_mask" in data.batch:
-         logger.debug("response mask found, use it to mask log probs")
