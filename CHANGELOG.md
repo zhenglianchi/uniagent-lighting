@@ -2,6 +2,17 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.29.0（2026-08-08）
+
+- 新增 `scripts/collect_grpo_stats.py`：**GRPO 训练逐步统计收集器**
+  （stdlib only）——解析 verl 主日志的 step 指标行 + AgentFrameworkWorker 的
+  `generate_sequences summary` + 会话日志逐条 `evaluate_reward`，每个 batch 落一行
+  JSONL，字段含：rollout 数量（sessions/outputs）、rollout 时长（`timing_s/gen`）、
+  训练时长（`timing_s/update_actor`）、step 总时长、reward（mean/min/max +
+  per_session 明细）、advantage、num_turns、tokens、throughput、grad_norm 等
+- 支持 `--watch` 常驻监听（训练中增量落盘，可 nohup 后台跑），供全样本 20 轮
+  长训逐步记录使用
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、
