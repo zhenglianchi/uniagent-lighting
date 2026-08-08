@@ -13,6 +13,13 @@
 - 支持 `--watch` 常驻监听（训练中增量落盘，可 nohup 后台跑），供全样本 20 轮
   长训逐步记录使用
 
+## v0.29.1（2026-08-08）
+
+- `run_grpo_humanevalfix_ucloud.sh`：`trainer.total_epochs` 改为环境变量
+  `TOTAL_EPOCHS` 可覆盖（默认 1），全样本长训（如 20 轮）直接
+  `TOTAL_EPOCHS=20 bash run_grpo_humanevalfix_ucloud.sh`；`resume_mode=auto` 保持默认
+  （长训中断可从 checkpoint 续）
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、

@@ -38,6 +38,7 @@ TOOL_PARSER=${TOOL_PARSER:-hermes}         # gateway tool-call parser；Qwen3-8B
 GATEWAY_COUNT=${GATEWAY_COUNT:-1}          # 单机冒烟 1 个 gateway actor
 CONCURRENCY=${CONCURRENCY:-4}              # 并发 rollout sessions（= 同时跑的沙箱数，控制成本）
 SERVED_MODEL_NAME=${SERVED_MODEL_NAME:-"$(basename "$MODEL")"}
+TOTAL_EPOCHS=${TOTAL_EPOCHS:-1}          # 全样本长训可覆盖（如 20），resume_mode=auto 已默认开启
 cd /home/ubuntu/uni-agent/verl
 
 ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
@@ -108,6 +109,6 @@ ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
   trainer.default_local_dir=/home/ubuntu/swe-rl/checkpoints/humanevalfix \
   trainer.n_gpus_per_node=1 \
   trainer.nnodes=1 \
-  trainer.total_epochs=1 \
+  trainer.total_epochs=$TOTAL_EPOCHS \
   trainer.test_freq=-1 \
   trainer.val_before_train=False \
