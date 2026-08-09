@@ -2,6 +2,24 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.32.0（2026-08-09）
+
+- **gateway hermes 解析容错上机验证通过**（v0.31.8 补丁，服务器 uni-agent commit
+  `5cc88ec`）：train3 × 1 epoch（3 样本 × n=4 = 12 会话）**3 个 step 全部 4/4 会话
+  成功（0 failed / 0 unfinished）**；15 次 JSONDecodeError 全部被 repair 救回
+  （0 次 unrecoverable）；per-session 通过率 step1 0/4 → step2 1/4 → step3 3/4，
+  与修复前基线一致 → 修复不改模型行为，只消除解析错误杀会话
+- **投机解码 A/B 量化（阶段 0 纯推理）**：新增 `scripts/spec_bench_ab.py` +
+  `scripts/spec_ab_run.sh`——Qwen3-8B + RedHatAI EAGLE-3 speculator，32 HumanEvalFix
+  prompt × n=4 × max_tokens 512、temp 0.8、max_num_seqs 16、max_model_len 8192、
+  util 0.7：**tok/s 730.65 → 1155.57（+58%），E2EL p50 21.68ms → 13.95ms（-36%），
+  平均接受长度 2.285**（官方 HumanEval k=3 ≈ 2.39）
+- `run_grpo_humanevalfix_ucloud.sh`：新增 `CKPT_DIR` 环境变量（默认 checkpoint 目录
+  不变），独立验证/评测 run 可覆盖，避免 resume_mode=auto 续训污染
+- 排障沉淀：vLLM 0.11 offline LLM 不接受消息列表（tokenizer 套 chat template 传文本）、
+  metrics 字段为 first_token_ts/latency、EAGLE-3 多占 ~2G 需 max_model_len 8192 或
+  util 0.7（util 0.5 + 默认 40960 时 KV 不足）
+
 ## v0.29.0（2026-08-08）
 
 - 新增 `scripts/collect_grpo_stats.py`：**GRPO 训练逐步统计收集器**

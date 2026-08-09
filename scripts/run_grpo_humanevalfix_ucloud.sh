@@ -48,6 +48,7 @@ PPO_MICRO_BATCH=${PPO_MICRO_BATCH:-1}    # 每 GPU micro-batch（48G + offload �
 MAX_CKPT_KEEP=${MAX_CKPT_KEEP:-}         # 只保留最近 N 个 checkpoint（如 1 = 一直覆盖最新）
 VLLM_MAX_NUM_SEQS=${VLLM_MAX_NUM_SEQS:-4}  # vLLM 并发序列数，与 CONCURRENCY 同步调高（如 8）
 VLLM_GPU_MEM_UTIL=${VLLM_GPU_MEM_UTIL:-0.5}  # vLLM 显存利用率（16 并发建议 0.7）
+CKPT_DIR=${CKPT_DIR:-/home/ubuntu/swe-rl/checkpoints/humanevalfix}  # 独立验证 run 可覆盖，避免续训污染
 cd /home/ubuntu/uni-agent/verl
 
 ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
@@ -120,7 +121,7 @@ fi
   trainer.experiment_name=qwen3-8b-grpo-humanevalfix-lora \
   trainer.save_freq=1 \
   trainer.resume_mode=auto \
-  trainer.default_local_dir=/home/ubuntu/swe-rl/checkpoints/humanevalfix \
+  trainer.default_local_dir="$CKPT_DIR" \
   trainer.n_gpus_per_node=1 \
   trainer.nnodes=1 \
   trainer.total_epochs=$TOTAL_EPOCHS \
