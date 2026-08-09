@@ -1,0 +1,79 @@
+diff --git a/verl/workers/engine/fsdp/transformer_impl.py b/verl/workers/engine/fsdp/transformer_impl.py
+index 939c963..826de89 100644
+--- a/verl/workers/engine/fsdp/transformer_impl.py
++++ b/verl/workers/engine/fsdp/transformer_impl.py
+@@ -444,9 +444,15 @@ class FSDPEngine(BaseEngine):
+                 "offload_policy": offload_policy,
+                 "reshard_after_forward": self.engine_config.reshard_after_forward,
+             }
+-            full_state = module.state_dict()
+-            apply_fsdp2(module, fsdp_kwargs, self.engine_config)
+-            fsdp2_load_full_state_dict(module, full_state, fsdp_mesh, offload_policy)
++            if torch.distributed.get_world_size() > 1:
++                # multi-rank: full_state is needed to broadcast weights from rank 0
++                full_state = module.state_dict()
++                apply_fsdp2(module, fsdp_kwargs, self.engine_config)
++                fsdp2_load_full_state_dict(module, full_state, fsdp_mesh, offload_policy)
++            else:
++                # single-rank: apply_fsdp2 keeps already-loaded weights in place;
++                # skip state_dict copy + reload to avoid ~2x memory peak on 32GB hosts
++                apply_fsdp2(module, fsdp_kwargs, self.engine_config)
+         else:
+             raise NotImplementedError(f"Unknown strategy {self.engine_config.strategy}")
+ 
+@@ -843,9 +849,11 @@ class FSDPEngine(BaseEngine):
+                 if not base_sync_done:
+                     params = {replace_lora_wrapper(k, peft_config): v for k, v in params.items()}
+             else:  # merge lora
+-                with merged_lora_context(self.module, backup_adapters=True):
+-                    params = self.module.state_dict()
+-                    params = normalize_peft_param_name(params)
++                # state_dict() aliases the live parameter storage and merged_lora_context
++                # restores the un-merged base weights on exit, so tensors must be
++                # materialized while the context is still open (inside the generator).
++                # Materializing after exit silently sends base weights without adapters.
++                return self._merged_lora_per_tensor_param(), None
+         else:
+             params = self.module.state_dict()
+ 
+@@ -896,6 +904,40 @@ class FSDPEngine(BaseEngine):
+         peft_config_dict = peft_config.to_dict() if peft_config is not None else None
+         return per_tensor_param, peft_config_dict
+ 
++
++    def _merged_lora_per_tensor_param(self):
++        """Stream merged (base + LoRA) weights for rollout weight sync.
++
++        ``state_dict()`` returns tensors that alias the live FSDP parameter
++        storage, and ``merged_lora_context`` restores the un-merged base
++        weights when it exits. The context therefore must stay open until the
++        consumer has materialized every tensor: ``DTensor.full_tensor()``
++        produces a copy, so yielded tensors remain valid after the restore.
++        Consuming a state_dict captured inside the context after the context
++        has exited would silently send base weights without the adapters.
++        """
++        device = get_device_id()
++        try:
++            with merged_lora_context(self.module, backup_adapters=True):
++                params = normalize_peft_param_name(self.module.state_dict())
++                params = convert_weight_keys(
++                    params, getattr(self.module, "_fsdp_wrapped_module", self.module)
++                )
++                for name, param in params.items():
++                    yield (
++                        name,
++                        param.to(device, non_blocking=True).full_tensor().to(torch.bfloat16, non_blocking=True)
++                        if isinstance(param, DTensor)
++                        # clone: plain tensors also alias module storage, and bucketed
++                        # senders may flush after the restore has already run
++                        else param.detach().clone(),
++                    )
++        finally:
++            log_gpu_memory_usage("Before offload_fsdp_model_to_cpu", logger=logger)
++            if self._is_offload_param:
++                offload_fsdp_model_to_cpu(self.module)
++            log_gpu_memory_usage("After offload_fsdp_model_to_cpu", logger=logger)
++
+     def disable_adapter(self) -> ContextManager:
+         return self.module.disable_adapter()
+ 

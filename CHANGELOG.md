@@ -36,6 +36,24 @@
   +41%）、update_weights 53s（merge 全量 15GB refit 代价，可接受）、per-sample
   耗时 -33%；5 epoch 预计 ~18-19h
 
+## v0.32.2（2026-08-09）
+
+- **重大 bug 修复：merge=True 时 rollout 同步的是基座权重（无 LoRA）**
+  - 现象：投机 run（lora.merge=True + EAGLE-3）训练 11 步 reward 始终在基座水平
+    波动（0.28-0.44）、agent 轮数不降（~23 轮）、策略不收敛；对比基线（as-adapter）
+    同阶段 reward 已升到 0.5-0.7、轮数降到 10-14
+  - 根因：verl `get_per_tensor_param()` 的 merge 分支在 `merged_lora_context` 内
+    提取 `state_dict()`（返回 live 存储**别名**），但返回的是**生成器**，consumer
+    （`engine_workers.update_weights`）在 context 退出（基座权重已恢复）后才迭代
+    物化 → 每步同步给 vLLM 的是**没有 LoRA 的基座权重**，策略更新从未作用到 rollout
+  - 修复：backport verl PR #7014——新增 `_merged_lora_per_tensor_param()` 生成器，
+    在 context 内逐个 `full_tensor()`/`clone()` 物化张量（`patches/
+    verl_merged_lora_materialize_fix.patch`，服务器 verl commit c2049af）
+  - 处置：11 步无效训练（checkpoint/logs 改名备份 `*_broken_11steps`）→ 清空 →
+    以修复后版本从头重跑 5 epoch
+  - 教训：merge 模式的权重同步必须"context 内物化"；后续若换全参/merge 配置需先
+    验证 rollout 权重确实含 adapter（对比 rollout 文本随训练变化 / 轮数下降信号）
+
 ## v0.29.0（2026-08-08）
 
 - 新增 `scripts/collect_grpo_stats.py`：**GRPO 训练逐步统计收集器**
