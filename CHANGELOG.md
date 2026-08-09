@@ -124,6 +124,20 @@
   对照（基座 76.4% / final 83.2%）、gateway 双解析根因量化（1,601 错误事件 /
   5.3% 调用 / 38% 会话受影响）与修复方案
 
+## v0.31.8（2026-08-09）
+
+- **gateway 工具解析容错（方案 A，代码已实现 + 本地逻辑验证通过，待服务器单步验证）**：
+  - 新增 `patches/gateway_hermes_parse_guard.patch`（作用于
+    `uni_agent/gateway/session/codec.py`）
+  - 修复点：`_process_tool_calls_vllm` 解析 `<tool_call>JSON</tool_call>` 失败时，
+    不再静默返回"无工具调用"文本（那会让 agent 误以为对话结束 → reward=0），而是：
+    ① `_repair_tool_call_json` 轻量修复（去尾逗号、补相邻字符串间缺逗号、
+      转义字符串内裸换行）后重试；② 仍失败则 `_synthetic_retry_call` 注入一个
+      "重试提示"工具调用（无害 echo + JSON 错误说明），把错误反馈给 agent 让它重试
+  - 本地单元验证：尾逗号 / 缺逗号 / 裸换行全部修复成功，合法输入零破坏
+  - 待服务器验证：应用补丁后跑 1 个 step（3~8 样本），解析错误应趋近 0、
+    per-session 通过率应回到 ~80%（对照：修复前 5.3% 调用报错 / 38% 会话受影响）
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、
