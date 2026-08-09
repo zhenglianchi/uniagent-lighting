@@ -89,6 +89,20 @@
   从 checkpoint 续训；step 3 被挂死会话阻塞无法出 checkpoint → 改为从 global_step_2
   续跑并重跑 step 3（带修复 + 新参数）
 
+## v0.31.0（2026-08-09）
+
+- 全样本 10 epoch 训练提前停止，**以 global_step_26（5 epoch + 1 步）为最终权重**，
+  checkpoint 改名 `checkpoints/humanevalfix/final`（max_ckpt_to_keep=1 轮换掉了
+  恰好 5 epoch 的 step 25，26 与 5 epoch 差异仅 1 步）
+- 新增 `scripts/convert_verl_lora_to_hf.py`：verl FSDP2+LoRA checkpoint（PEFT 风格
+  base_layer + lora_A/B）→ 合并为标准 HF 模型目录（safetensors + config/tokenizer 从
+  基座复制），供 vLLM 直接 serve
+- 新增 `scripts/eval_humanevalfix.py`：**n=1 通过率评测**——并发沙箱（默认 16）、
+  mini-swe-agent harness + 腾讯沙箱 + 隐藏测试 reward（无测试泄露），输出 per-sample
+  JSON + pass rate；用于"基座 vs final"对比（方案 A）
+- 训练实测（10 epoch 中断于 26/50）：epoch 平均 reward 0.378 → 0.539 → 0.590 →
+  0.657 → 0.699 →（epoch 6 起步 0.66）；最终权重 = step 26（reward mean 0.659）
+
 ## v0.28.3（2026-08-08）
 
 - `make_humanevalfix_data.py`：任务提示词增加 **heredoc 约束**——修复仅改 bug 逻辑、
