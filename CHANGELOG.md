@@ -20,6 +20,22 @@
   metrics 字段为 first_token_ts/latency、EAGLE-3 多占 ~2G 需 max_model_len 8192 或
   util 0.7（util 0.5 + 默认 40960 时 KV 不足）
 
+## v0.32.1（2026-08-09）
+
+- **投机解码全样本训练 run 启动**（train161 / batch 32 / mini 16 / micro 4 / 并发 64 /
+  vllm 128 / util 0.8 / 5 epoch / ckpt keep 1，与 2026-08-08 基线一致）：
+  `run_grpo_humanevalfix_ucloud.sh` 新增 `LORA_MERGE` / `SPEC_ON` / `SPEC_DRAFT` /
+  `SPEC_TOKENS` / `LOG_DIR` 环境变量（`lora.merge=True` 是 LoRA×SD 互斥的前置；
+  Hydra 传 JSON 需单引号包字符串 + `+` 前缀）；启动脚本 `spec_train_run.sh`、
+  清理脚本 `kill_train.sh`、统计 watcher `start_stats_watch.sh`
+- **EAGLE-3 logprobs 全丢 bug 定位与修复**：`logprobs_spec_test.py` 验证 vLLM 0.11.1
+  + EAGLE-3 下 `logprobs=0` 只返回 2/32 个（vllm#30059，v0.12 才修），verl
+  `vllm_async_server.py` 恰好设 0 → 一行 `0→1`（`patches/verl_vllm_logprobs_spec_fix.patch`，
+  服务器 verl commit 5fa045e），实测 logprobs=1/3 返回 32/32
+- **step 1 实测**：reward mean 0.301（基线 0.247）、吞吐 301 tok/s（基线 213.7，
+  +41%）、update_weights 53s（merge 全量 15GB refit 代价，可接受）、per-sample
+  耗时 -33%；5 epoch 预计 ~18-19h
+
 ## v0.29.0（2026-08-08）
 
 - 新增 `scripts/collect_grpo_stats.py`：**GRPO 训练逐步统计收集器**

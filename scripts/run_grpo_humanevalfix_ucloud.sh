@@ -49,6 +49,11 @@ MAX_CKPT_KEEP=${MAX_CKPT_KEEP:-}         # 只保留最近 N 个 checkpoint（�
 VLLM_MAX_NUM_SEQS=${VLLM_MAX_NUM_SEQS:-4}  # vLLM 并发序列数，与 CONCURRENCY 同步调高（如 8）
 VLLM_GPU_MEM_UTIL=${VLLM_GPU_MEM_UTIL:-0.5}  # vLLM 显存利用率（16 并发建议 0.7）
 CKPT_DIR=${CKPT_DIR:-/home/ubuntu/swe-rl/checkpoints/humanevalfix}  # 独立验证 run 可覆盖，避免续训污染
+LOG_DIR=${LOG_DIR:-/home/ubuntu/swe-rl/logs/humanevalfix}          # 会话/轨迹日志目录（独立 run 用新目录防混杂）
+LORA_MERGE=${LORA_MERGE:-0}              # 1 = lora.merge=True（每步合并全量权重同步；投机解码 SD 的前置，vLLM LoRA×SD 互斥）
+SPEC_ON=${SPEC_ON:-0}                    # 1 = 开启投机解码（EAGLE-3 drafter，需 LORA_MERGE=1）
+SPEC_DRAFT=${SPEC_DRAFT:-/home/ubuntu/models/Qwen3-8B-speculator.eagle3}
+SPEC_TOKENS=${SPEC_TOKENS:-3}            # num_speculative_tokens（官方编码基准 k=3）
 cd /home/ubuntu/uni-agent/verl
 
 ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
@@ -56,6 +61,16 @@ ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
 EXTRA_ARGS=()
 if [ -n "$MAX_CKPT_KEEP" ]; then
   EXTRA_ARGS+=(trainer.max_actor_ckpt_to_keep="$MAX_CKPT_KEEP")
+fi
+if [ "$LORA_MERGE" = "1" ]; then
+  EXTRA_ARGS+=(actor_rollout_ref.model.lora.merge=True)
+fi
+if [ "$SPEC_ON" = "1" ]; then
+  # 独立 drafter（非 MTP）不走权重同步（verl _iter_all_models 只同步 actor+MTP）；
+  # drafter 保持静态，训练中 LoRA 漂移会导致接受率下降（step1 vs step5 各记录一次）
+  EXTRA_ARGS+=(
+    "+actor_rollout_ref.rollout.engine_kwargs.vllm.speculative_config='{\"method\": \"eagle3\", \"model\": \"$SPEC_DRAFT\", \"num_speculative_tokens\": $SPEC_TOKENS, \"draft_tensor_parallel_size\": 1}'"
+  )
 fi
 
 "$ENV/bin/python" -m verl.trainer.main_ppo \
@@ -107,7 +122,7 @@ fi
   actor_rollout_ref.rollout.agent.num_workers=1 \
   ++actor_rollout_ref.rollout.agent.agent_loop_manager_class=uni_agent.framework.entry.AgentFrameworkRolloutAdapter \
   ++actor_rollout_ref.rollout.custom.agent_framework.gateway_count=${GATEWAY_COUNT} \
-  ++actor_rollout_ref.rollout.custom.agent_framework.log_dir=/home/ubuntu/swe-rl/logs/humanevalfix \
+  ++actor_rollout_ref.rollout.custom.agent_framework.log_dir="$LOG_DIR" \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_fqn=uni_agent_ext.agents.mini_swe_agent_runner.mini_swe_agent_runner \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.dispatch_mode=ray_task \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.max_concurrent_sessions=${CONCURRENCY} \
