@@ -172,17 +172,21 @@ async def worker(
         for i, task in enumerate(chunk):
             print(f"[worker {worker_id}] {i + 1}/{len(chunk)} {task['instance_id']}", flush=True)
             try:
-                results.append(
-                    await run_one(
-                        sandbox,
-                        task,
-                        model_name=model_name,
-                        api_base=api_base,
-                        api_key=api_key,
-                        max_turns=max_turns,
-                        temperature=temperature,
-                        out_dir=out_dir,
-                    )
+                res = await run_one(
+                    sandbox,
+                    task,
+                    model_name=model_name,
+                    api_base=api_base,
+                    api_key=api_key,
+                    max_turns=max_turns,
+                    temperature=temperature,
+                    out_dir=out_dir,
+                )
+                results.append(res)
+                print(
+                    f"[worker {worker_id}] done {task['instance_id']} "
+                    f"reward={res.get('reward')} resolved={res.get('resolved')}",
+                    flush=True,
                 )
             except Exception as exc:  # noqa: BLE001 - 单个样本失败不拖垮整个 worker
                 results.append(
@@ -220,10 +224,10 @@ async def main() -> None:
 
     chunks = [tasks[i:: args.concurrency] for i in range(args.concurrency)]
     chunks = [c for c in chunks if c]
-    results = []
-    for wid, chunk in enumerate(chunks):
-        results.extend(
-            await worker(
+    # 真正的并发：asyncio.gather 同时跑所有 worker（每个 worker 一个沙箱）
+    results_lists = await asyncio.gather(
+        *[
+            worker(
                 chunk,
                 model_name=args.model,
                 api_base=args.base_url,
@@ -233,7 +237,10 @@ async def main() -> None:
                 out_dir=out_dir,
                 worker_id=wid,
             )
-        )
+            for wid, chunk in enumerate(chunks)
+        ]
+    )
+    results = [r for rl in results_lists for r in rl]
 
     total = len(results)
     passed = sum(1 for r in results if r.get("resolved"))
