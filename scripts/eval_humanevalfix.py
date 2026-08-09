@@ -44,7 +44,14 @@ REPO_WORK = ROOT.parent / "work"
 
 
 def load_envs() -> None:
-    load_dotenv(REPO_WORK / "tencent_sandbox.env")
+    candidates = [
+        REPO_WORK / "tencent_sandbox.env",                    # 本地布局
+        ROOT.parent / "swe-rl" / "tencent_sandbox.env",       # 服务器布局
+    ]
+    for c in candidates:
+        if c.exists():
+            load_dotenv(c)
+            break
     os.environ.setdefault("E2B_DOMAIN", "ap-guangzhou.tencentags.com")
     os.environ["E2B_API_KEY"] = os.environ["TENCENT_SANDBOX_E2B_TOKEN"]
     # 跳过沙箱内 tmux 安装（E2B 请求可能挂起，白耗时间）
