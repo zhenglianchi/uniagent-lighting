@@ -62,12 +62,14 @@ def merge_lora(
     done: set[str] = set()
     for module, (base_key, lora_a_key, lora_b_key) in lora_modules.items():
         assert base_key and lora_a_key and lora_b_key, f"incomplete lora module: {module}"
+        base_dtype = sd[base_key].dtype
         base = sd[base_key].float()
         lora_a = sd[lora_a_key].float()
         lora_b = sd[lora_b_key].float()
         delta = (lora_b @ lora_a) * scale
-        out_key = "base_model.model." + module + ".weight"
-        merged[out_key] = (base + delta).to(base.dtype)
+        # module 已含 "base_model.model." 前缀；save 阶段统一去掉该前缀
+        out_key = module + ".weight"
+        merged[out_key] = (base + delta).to(base_dtype)
         done.update({base_key, lora_a_key, lora_b_key})
 
     # 非 LoRA 模块直接透传（embed / norm / lm_head 等）
