@@ -238,9 +238,15 @@ async def main() -> None:
                 worker_id=wid,
             )
             for wid, chunk in enumerate(chunks)
-        ]
+        ],
+        return_exceptions=True,
     )
-    results = [r for rl in results_lists for r in rl]
+    results = []
+    for rl in results_lists:
+        if isinstance(rl, Exception):
+            print(f"[eval] worker failed: {type(rl).__name__}: {rl}", flush=True)
+            continue
+        results.extend(rl)
 
     total = len(results)
     passed = sum(1 for r in results if r.get("resolved"))
