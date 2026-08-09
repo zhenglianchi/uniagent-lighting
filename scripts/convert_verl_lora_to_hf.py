@@ -27,7 +27,14 @@ import torch
 
 
 def load_state_dict(ckpt_path: str) -> dict:
-    return torch.load(ckpt_path, map_location="cpu", weights_only=False)
+    sd = torch.load(ckpt_path, map_location="cpu", weights_only=False)
+    try:
+        from torch.distributed.tensor import DTensor
+
+        # FSDP2 保存的是 DTensor；单卡（world_size=1）下 to_local() 即完整张量
+        return {k: (v.to_local() if isinstance(v, DTensor) else v) for k, v in sd.items()}
+    except ImportError:
+        return sd
 
 
 def merge_lora(
