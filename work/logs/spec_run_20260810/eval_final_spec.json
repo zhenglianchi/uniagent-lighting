@@ -1,0 +1,2586 @@
+{
+  "model": "Qwen3-8B-final-spec",
+  "base_url": "http://127.0.0.1:8001/v1",
+  "total": 161,
+  "passed": 133,
+  "pass_rate": 0.8261,
+  "reward_mean": 0.8261,
+  "per_sample": [
+    {
+      "instance_id": "humanevalfix-Python-61",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 87.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-61.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-2",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 107.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-2.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-64",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 41.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-64.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-162",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 62.5,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-162.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-100",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 78.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-100.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-77",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 71.9,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-77.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-59",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 122.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-59.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-104",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 96.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-104.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-19",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 28,
+      "elapsed_s": 45.7,
+      "agent_rc": 1,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-19.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8384 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-16",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 24.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-16.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-133",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 7,
+      "elapsed_s": 53.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-133.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-113",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 624.8,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-113.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-44",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 107.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-44.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-55",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 48.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-55.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-105",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 153.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-105.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-76",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 161.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-76.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-83",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 118.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-83.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-101",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 234.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-101.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-111",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 18,
+      "elapsed_s": 728.0,
+      "agent_rc": 1,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-111.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8353 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-135",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 38.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-135.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-23",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 34.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-23.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-42",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 34.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-42.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-109",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 334.9,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-109.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-69",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 118.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-69.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-94",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 73.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-94.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-98",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 50.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-98.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-45",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 34.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-45.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-7",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 61.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-7.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-145",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 7,
+      "elapsed_s": 834.7,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-145.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-67",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 32.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-67.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-131",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 54.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-131.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-147",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 67.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-147.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-29",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 72.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-29.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-12",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 35.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-12.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-8",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 27.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-8.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-130",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 174.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-130.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-159",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 115.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-159.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-25",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 110.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-25.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-89",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 38.0,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-89.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-84",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 53.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-84.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-97",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 115.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-97.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-108",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 11,
+      "elapsed_s": 132.0,
+      "agent_rc": 1,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-108.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8478 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-88",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 48.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-88.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-158",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 105.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-158.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-78",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 43.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-78.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-31",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 33.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-31.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-119",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 8,
+      "elapsed_s": 63.5,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-119.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-149",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 10,
+      "elapsed_s": 158.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-149.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-151",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 139.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-151.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-11",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 89.8,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-11.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-144",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 60.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-144.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-110",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 60.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-110.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-116",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 316.6,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-116.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-153",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 355.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-153.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-86",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 215.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-86.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-22",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 33.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-22.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-137",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 59.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-137.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-112",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 62.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-112.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-13",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 32,
+      "elapsed_s": 258.8,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-13.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-21",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 46.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-21.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-90",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 54.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-90.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-148",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 50.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-148.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-139",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 37.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-139.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-66",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 34.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-66.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-3",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 162.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-3.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-91",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 56.9,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-91.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-122",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 70.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-122.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-24",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 93.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-24.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-39",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 147.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-39.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-26",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 35,
+      "elapsed_s": 406.6,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-26.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-30",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 112.0,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-30.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-102",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 81.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-102.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-134",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 207.4,
+      "agent_rc": 1,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-134.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8439 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-9",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 39.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-9.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-73",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 61.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-73.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-138",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 9,
+      "elapsed_s": 97.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-138.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-35",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 61.5,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-35.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-124",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 139.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-124.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-54",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 189.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-54.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-140",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 174.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-140.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-82",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 55.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-82.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-46",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 72.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-46.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-87",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 171.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-87.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-57",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 84.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-57.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-154",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 159.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-154.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-32",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 8,
+      "elapsed_s": 425.8,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-32.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-36",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 128.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-36.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-34",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 33.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-34.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-79",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 10,
+      "elapsed_s": 156.5,
+      "agent_rc": 1,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-79.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8360 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-152",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 29.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-152.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-62",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 45.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-62.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-18",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 42.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-18.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-75",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 178.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-75.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-60",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 33.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-60.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-85",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 48.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-85.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-80",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 63.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-80.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-40",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 208.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-40.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-70",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 64.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-70.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-127",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 133.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-127.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-14",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 50.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-14.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-92",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 110.9,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-92.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-146",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 7,
+      "elapsed_s": 175.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-146.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-106",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 132.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-106.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-1",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 40,
+      "elapsed_s": 127.0,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-1.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-6",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 8,
+      "elapsed_s": 408.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-6.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-121",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 44.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-121.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-128",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 120.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-128.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-27",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 67.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-27.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-125",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 63.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-125.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-37",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 102.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-37.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-71",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 63.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-71.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-28",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 51.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-28.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-0",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 48.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-0.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-53",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 46.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-53.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-120",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 85.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-120.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-47",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 8,
+      "elapsed_s": 615.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-47.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-48",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 115.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-48.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-114",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 80.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-114.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-163",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 6,
+      "elapsed_s": 116.5,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-163.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-17",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 91.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-17.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-43",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 188.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-43.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-74",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 149.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-74.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-20",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 105.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-20.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-15",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 7,
+      "elapsed_s": 79.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-15.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-56",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 78.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-56.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-52",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 48.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-52.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-63",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 117.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-63.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-51",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 51.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-51.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-141",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 58.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-141.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-68",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 156.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-68.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-107",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 125.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-107.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-123",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 7,
+      "elapsed_s": 174.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-123.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-99",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 7,
+      "elapsed_s": 136.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-99.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-136",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 35.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-136.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-81",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 11,
+      "elapsed_s": 472.7,
+      "agent_rc": 1,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-81.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8424 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-58",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 21.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-58.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-155",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 44.3,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-155.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-38",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 57.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-38.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-49",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 117.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-49.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-4",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 50.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-4.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-117",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 160.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-117.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-93",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 80.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-93.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-50",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 9,
+      "elapsed_s": 109.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-50.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-72",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 109.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-72.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-65",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 103.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-65.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-96",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 84.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-96.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-157",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 42.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-157.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-5",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 58.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-5.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-143",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 101.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-143.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-132",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 122.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-132.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-118",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 146.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-118.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-150",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 47.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-150.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-142",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 72.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-142.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-103",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 93.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-103.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-161",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 71.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-161.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-95",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 106.7,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-95.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-115",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 56.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-115.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-41",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 3,
+      "elapsed_s": 56.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-41.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-126",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 195.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-126.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-33",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 4,
+      "elapsed_s": 68.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-33.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-129",
+      "model": "Qwen3-8B-final-spec",
+      "rounds": 5,
+      "elapsed_s": 77.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "/home/ubuntu/swe-rl/eval_final_spec_dir/humanevalfix_humanevalfix-Python-129.traj.json",
+      "log_tail": ""
+    }
+  ]
+}

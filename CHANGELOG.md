@@ -2,6 +2,18 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.33.1（2026-08-10）
+
+- **代码仓存档补全（保存镜像前整理）**：
+  - 正式评测结果 `work/logs/spec_run_20260810/eval_final_spec.json`
+    （133/161 = 82.6%，per_sample 完整）
+  - 服务器环境配置 `work/config/`：`config_qwen3_vllm.yaml` + `pip-freeze-swe-rl.txt`
+  - 修正 `work/data/humanevalfix_val.jsonl`（原 0 字节空文件 → 服务器 13.7KB 正确版）
+  - 补充 `work/data/smoke_train.jsonl` / `smoke_val.jsonl`（双机冒烟用，sha256 与
+    服务器一致）；train161/164/3、agentic、val 全部 sha256 已核对一致
+- **服务器同步**：服务器 uniagent-lighting 仓库 git pull 到 v0.33.0（此前停在
+  v0.31.6）；14 个核心脚本 sha256 与仓库逐一比对一致
+
 ## v0.33.0（2026-08-10）
 
 - **投机解码全样本训练完成（25/25 步 = 5 epoch）**：merge bug（v0.32.2）修复后
