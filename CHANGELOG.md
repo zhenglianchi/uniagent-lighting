@@ -2,6 +2,14 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.33.2（2026-08-10）
+
+- **补归评测/沙箱运维脚本**（服务器在用但仓库缺失，sha256 与服务器逐一核对一致）：
+  `scripts/eval_spec_final.sh`（base vs final-spec 评测包装）、`run_eval_only.sh`
+  （复用已就绪 vLLM 重跑）、`run_eval_final_spec.sh`（起 vLLM + 评测）、
+  `kill_eval.sh`、`list_kill_sandboxes.py`、`tencent_stop_all_instances.py`
+  （腾讯沙箱配额清理）、`start_stats_watch.sh` 更新版
+
 ## v0.33.1（2026-08-10）
 
 - **代码仓存档补全（保存镜像前整理）**：
