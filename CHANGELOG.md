@@ -2,6 +2,26 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.33.0（2026-08-10）
+
+- **投机解码全样本训练完成（25/25 步 = 5 epoch）**：merge bug（v0.32.2）修复后
+  2026-08-09 21:14 重跑，2026-08-10 09:38 完成；EAGLE-3 生效确认（vLLM 侧
+  speculative_algorithm=EAGLE / 4 draft tokens / 3 steps）；最终权重
+  `Qwen3-8B-final-spec`（convert_verl_lora_to_hf.py 合并 step25 LoRA）；训练日志
+  完整性核对通过（25 步无缺步、ckpt 落盘完整，仅收尾 DataLoader worker OOM kill，
+  发生在 step25 指标之后，不影响结果）
+- **训练日志存档**：
+  - 本地完整存档 `swe-rl-local/work/server_logs/`：`grpo_humanevalfix_spec.log`
+    （10.8MB）+ `logs/grpo_stats_spec.jsonl` + `logs/humanevalfix_spec/`（25 step
+    会话目录）+ `swe_rl_logs_spec.tar.gz`（15.8MB，sha256 校验一致）
+  - 本仓轻量存档 `work/logs/spec_run_20260810/`：压缩训练日志（483KB）+ 逐步统计
+    + README（配置摘要、sha256、路径对照）
+- **final-spec 评测 run4 失效复盘并重跑**：161 条仅 46 条真实评测（41 pass ≈ 89%），
+  115 条因腾讯沙箱 E2B 批量故障未测（93 `AUTHENTICATION_FAILED` + 22
+  `resource does not exist`，10:42 起）；已删除全部失效产物（run1-4 日志/汇总/
+  轨迹），保留 08-09 baseline 成功结果，复用现有 vLLM（`Qwen3-8B-final-spec`）
+  按 baseline 口径（并发 24 / temp 0.8 / n=1 / 161 条）重跑
+
 ## v0.32.0（2026-08-09）
 
 - **gateway hermes 解析容错上机验证通过**（v0.31.8 补丁，服务器 uni-agent commit
