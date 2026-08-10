@@ -2,6 +2,16 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.34.1（2026-08-10）
+
+- **代码仓清理**：删除 6 个一次性/被取代脚本（git 历史可恢复）——
+  `list_kill_sandboxes.py`（被 `tencent_stop_all_instances.py` 取代）、`fix_otel.sh`、
+  `verify_p2p_baseline.py`、`verify_reward_095.py`、`logprobs_spec_test.py`
+  （根因已固化在 patches/）、`run_humanevalfix_local.py`（一次性本地开发脚本）
+- **训练数据入仓**：`work/data/` 补全 `agentic_train/val.jsonl`、
+  `humanevalfix_train.jsonl`、`train161/164/3.jsonl`（原被 .gitignore 的 work/ 忽略，
+  现强制跟踪，与服务器 sha256 一致）
+
 ## v0.34.0（2026-08-10）
 
 - **README 全面更新**：新增「训练模式一览」（冒烟 / 单机 LoRA / agentic / 全样本
