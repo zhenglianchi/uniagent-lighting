@@ -2,6 +2,14 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.37.1（2026-08-11）
+
+- **黑盒 runner 支持 SSH 隧道模式（默认）**：沙箱内 claude-code 通过
+  `ensure_gateway_tunnel`（复用白盒）走训练机公网 22 端口转发 Gateway，**无需安全组
+  放行新端口**；`CLAUDE_GATEWAY_TUNNEL=0` + `CLAUDE_GATEWAY_PUBLIC_HOST` 时回退
+  direct-URL（需放行 Gateway 端口）。黑盒小样本脚本默认 `CLAUDE_GATEWAY_TUNNEL=1` +
+  `MSA_GATEWAY_SSH_HOST=117.50.199.93`。
+
 ## v0.37.0（2026-08-11）
 
 - **黑盒 Claude Code runner 支持 HumanEvalFix（与白盒同口径）+ 黑盒小样本训练脚本**：

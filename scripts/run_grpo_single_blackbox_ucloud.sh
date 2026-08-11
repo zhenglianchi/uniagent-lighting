@@ -28,6 +28,10 @@ source /home/ubuntu/swe-rl/tencent_sandbox.env
 set +a
 export E2B_DOMAIN="${E2B_DOMAIN:-ap-guangzhou.tencentags.com}"
 export E2B_API_KEY="${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}"
+# 黑盒：沙箱内 claude-code 访问 Gateway——默认走 SSH 隧道（训练机公网 22 端口，
+# 无需安全组放行新端口）；MSA_GATEWAY_SSH_HOST = 训练机公网 IP
+export CLAUDE_GATEWAY_TUNNEL=${CLAUDE_GATEWAY_TUNNEL:-1}
+export MSA_GATEWAY_SSH_HOST=${MSA_GATEWAY_SSH_HOST:-117.50.199.93}
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
 MODEL=/home/ubuntu/models/Qwen3-8B

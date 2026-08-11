@@ -41,6 +41,7 @@ from uni_agent.sandbox import Sandbox
 
 from uni_agent_ext.agents.mini_swe_agent_runner import (
     create_task_sandbox,
+    ensure_gateway_tunnel,
     evaluate_reward as evaluate_reward_msa,
     extract_task as extract_task_meta,
 )
@@ -277,8 +278,24 @@ async def claude_code_runner(
             # 让 solution.py 被 git 跟踪，否则 agent 提交时 `git diff` 拿不到 patch
             await sandbox.exec_shell("cd /testbed && git add -A", timeout=60)
 
-        # direct URL：session.base_url 是 /v1 API root，去掉 /v1 供 Anthropic 客户端拼 /v1/messages
-        claude_base_url = gateway_url.removesuffix("/v1")
+        # 沙箱内 claude-code 访问 Gateway：
+        # - 隧道模式（CLAUDE_GATEWAY_TUNNEL=1，默认）：沙箱内 ssh -N -L 走训练机公网
+        #   22 端口转发 Gateway（只需安全组放行 22，无需开新端口）；复用白盒
+        #   ensure_gateway_tunnel（MSA_GATEWAY_SSH_HOST=训练机公网 IP）
+        # - direct-URL 模式（CLAUDE_GATEWAY_TUNNEL=0 + CLAUDE_GATEWAY_PUBLIC_HOST）：
+        #   ANTHROPIC_BASE_URL 直连公网 Gateway（需安全组放行 Gateway 端口）
+        if os.environ.get("CLAUDE_GATEWAY_TUNNEL", "1") == "1":
+            claude_base_url = await ensure_gateway_tunnel(sandbox, gateway_url)
+        else:
+            public_host = os.environ.get("CLAUDE_GATEWAY_PUBLIC_HOST", "")
+            if public_host:
+                parsed = urlparse(gateway_url)
+                gateway_url = (
+                    f"{parsed.scheme}://{public_host}:{parsed.port}{parsed.path}"
+                )
+            claude_base_url = gateway_url
+        # session.base_url 是 /v1 API root，去掉 /v1 供 Anthropic 客户端拼 /v1/messages
+        claude_base_url = claude_base_url.removesuffix("/v1")
         agent_cmd = build_claude_command(
             task=task,
             base_url=claude_base_url,
