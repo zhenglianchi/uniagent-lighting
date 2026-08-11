@@ -2,6 +2,19 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.38.2（2026-08-11）
+
+- **黑盒 max_tokens 根因修复（debug_launcher 定位）**：
+  - 根因：claude-code 默认请求 `max_tokens=32000`（`CLAUDE_CODE_MAX_OUTPUT_TOKENS`
+    控制），Gateway 原样传给 vLLM → `max_model_len(16384) - 32000 = -15616` →
+    vLLM 400 拒绝（此前 ECONNRESET / "response exceeded output token maximum" 均是
+    连锁表现）
+  - 修复：`patches/gateway_max_tokens_cap.patch`——anthropic adapter 把 max_tokens
+    截断到 `GATEWAY_MAX_GENERATION_TOKENS`（默认 8192）；claude-code 的
+    `CLAUDE_CODE_MAX_OUTPUT_TOKENS` 同步改为 8192（客户端检查与请求一致）
+  - 验证：debug_launcher fake backend 通过；真实 vLLM（openai-completions）此前
+    400，修复后待复验
+
 ## v0.38.1（2026-08-11）
 
 - **黑盒首跑排障（隧道已通，claude 报 output token 超限）**：

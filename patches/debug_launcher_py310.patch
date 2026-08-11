@@ -1,0 +1,15 @@
+diff --git a/examples/gateway/debug_launcher.py b/examples/gateway/debug_launcher.py
+index 3025234..693c4eb 100644
+--- a/examples/gateway/debug_launcher.py
++++ b/examples/gateway/debug_launcher.py
+@@ -10,7 +10,9 @@ import signal
+ import subprocess
+ import sys
+ from dataclasses import dataclass
+-from datetime import UTC, datetime
++from datetime import datetime, timezone
++
++UTC = timezone.utc  # py3.10 兼容（官方脚本用了 3.11+ 的 datetime.UTC）
+ from pathlib import Path
+ from typing import Any
+ from urllib.parse import urlparse

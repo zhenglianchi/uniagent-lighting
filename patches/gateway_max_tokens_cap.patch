@@ -1,0 +1,26 @@
+diff --git a/uni_agent/gateway/adapters/anthropic.py b/uni_agent/gateway/adapters/anthropic.py
+index 203ebb8..899889c 100644
+--- a/uni_agent/gateway/adapters/anthropic.py
++++ b/uni_agent/gateway/adapters/anthropic.py
+@@ -5,6 +5,7 @@ from __future__ import annotations
+ import copy
+ import json
+ import logging
++import os
+ import re
+ import secrets
+ from collections.abc import AsyncIterator
+@@ -541,6 +542,13 @@ def anthropic_to_internal(
+     for key in ("max_tokens", "temperature", "top_p", "top_k"):
+         if key in allowed_sampling_keys and key in payload:
+             sampling_params[key] = payload[key]
++    # claude-code 默认请求 max_tokens=32000（或 CLAUDE_CODE_MAX_OUTPUT_TOKENS），
++    # 远超 vLLM max_model_len（如 16384）→ vLLM 400 "maximum context length is
++    # negative"（16384-32000）。这里截断到 GATEWAY_MAX_GENERATION_TOKENS（默认
++    # 8192），与 vLLM max_model_len 协调（prompt 余量 = max_model_len - cap）。
++    cap = int(os.environ.get("GATEWAY_MAX_GENERATION_TOKENS", "8192"))
++    if "max_tokens" in sampling_params:
++        sampling_params["max_tokens"] = min(int(sampling_params["max_tokens"]), cap)
+     if "stop" in allowed_sampling_keys and "stop_sequences" in payload:
+         sampling_params["stop"] = payload["stop_sequences"]
+     # Anthropic cache_control can appear on request blocks; it is intentionally

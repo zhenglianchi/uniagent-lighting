@@ -158,10 +158,10 @@ def build_claude_command(
         "CLAUDE_CODE_FORK_SUBAGENT": "0",
         "CLAUDE_CODE_SUBAGENT_MODEL": model,
         "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",  # vLLM ≤0.17.1：避免请求 hash 破坏 prefix cache
-        # 自定义端点（vLLM/Gateway）下 claude-code 对 usage 的客户端检查会误报
-        # "response exceeded 32000 output token maximum"（Gateway usage 字段语义
-        # 差异导致），放宽上限绕过（v0.38.1 实测定位）
-        "CLAUDE_CODE_MAX_OUTPUT_TOKENS": os.environ.get("CLAUDE_CODE_MAX_OUTPUT_TOKENS", "128000"),
+        # 与 Gateway 的 GATEWAY_MAX_GENERATION_TOKENS 截断一致（v0.38.2）：
+        # claude-code 用它作为请求 max_tokens，太大（32000/128000）会让 vLLM
+        # 400（max_model_len - max_tokens 为负）
+        "CLAUDE_CODE_MAX_OUTPUT_TOKENS": os.environ.get("CLAUDE_CODE_MAX_OUTPUT_TOKENS", "8192"),
         "DISABLE_AUTOUPDATER": "1",
         "IS_SANDBOX": "1",
     }
