@@ -1,9 +1,10 @@
-# Roadmap（2026-08-06 定稿）
+# Roadmap（2026-08-11 更新；进度按 TODO.md / CHANGELOG.md 为准）
 
-> 服务器已关机、node2 镜像已保存；所有代码/文档由本仓维护，恢复后
-> `git -C /home/ubuntu/uniagent-lighting pull` 即可续跑。
+> 训练主力 = node1（117.50.189.37，1×4090 48G / 94G，2026-08-08 新建）；
+> 双机目标 = node1 + node2（2×4090 24G），VPC 未通；所有代码/文档由本仓维护，
+> 服务器 `git -C /home/ubuntu/uniagent-lighting pull` 即可续跑。
 
-## 1. 换数据集：HumanEvalFix（下一步，本地可做，agent 不改）
+## 1. 换数据集：HumanEvalFix（✅ 已完成，2026-08-08~10 全样本跑通）
 
 背景：Qwen3-8B 在 SWE-bench 长程任务上行为退化已实证（60 轮不修改代码、循环执行命令；
 simple-bench 极简实验已回滚）。**用户拍板：agent 不改（保持 mini-swe-agent harness），
@@ -20,9 +21,21 @@ simple-bench 极简实验已回滚）。**用户拍板：agent 不改（保持 m
   仓库 + solution.py 注入（`git add -A`）+ mini-swe-agent API 直连 + reward 阶段写隐藏
   测试（无测试泄露）
 - ✅ 训练脚本 `scripts/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录区分）
-- ⏳ 上机验证：node2 恢复镜像后 git pull → 数据拷到 `/home/ubuntu/swe-rl/data/` →
-  跑 run_grpo_humanevalfix_ucloud.sh；验收 3~5 条样本至少 1 条修出通过补丁、reward 出现
-  组内差异（advantage ≠ 0）→ 支撑完整训练链路，作为校招亮点（agentic 修复 + 沙箱系统）
+- ✅ 阶段一验收（2026-08-08，117.50.81.187→189.37）：P61 4/4=1.0、P104 1/4=1.0，
+  **advantage≠0（max 1.5 / min -0.5）**——Qwen3-8B 在 HumanEvalFix 上有可训练奖励；
+  中途修复提示词（heredoc 整文件重写约束，v0.28.3）
+- ✅ 全样本 baseline（2026-08-08~09）：train161 / 26 步 = 5 epoch + 1 步，
+  基座 76.4% → **final 83.2%（+6.8pp）**；评测与逐步统计见 `docs/训练评测分析.md`
+
+## 1b. 黑盒采样（Claude Code，✅ 代码就绪 v0.35.1，待上机验证）
+
+- runner：`uni_agent_ext/agents/claude_code_runner.py`（腾讯 E2B direct-URL 版）——
+  `ANTHROPIC_BASE_URL` 直连公网 Gateway（去 `/v1`）+ 沙箱内 npm 装 pin 版
+  claude-code（2.1.153，< 2.1.154）+ reward 复用 SWE-bench 评估
+- 本地工具就绪：ccglass 1.1.2 + claude-code 2.1.153（npmmirror）
+- 下一步：服务器开机后跑单机黑盒 GRPO 冒烟（复用 §D 链路，runner 换
+  claude_code_runner）；验收 = 黑盒轨迹进 session + reward 上报 + 训练步正常
+- 细节见 TODO §G
 
 ## 2. 双机全异步 GRPO（2026-08-11 用户定稿：双机网络就绪后第一优先；PD 分离已放弃）
 
@@ -39,17 +52,19 @@ simple-bench 极简实验已回滚）。**用户拍板：agent 不改（保持 m
 
 ## 3. 投机解码（Speculative Decoding）
 
-- 小 draft 模型（如 Qwen2.5-Coder-0.5B/1.5B）为 7B/8B 目标模型投机，接受率高时生成提速
-  （vLLM 官方实测 1.5-3x）
-- 落地点（待验证）：vllm `--speculative-config`（draft_model + num_speculative_tokens）
-- 关键风险：RL 训练必须拿到目标分布精确 logprobs，vLLM 不保证 spec decode 下 logprob
-  稳定性 → 需在 verl rollout 链路实测（distilled 类 draft 用 rejection sampling 保分布）
-- 注意：draft 模型多占显存，适合双卡/多卡阶段；batch 大、KV 复用低时收益下降需实测阈值
+- **✅ 已完成（2026-08-09~10）**：EAGLE-3（`RedHatAI/Qwen3-8B-speculator.eagle3`，
+  vLLM 0.11.1 V1 支持；独立 draft 小模型方案已因 V1 移除不可用）+
+  `lora.merge=True`（LoRA×SD 互斥）；修 logprobs 0 全丢（0→1）与 merge 权重物化
+  bug（backport verl#7014）
+- **实测**：rollout 吞吐 **+41.7%**（199.2 → 282.4 tok/s），每 token 延迟 -39.5%，
+  25 步全程稳定；最终评测 **82.61%（133/161）** vs baseline 83.2%（几乎持平）
+- 细节见 TODO §9.1/§9.3 与 `docs/训练评测分析.md`
 
 ## 4. 服务器恢复 checklist
 
-1. 用户恢复 node2 镜像（新实例 ≥64GB 内存）→ 更新本地 `work/ucloud.env`（新公网/内网 IP）
-2. node2：`git -C /home/ubuntu/uniagent-lighting pull`（本仓代码/文档/脚本）
-3. 环境验证（import / 模型存在）→ 按 §1 构造 HumanEvalFix 数据 → 跑单机 agentic GRPO 冒烟
-4. 双机网络就绪后：重做 hosts/SSH/Ray（`scripts/fix_multinode_hosts.sh` +
-   `setup_ssh_trust.py` + `ray_cluster_setup.sh`）→ 跑双机全异步 GRPO
+1. node1（117.50.189.37）已就绪（2026-08-08 镜像恢复，代码 v0.35.x）；node2 恢复镜像后
+   更新本地 `work/ucloud.env`（新公网/内网 IP）
+2. 服务器：`git -C /home/ubuntu/uniagent-lighting pull`（本仓代码/文档/脚本）
+3. 环境验证（import / 模型存在）→ 单机黑盒 GRPO 冒烟（§1b）
+4. 双机网络就绪后（同 VPC/子网）：重做 hosts/SSH/Ray（`scripts/fix_multinode_hosts.sh`
+   + `nccl_multinode_test.py`）→ 跑双机全异步 GRPO（§2）

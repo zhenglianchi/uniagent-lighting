@@ -1,4 +1,8 @@
-# 部署到训练机（UCloud node2，2026-08-05 实测）
+# 部署到训练机（UCloud node1，2026-08-08 实测；当前 117.50.189.37，1×4090 48G / 94G）
+
+> 版本链（2026-08-04 起实测）：**torch 2.9.0+cu128 / vllm 0.11.1 / transformers 4.57.x /
+> verl 0.9.0.dev（uni-agent 捆绑）/ ray 2.56.1 / TransferQueue 0.1.9**；
+> vllm ≥0.11.1 为多机硬性要求。node2 不单独装环境，克隆 node1 镜像。
 
 ## 0. 仓库管理（2026-08-06 起，git 化）
 
@@ -15,16 +19,31 @@ ln -sfn /home/ubuntu/uniagent-lighting/uni_agent_ext uni_agent_ext
 
 # swe-rl 运行目录（数据/凭据/checkpoint/日志）不动，脚本替换为仓库软链
 cd /home/ubuntu/swe-rl
-for f in fix_multinode_hosts.sh nccl_multinode_test.py patch_verl_ipc_cpu.py \
-         ray_import_test.py reward_smoke.py run_grpo_multinode_ucloud.sh \
-         run_grpo_single_agentic_ucloud.sh run_grpo_single_lora_ucloud.sh \
-         run_grpo_smoke_ucloud.sh; do
+for f in run_grpo_smoke_ucloud.sh run_grpo_single_lora_ucloud.sh \
+         run_grpo_single_agentic_ucloud.sh run_grpo_humanevalfix_ucloud.sh \
+         run_grpo_multinode_ucloud.sh run_grpo_multinode_async_ucloud.sh \
+         spec_train_run.sh kill_train.sh start_stats_watch.sh collect_grpo_stats.py \
+         eval_humanevalfix.py convert_verl_lora_to_hf.py fix_multinode_hosts.sh \
+         nccl_multinode_test.py patch_verl_ipc_cpu.py ray_import_test.py \
+         reward_smoke.py tencent_stop_all_instances.py kill_eval.sh \
+         eval_spec_final.sh run_eval_only.sh run_eval_final_spec.sh; do
   rm -f "$f" && ln -s /home/ubuntu/uniagent-lighting/scripts/$f "$f"
 done
 ```
 
 更新流程：本地改代码 → commit + push（语义化版本）→ 服务器 `git -C /home/ubuntu/uniagent-lighting pull`。
 `/home/ubuntu/swe-rl` 只放非仓库内容：`tencent_sandbox.env`（凭据，勿入库）、`data/`、`checkpoints/`、`logs/`。
+
+> 服务器侧 verl/uni-agent 补丁（部署时应用）：
+> - py3.10 StrEnum 兼容：`scripts/fix_strenum_ucloud.sh`
+> - 单卡 fsdp2 跳过冗余 state_dict 拷贝：内嵌于 setup 脚本（幂等）
+> - IPC CPU 大权重：`scripts/patch_verl_ipc_cpu.py`（bucket 2048 + 发送前 CPU→CUDA）
+> - `patches/verl_vllm_logprobs_spec_fix.patch`（EAGLE-3 下 logprobs 0 全丢，0→1）
+> - `patches/verl_merged_lora_materialize_fix.patch`（merge=True 同步基座权重 bug，
+>   backport verl#7014；服务器另可用 `scripts/patch_verl_merged_lora.py`）
+> - `patches/verl_debug_metrics_logprobs_guard.patch`（batch 缺 rollout_log_probs 防崩）
+> - `patches/gateway_hermes_parse_guard.patch`（解析容错，git apply + commit `5cc88ec`；
+>   含 import 修复，覆盖 `patches/uni_agent_vllm0111_toolparsers.patch` 的 import 段）
 
 > 历史方式（v0.18.0 前）：本地 tar 打包 uni_agent_ext → 服务器解压 → 写 `.pth` 进 PYTHONPATH。
 > `.pth` 内容必须是包的父目录（`/home/ubuntu`），不是包目录本身——否则 `import uni_agent_ext`
@@ -62,6 +81,9 @@ uni-agent 一处误用 `typing.NotRequired`（3.11+ 才有）→ 3.10 下 import
 # agentic 训练数据（make_agentic_data.py 产物）
 scp work/data/agentic_train.jsonl work/data/agentic_val.jsonl \
   ubuntu@<训练机IP>:/home/ubuntu/swe-rl/data/
+# HumanEvalFix 数据（当前训练口径；train161 + val + smoke）
+scp work/data/humanevalfix_train161.jsonl work/data/humanevalfix_val.jsonl \
+  ubuntu@<训练机IP>:/home/ubuntu/swe-rl/data/
 # 腾讯云沙箱凭据（chmod 600，勿入库）
 scp work/tencent_sandbox.env ubuntu@<训练机IP>:/home/ubuntu/swe-rl/
 ```
@@ -78,6 +100,11 @@ print(mini_swe_agent_runner.__name__)"
 
 `bash /home/ubuntu/swe-rl/run_grpo_single_agentic_ucloud.sh`（脚本见 scripts/）。
 注意：腾讯沙箱需能访问训练机 Gateway（公网端口，见 docs/vllm_access.md）。
+
+全样本口径（当前主力）：`bash /home/ubuntu/swe-rl/run_grpo_humanevalfix_ucloud.sh`
+（train161 / batch32 / mini16 / micro4 / 并发 64 / 5 epoch）；投机解码加
+`bash /home/ubuntu/swe-rl/spec_train_run.sh`（`lora.merge=True` + EAGLE-3，独立
+checkpoint/日志目录）。双机全异步：`run_grpo_multinode_async_ucloud.sh`（见 README）。
 
 ## 6. mini-swe-agent tencent_e2b attach 补丁（训练机必做）
 

@@ -2,6 +2,27 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.36.0（2026-08-11）
+
+- **全量文档同步到 2026-08-11 实际状态**（README / docs / 扩展包说明）：
+  - README：里程碑推进到 v0.35.2（gateway 容错上机验证、投机 +41.7%、
+    黑盒 runner v0.35.1、双机全异步脚本 v0.35.0、优化路线定稿）；训练模式表/启动
+    示例去掉 Mooncake 对照；补 gateway 补丁排坑
+  - docs/architecture.md：物理部署表更新为 node1（117.50.189.37，训练主力）+
+    node2（2×4090 24G）；亮点改为 LoRA 热插 / 投机解码 / 全异步（PD 已放弃）；
+    状态节更新到 2026-08-11
+  - docs/deployment.md：部署对象更新为 node1；补全版本链（torch 2.9.0+cu128 /
+    vllm 0.11.1）、补丁清单（按 patches/scripts 实际文件名核对）、全样本/投机/
+    全异步脚本入口、HumanEvalFix 数据上传
+  - docs/vllm_access.md：SSH 隧道方案标记为历史（v0.14.0 起不需要）；当前路径 =
+    训练机 Gateway 公网端口 + 白盒本机直连 / 黑盒 direct-URL（v0.35.1）
+  - docs/训练评测分析.md：gateway 方案 A 上机验证结果（3 step 全 4/4、
+    0 unrecoverable）、投机 run 结果（+41.7%、82.61%）、下一步更新
+  - docs/ROADMAP.md：HumanEvalFix 标完成、新增黑盒采样节（§1b）、投机解码标完成、
+    服务器恢复 checklist 更新
+  - uni_agent_ext/README.md：补 agents（mini_swe_agent_runner / claude_code_runner）、
+    SWE-bench 后端适配标完成
+
 ## v0.35.2（2026-08-11）
 
 - **优化路线定稿（用户拍板）：PD 分离彻底放弃，改走双机全异步**：

@@ -1,4 +1,4 @@
-# 整体架构（2026-08-06：现行 + 目标形态，防跑偏锚点）
+# 整体架构（2026-08-11：现行 + 目标形态，防跑偏锚点）
 
 ## 1. 项目定位
 
@@ -7,19 +7,21 @@
 （LoRA 微调）训练模型，权重回传让"采样用的就是正在训练的模型"。
 
 - **训练方式不是项目重点**：LoRA 保持轻量可扩展；
-- **项目亮点在 rollout 侧优化**：LoRA 引擎常驻（adapter 热插）/ 投机解码 / PD 分离；
+- **项目亮点在 rollout 侧优化**：LoRA 引擎常驻（adapter 热插）/ 投机解码（EAGLE-3，
+  已实测 +41.7% 吞吐）/ 全异步（v1 colocate_async/separate_async，2026-08-11 定稿；
+  **PD 分离已放弃**，详见 ROADMAP §2）；
 - **改造目标**：把 uni-agent 改造成 agentlighting 式异步架构（见 §6）。
 
-## 2. 物理部署（当前实际，2026-08-06）
+## 2. 物理部署（当前实际，2026-08-11）
 
 | 角色 | 位置 | 职责 |
 |---|---|---|
 | 开发台 | 本地 WSL2 | 代码/脚本/数据准备；采样调试；GitHub 改造仓 |
-| 训练机 node2 | UCloud 1×4090 48G / 94G | verl+uni-agent、vLLM（训练 rollout）、runner 驱动 mini-swe-agent（harness 在训练机）、腾讯沙箱客户端、Gateway |
+| 训练机 node1 | UCloud 1×4090 48G / 94G（117.50.189.37，2026-08-08 新建） | verl+uni-agent、vLLM（训练 rollout）、runner 驱动 mini-swe-agent（harness 在训练机）、腾讯沙箱客户端、Gateway；全样本 baseline + 投机 run 都在此完成 |
 | 沙箱 | 腾讯云 Agent Runtime | SWE-bench 实例（/testbed 执行环境），E2B 连接，跑完即毁 |
-| node1 | UCloud 同配置 | 备用；**VPC 未通，多机未启用**（脚本已按 2×48G 备好） |
+| node2 | UCloud 2×4090 24G（117.50.197.46） | 双机全异步目标机；**与 node1 不同 VPC，内网未通**，多机待网络就绪 |
 
-## 3. 训练链路（agentic GRPO，v0.15.1 起实测跑通 2/2 步）
+## 3. 训练链路（agentic GRPO，全样本 26 步 + 投机 25 步已实测）
 
 1. **数据**：SWE-bench Lite（→ HumanEvalFix，2026-08-06 定稿）→ `agentic_train/val.jsonl`
    （`raw_prompt + tools_kwargs{task/env/reward metadata} + reward_model.ground_truth`）
@@ -39,7 +41,8 @@
    （~2s，引擎常驻）→ checkpoint（`resume_mode=auto` 可续训）→ 下一轮
 
 训练配置（定稿）：LoRA rank=32 / AdamW(fp32) / offload 关 / **fused kernels 关**（与 LoRA 冲突）/
-梯度检查点 / batch=1 / n=2 / lr=1e-5 / step_limit=60。
+梯度检查点 / 全样本 batch=32 / mini=16 / micro=4 / n=4 / 并发 64 / lr=1e-5 / 5 epoch；
+gateway 解析容错补丁（v0.31.8）已上机验证；投机 run 另加 `lora.merge=True` + EAGLE-3。
 
 ## 4. 两条推理链路（重要，勿混）
 
@@ -64,8 +67,10 @@
 ## 7. 状态
 
 - ✅ 单机 agentic GRPO 全链路（数据→沙箱→agent 轨迹→真实 reward→LoRA 更新）v0.15.1/v0.16.1
-- ⏳ 换数据集 HumanEvalFix（agent 不改；数据构造 + runner 文件注入，见 ROADMAP）
-- ⏳ 扩大冒烟样本量（HumanEvalFix 口径）、观察 reward 分布
-- ⏳ 多机（VPC 网络）
-- ⏳ 双机 TQ + Mooncake（VPC 就绪后第一优先）→ 投机解码（详见 ROADMAP / TODO §C 6.5）
-- ⏳ agentlighting 异步改造（方案 1）
+- ✅ HumanEvalFix 全样本 baseline（26 步，基座 76.4% → final 83.2%）+ 投机 run
+  （25 步，82.61%，吞吐 +41.7%）2026-08-08~10
+- ✅ gateway hermes 解析容错（方案 A）上机验证通过（2026-08-09）
+- ✅ 黑盒 Claude Code runner（v0.35.1，腾讯 direct-URL）代码完成，待上机
+- ⏳ 单机黑盒训练验证（下一步；复用 §3 链路，runner 换 claude_code_runner）
+- ⏳ 双机全异步（VPC 就绪后第一优先；colocate_async → separate_async；PD 已放弃）
+- ⏳ agentlighting 异步改造（方案 1，轨迹异步解耦）

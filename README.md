@@ -2,7 +2,8 @@
 
 把 **uni-agent（verl 之上的 Agent RL 编排层）改造成 agentlighting 式异步架构**：本地采样/rollout
 与云端训练通过轨迹存储解耦。当前以 HumanEvalFix 为基准完成单机全样本训练 + 投机解码加速，
-下一步推进双机全异步 + TransferQueue 的 mooncake 存储后端。
+gateway 解析容错修复；黑盒 Claude Code runner 已就绪待上机；下一步推进**双机全异步**
+（verl v1 `colocate_async`/`separate_async` + TransferQueue SimpleStorage）。
 
 ## 定位
 
@@ -14,20 +15,29 @@
 - **训练基线（2026-08-05 定稿，实测执行）**：`Qwen3-8B` + LoRA rank=32 + AdamW(fp32)
   + 梯度检查点；单机 4090 24GB 即可跑冒烟（全样本 32GB 机器亦可，见部署）
 
-## 我们做了什么（截至 2026-08-10，v0.33.4）
+## 我们做了什么（截至 2026-08-11，v0.35.2）
 
 - ✅ **单机 agentic GRPO 全链路**：verl 内部 Ray + vLLM Gateway + mini-swe-agent runner
   （`uni_agent_ext/agents/mini_swe_agent_runner.py`）+ 腾讯云沙箱（E2B 兼容端点），
   LoRA rank=32、续训 `resume_mode=auto`、checkpoint keep=1
 - ✅ **全样本 HumanEvalFix 训练（baseline）**：train161 / batch32 / mini16 / micro4 / 并发64 /
   5 epoch（26 步），评测 **基座 76.4% → final 83.2%**（n=1 / temp 0.8 / 161 条）
-- ✅ **gateway hermes 工具解析容错**（JSON repair + 合成重试，v0.31.8）：消除解析错误杀会话
+- ✅ **gateway hermes 工具解析容错**（方案 A，JSON repair + 合成重试，v0.31.8 上机验证）：
+  3 step 全部 4/4 会话成功，解析错误不再杀会话；方案 B（vLLM 生成期直接解析）留作可选优化
 - ✅ **投机解码（EAGLE-3 + LoRA merge）**：25/25 步训练完成（v0.32.x），rollout 吞吐
-  **+40%**（199 → 282 tok/s），最终模型评测 **82.6%（133/161）**，与 baseline final 几乎持平
+  **+41.7%**（199.2 → 282.4 tok/s，watcher 口径），最终模型评测 **82.61%（133/161）**，
+  与 baseline final 几乎持平；期间修复 verl #7014 merge 权重物化 bug（v0.32.2）
+- ✅ **双机全异步脚本**（v0.35.0）：`run_grpo_multinode_async_ucloud.sh`——默认
+  `colocate_async`（rollout+trainer 同机重叠），`separate_async` 实验性可切
+- ✅ **黑盒 Claude Code runner**（v0.35.1，腾讯 E2B direct-URL 版）：
+  `uni_agent_ext/agents/claude_code_runner.py`，纯函数测试通过，待上机验证
+- ✅ **优化路线定稿**（2026-08-11 用户拍板）：PD 分离彻底放弃；Mooncake 不单跑
+  （无 RDMA 收益有限）；双机全异步 = 网络就绪后第一优先；腾讯沙箱配额已提升但并发
+  保持 baseline 口径（64 / max_num_seqs 128 / util 0.8）保证速度对比可比
 - ✅ **训练日志双存档**：本地 `swe-rl-local/work/server_logs/`（完整会话目录）+ 本仓
   `work/logs/spec_run_20260810/`（压缩日志 + 逐步统计 + 评测结果，含 sha256）
-- ⏳ **双机全异步 + TQ mooncake 存储后端**（进行中）：保存 node1 镜像 → 恢复双机 →
-  GRPO 冒烟 → 验证全异步链路 → 对比 mooncake 存储后端吞吐
+- ⏳ **双机全异步**（进行中）：双机 VPC 网络就绪 → 恢复 node1+node2 → 重做 hosts/SSH/Ray
+  → GRPO 冒烟 → 验证全异步链路（colocate_async 先行，separate_async 后测）
 
 ## 仓库结构
 
@@ -53,7 +63,7 @@ CHANGELOG.md              # 版本记录（每完成一项 commit 一次，语�
 | **投机推理全样本** | `spec_train_run.sh` | 全样本 + EAGLE-3 投机解码 | `LORA_MERGE=1` `SPEC_ON=1` |
 | 多机 | `run_grpo_multinode_ucloud.sh` | 双机 GRPO 冒烟 | dp=2 / tp=2 / batch=2 |
 | **多机全异步** | `run_grpo_multinode_async_ucloud.sh` | 双机 colocate_async（Trainer 与 rollout
-  重叠）+ TQ，可切 mooncake 后端 | `MOONCAKE=0/1` / 预热 1 / dp=2 / tp=1 |
+  重叠）+ TQ SimpleStorage；`separate_async` 实验性 | `TRAINER_MODE=colocate_async` / 预热 1 / dp=2 / tp=1 |
 
 ### 启动示例
 
@@ -74,9 +84,8 @@ tail -f /home/ubuntu/swe-rl/grpo_humanevalfix_spec.log
 # 多机（node1 上，前置 Ray 集群已起）
 bash /home/ubuntu/swe-rl/run_grpo_multinode_ucloud.sh 2>&1 | tee /home/ubuntu/swe-rl/grpo_multinode.log
 
-# 多机全异步（TQ SimpleStorage；MOONCAKE=1 切 MooncakeStore 做对照）
+# 多机全异步（TQ SimpleStorage；Mooncake 已定不单跑，MOONCAKE=1 仅保留对照开关）
 MOONCAKE=0 bash /home/ubuntu/swe-rl/run_grpo_multinode_async_ucloud.sh 2>&1 | tee grpo_multinode_async.log
-MOONCAKE=1 bash /home/ubuntu/swe-rl/run_grpo_multinode_async_ucloud.sh 2>&1 | tee grpo_multinode_async_mooncake.log
 ```
 
 > ⚠️ 训练中 CPU 峰值内存较高（agentic ~65GB），SSH 可能长时间无响应——用 UCloud 控制台
@@ -89,7 +98,8 @@ MOONCAKE=1 bash /home/ubuntu/swe-rl/run_grpo_multinode_async_ucloud.sh 2>&1 | te
 verl rollout，轨迹可直接进训练（token-truth）。腾讯 E2B 后端专用 runner：
 `uni_agent_ext/agents/claude_code_runner.py`——direct-URL 直连 Gateway（不走沙箱内
 隧道）+ 沙箱内 npm 安装 pin 版 claude-code（**< 2.1.154**，vLLM 0.11.1 严格 role
-校验）+ reward 复用 SWE-bench 评估。训练 yaml 配置：
+校验）+ reward 复用 SWE-bench 评估（v0.35.1，纯函数测试通过，**待服务器开机上机验证**）。
+本地工具已就绪：ccglass 1.1.2 + claude-code 2.1.153。训练 yaml 配置：
 
 ```yaml
 runner_fqn: uni_agent_ext.agents.claude_code_runner.claude_code_runner
@@ -223,6 +233,9 @@ vLLM 引擎。默认 `resume_mode=auto` 续训，checkpoint 在 `/home/ubuntu/sw
   会全丢（vllm#30059），需应用 `patches/verl_vllm_logprobs_spec_fix.patch`（0→1）
 - 腾讯沙箱：一次性并发创建过多实例会 `AUTHENTICATION_FAILED` / `LimitExceeded.CPU`，
   训练渐进派发无碍；评测若批量失败，先停残留实例（`tencent_stop_all_instances.py`）再重跑
+- gateway 二次解析容错：`patches/gateway_hermes_parse_guard.patch`（v0.31.8，服务器
+  uni-agent git apply + commit `5cc88ec`）；统计口径看"会话失败数/unrecoverable 数"
+  而非 hermes parser 的 ERROR 日志行
 - 训练数据不要注入 `test_patch`（防泄露），`test_patch` 只用于 reward 评估
 - 所有模型/数据/checkpoint 走服务器本地，**不用腾讯云 COS**
 
@@ -231,8 +244,8 @@ vLLM 引擎。默认 `resume_mode=auto` 续训，checkpoint 在 `/home/ubuntu/sw
 单机跑通后，多机 = 两台同 VPC/子网的机器（vllm 0.11.1 已满足多节点要求）：
 `fix_multinode_hosts.sh` 写内网 hosts → Ray head/join → `run_grpo_multinode_ucloud.sh`
 （LoRA rank=32 / dp=2 / tp=2 / batch=2，冒烟口径 2 条 prompt）。详见
-`docs/architecture.md` 与 `docs/deployment.md`。下一步计划：双机全异步 rollout +
-TransferQueue 的 mooncake 存储后端对比（见 `docs/ROADMAP.md`）。
+`docs/architecture.md` 与 `docs/deployment.md`。双机全异步
+（`run_grpo_multinode_async_ucloud.sh`）为网络就绪后第一优先，见 `docs/ROADMAP.md`。
 
 ## 使用
 
