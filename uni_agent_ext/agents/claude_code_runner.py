@@ -23,21 +23,27 @@ reward 评估复用 uni-agent 的 SWE-bench reward（``uni_agent.tasks.swe_bench
 
 from __future__ import annotations
 
-import base64
 import json
 import logging
 import os
 import shlex
 import time
-from pathlib import Path
+from typing import Any
 from urllib.parse import urlparse
 
 import httpx
 
-from uni_agent.gateway.session import SessionHandle
+try:
+    from uni_agent.gateway.session import SessionHandle
+except Exception:  # noqa: BLE001 - 本地开发（无 ray）也能 import runner 的纯函数部分
+    SessionHandle = Any  # type: ignore[misc,assignment] - 仅用于类型注解
 from uni_agent.sandbox import Sandbox
 
-from uni_agent_ext.agents.mini_swe_agent_runner import create_task_sandbox
+from uni_agent_ext.agents.mini_swe_agent_runner import (
+    create_task_sandbox,
+    evaluate_reward as evaluate_reward_msa,
+    extract_task as extract_task_meta,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -206,44 +212,16 @@ async def install_claude_in_sandbox(sandbox: Sandbox) -> None:
     logger.info("claude-code %s installed in sandbox", CLAUDE_CODE_VERSION)
 
 
-class SandboxEnvForReward:
-    """把 :class:`Sandbox` 适配成 reward 评估用的 async env 接口。"""
+async def evaluate_in_env(sandbox: Sandbox, raw_prompt, tools_kwargs: dict, eval_timeout: int = 600) -> tuple[float, dict]:
+    """在沙箱内跑 reward，与白盒 mini-swe-agent runner 完全同口径。
 
-    def __init__(self, sandbox: Sandbox):
-        self._sandbox = sandbox
-
-    async def communicate(self, input: str, timeout=600, check="ignore", error_msg="Command failed") -> str:
-        result = await self._sandbox.exec_shell(input, timeout=int(timeout))
-        if check == "raise" and result.exit_code != 0:
-            raise RuntimeError(
-                f"{error_msg} (exit_code={result.exit_code}) "
-                f"stdout={result.stdout[:200]} stderr={result.stderr[:200]}"
-            )
-        return result.stdout
-
-    async def write_file(self, path: str | Path, content: str) -> None:
-        encoded = base64.b64encode(content.encode()).decode()
-        await self.communicate(f"echo {encoded} | base64 -d > {path}", check="raise", error_msg=f"write {path}")
-
-    async def read_file(self, path: str | Path, **_) -> str:
-        return await self.communicate(f"cat {path}")
-
-    async def exec_shell(self, command: str, *, workdir=None, timeout=600):
-        return await self._sandbox.exec_shell(command, workdir=workdir, timeout=int(timeout))
-
-
-async def evaluate_in_env(env, metadata: dict, eval_timeout: int = 600) -> tuple[float, dict]:
-    """在沙箱内跑 SWE-bench reward（与 mini-swe-agent runner 同口径）。"""
-    data_source = metadata.get("data_source", "unknown")
-    reward_model = metadata.get("reward_model", {})
-    if data_source != "swe_bench":
-        raise ValueError(f"Unsupported reward data source: {data_source}")
-    from uni_agent.tasks.swe_bench.reward import compute_reward
-
-    spec_metadata = reward_model.get("ground_truth", reward_model)
-    result = await compute_reward(spec_metadata, env, eval_timeout=eval_timeout)
-    score = 1.0 if result.get("resolved", False) else 0.0
-    return score, result
+    复用 :func:`mini_swe_agent_runner.evaluate_reward`（swe_bench / humaneval_fix 双口径：
+    test_patch git apply + FAIL_TO_PASS/P2P 分级打分；humaneval_fix 写 hidden_files 后
+    跑 test_solution.py::test_all）。这样黑白盒 reward 口径一致，便于同条件对比。
+    """
+    task = extract_task_meta(raw_prompt, tools_kwargs)
+    score, details = await evaluate_reward_msa(sandbox, task, timeout=eval_timeout)
+    return score, details
 
 
 async def claude_code_runner(
@@ -282,6 +260,23 @@ async def claude_code_runner(
 
         await install_claude_in_sandbox(sandbox)
 
+        # 任务文件注入（humaneval_fix）：沙箱预置 /testbed git 仓库 + solution.py。
+        # 只注入任务文件，隐藏测试由 evaluate_in_env 在完成后写入（无测试泄露）。
+        env_files = env_config.get("files") or {}
+        if env_files:
+            await sandbox.exec_shell(
+                "mkdir -p /testbed && cd /testbed && "
+                "(git --version >/dev/null 2>&1 || "
+                "(DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
+                "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git)) && "
+                "git init -q && git config user.email t@example.com && git config user.name t",
+                timeout=300,
+            )
+            for rel_path, content in env_files.items():
+                await sandbox.write_file(f"/testbed/{rel_path}", content)
+            # 让 solution.py 被 git 跟踪，否则 agent 提交时 `git diff` 拿不到 patch
+            await sandbox.exec_shell("cd /testbed && git add -A", timeout=60)
+
         # direct URL：session.base_url 是 /v1 API root，去掉 /v1 供 Anthropic 客户端拼 /v1/messages
         claude_base_url = gateway_url.removesuffix("/v1")
         agent_cmd = build_claude_command(
@@ -306,15 +301,13 @@ async def claude_code_runner(
                 (result.stderr or "")[-4000:],
             )
 
-        metadata = {
-            "data_source": (tools_kwargs.get("reward") or {}).get("name", "unknown"),
-            "reward_model": (tools_kwargs.get("reward") or {}).get("metadata", {}),
-        }
         eval_timeout = int(os.environ.get("SWE_AGENT_EVAL_TIMEOUT", "600"))
-        score, eval_result = await evaluate_in_env(SandboxEnvForReward(sandbox), metadata, eval_timeout)
+        score, eval_result = await evaluate_in_env(sandbox, raw_prompt, tools_kwargs, eval_timeout)
         logger.info("[sample %d] reward done score=%s resolved=%s", sample_index, score, eval_result.get("resolved"))
 
         reward_info = {
+            # framework._score_from_reward_info 消费 "reward" 键（reward_score 只是兼容字段）
+            "reward": score,
             "reward_score": score,
             "claude_code_exit_code": result.exit_code,
             **eval_result,

@@ -2,6 +2,22 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.37.0（2026-08-11）
+
+- **黑盒 Claude Code runner 支持 HumanEvalFix（与白盒同口径）+ 黑盒小样本训练脚本**：
+  - `uni_agent_ext/agents/claude_code_runner.py`：
+    - reward 改为复用 `mini_swe_agent_runner.evaluate_reward`（swe_bench /
+      humaneval_fix 双口径，与白盒完全同分；原 `compute_reward` 直连只支持
+      swe_bench 数据源）
+    - 新增 humaneval_fix 任务文件注入（`tools_kwargs.env.files` → /testbed git
+      仓库 + solution.py，仅任务文件、隐藏测试 reward 阶段写入，无测试泄露）
+    - 修复 reward_info 缺 `reward` 键（framework `_score_from_reward_info` 消费
+      该键，缺失会 rm_scores 恒 0；v0.22.2 白盒修复未同步到黑盒）
+    - `SessionHandle` import 改防御式（本地无 ray 也能跑纯函数测试）
+  - 新增 `scripts/run_grpo_single_blackbox_ucloud.sh`：黑盒小样本 GRPO（默认
+    humanevalfix_train3 / n=4 / 并发 4 / 独立 checkpoint+日志目录 blackbox）
+  - 本地纯函数验证通过（build_claude_task + extract_task_meta，humanevalfix 数据）
+
 ## v0.36.0（2026-08-11）
 
 - **全量文档同步到 2026-08-11 实际状态**（README / docs / 扩展包说明）：
