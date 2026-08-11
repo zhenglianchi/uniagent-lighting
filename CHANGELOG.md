@@ -2,6 +2,13 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.38.4（2026-08-11）
+
+- **黑盒 claude 命令加 `--bare`**：debug_launcher 验证（成功）用 `--bare`
+  （精简系统提示），训练命令未加——完整模式系统提示大，input_tokens 超过
+  `CLAUDE_CODE_MAX_OUTPUT_TOKENS=8192` 被客户端误判为 output 超限
+  （"Stream started - received first chunk" 后立即报 8192，4s 内不可能真实超限）
+
 ## v0.38.3（2026-08-11）
 
 - **黑盒排障：claude 加 `--debug-file` 并取回日志**：max_tokens 截断后仍报

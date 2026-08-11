@@ -178,6 +178,7 @@ def build_claude_command(
     env_prefix = " ".join(env_assignments)
     argv = [
         "claude",
+        "--bare",
         "-p",
         task,
         "--model",
