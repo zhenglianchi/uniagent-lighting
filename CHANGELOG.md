@@ -2,6 +2,13 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.38.3（2026-08-11）
+
+- **黑盒排障：claude 加 `--debug-file` 并取回日志**：max_tokens 截断后仍报
+  "response exceeded 8192 output token maximum"（4.3s 内不可能真实超限）——
+  疑 verl 引擎返回的 response 异常；加 debug 日志取回（`/tmp/claude-debug.log`
+  失败时 tail 80 行进 task.log），定位真实响应
+
 ## v0.38.2（2026-08-11）
 
 - **黑盒 max_tokens 根因修复（debug_launcher 定位）**：

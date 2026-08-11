@@ -186,6 +186,8 @@ def build_claude_command(
         str(max_turns),
         "--permission-mode",
         permission_mode,
+        "--debug-file",
+        "/tmp/claude-debug.log",
     ]
     if disable_slash_commands:
         argv.append("--disable-slash-commands")
@@ -327,6 +329,16 @@ async def claude_code_runner(
                 claude_stdout[-4000:],
                 claude_stderr[-4000:],
             )
+            # 取回 claude-debug 日志（API 请求/响应，排障用）
+            debug_log = await sandbox.exec_shell(
+                "tail -80 /tmp/claude-debug.log 2>/dev/null || true", timeout=30
+            )
+            if debug_log.stdout:
+                logger.info(
+                    "[sample %d] claude-debug tail:\n%s",
+                    sample_index,
+                    (debug_log.stdout or "")[-6000:],
+                )
 
         eval_timeout = int(os.environ.get("SWE_AGENT_EVAL_TIMEOUT", "600"))
         score, eval_result = await evaluate_in_env(sandbox, raw_prompt, tools_kwargs, eval_timeout)
