@@ -2,6 +2,17 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.35.2（2026-08-11）
+
+- **优化路线定稿（用户拍板）：PD 分离彻底放弃，改走双机全异步**：
+  - 删除 ROADMAP §4 PD 分离（Prefill/Decode Disaggregation）章节及双机条目中的
+    Mooncake/PD 落地点——无 RDMA 普通网卡 + 当前 HumanEvalFix 短 prompt 任务收益有限，
+    不再做双机 Mooncake 对照实验
+  - 双机全异步（v0.35.0 脚本）定为双机网络就绪后第一优先：colocate_async 先行
+    （rollout+trainer 同机重叠，官方 recipe 模式），separate_async 实验性后测
+  - 配套：TODO §C 6.5 / §E 同步更新；腾讯沙箱配额已提升（用户操作），但并发保持与
+    baseline/投机 run 一致（64 / max_num_seqs 128 / util 0.8），保证速度对比可比
+
 ## v0.35.1（2026-08-11）
 
 - **黑盒 Claude Code 方案落地（TODO §G，腾讯 E2B direct-URL 版）**：

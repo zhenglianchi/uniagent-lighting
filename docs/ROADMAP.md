@@ -24,16 +24,18 @@ simple-bench 极简实验已回滚）。**用户拍板：agent 不改（保持 m
   跑 run_grpo_humanevalfix_ucloud.sh；验收 3~5 条样本至少 1 条修出通过补丁、reward 出现
   组内差异（advantage ≠ 0）→ 支撑完整训练链路，作为校招亮点（agentic 修复 + 沙箱系统）
 
-## 2. 双机 TQ + Mooncake（双机网络就绪后第一优先）
+## 2. 双机全异步 GRPO（2026-08-11 用户定稿：双机网络就绪后第一优先；PD 分离已放弃）
 
-- 目标：双机（node1+node2）开启 verl TransferQueue 跨节点轨迹缓冲 + Mooncake
-  （KV cache 传输 = MooncakeConnector；P2P 权重分发 = mooncake p2p store /
-  checkpoint-engine），摊平单机 rollout 与权重同步瓶颈
+- 目标：双机（node1+node2）开启 verl v1 全异步——Trainer 与 rollout 重叠，摊平单机
+  step 内 gen（53%）与 update（33%）的串行瓶颈（理论上限 ~1.8x）
+- 脚本已备：`scripts/run_grpo_multinode_async_ucloud.sh`（v0.35.0）——默认
+  `trainer.v1.trainer_mode=colocate_async`（rollout+trainer 同机重叠）；`separate_async`
+  （训练机独立，需非 naive checkpoint engine 权重同步）实验性后测；TQ 已全程承载
+  verl v1 数据流（SimpleStorage 默认）
+- **Mooncake 不单跑**：无 RDMA 普通网卡 + 轨迹小数据量收益有限，不做双机 Mooncake
+  对照实验
 - 前提：两台同 VPC/子网（当前 node1/node2 不同 VPC 未通；node2 镜像已保存）
-- 落地点（待上机验证）：TQ 后端（SimpleStorage 双机 or Redis）→ 双机 GRPO 跑通 →
-  vllm PD 分离场景 KV 走 MooncakeConnector；权重分发走 mooncake P2P
-- 验收：跨节点生成吞吐 / KV 传输延迟 / 每步权重同步耗时 vs 单机基线；
-  普通款无 RDMA 时收益待实测
+- 验收：step 墙钟 / 生成吞吐 vs 单机基线（投机 run 45.3min/step 为对照口径）
 
 ## 3. 投机解码（Speculative Decoding）
 
@@ -44,16 +46,10 @@ simple-bench 极简实验已回滚）。**用户拍板：agent 不改（保持 m
   稳定性 → 需在 verl rollout 链路实测（distilled 类 draft 用 rejection sampling 保分布）
 - 注意：draft 模型多占显存，适合双卡/多卡阶段；batch 大、KV 复用低时收益下降需实测阈值
 
-## 4. PD 分离（Prefill/Decode Disaggregation，后续亮点）
-
-- prefill 与 decode 拆不同 worker/实例，经 KV connector（MooncakeConnector）跨引擎传 KV，
-  消除长 prompt prefill 对 decode 吞吐（TPOT）的抢占；vLLM 官方明确适配 agentic RL
-- 与双机 TQ + Mooncake 结合：prefill 机与 decode 机分离部署，KV 传输走 Mooncake
-
-## 5. 服务器恢复 checklist
+## 4. 服务器恢复 checklist
 
 1. 用户恢复 node2 镜像（新实例 ≥64GB 内存）→ 更新本地 `work/ucloud.env`（新公网/内网 IP）
 2. node2：`git -C /home/ubuntu/uniagent-lighting pull`（本仓代码/文档/脚本）
 3. 环境验证（import / 模型存在）→ 按 §1 构造 HumanEvalFix 数据 → 跑单机 agentic GRPO 冒烟
 4. 双机网络就绪后：重做 hosts/SSH/Ray（`scripts/fix_multinode_hosts.sh` +
-   `setup_ssh_trust.py` + `ray_cluster_setup.sh`）→ 开 TQ + Mooncake
+   `setup_ssh_trust.py` + `ray_cluster_setup.sh`）→ 跑双机全异步 GRPO
