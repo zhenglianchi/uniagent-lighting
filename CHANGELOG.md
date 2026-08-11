@@ -2,6 +2,15 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.38.1（2026-08-11）
+
+- **黑盒首跑排障（隧道已通，claude 报 output token 超限）**：
+  - `build_claude_command` 加 `CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000`（默认，可覆盖）：
+    Gateway 自定义端点的 usage 字段语义差异导致 claude-code 客户端误报
+    "response exceeded 32000 output token maximum"（4.2s 内不可能真实超限）
+  - 黑盒脚本补 `TENCENT_SANDBOX_SKIP_TMUX=1`（tmux 安装每会话白耗 180s 超时，
+    白盒 v0.30.1 同款提速，黑盒漏了）
+
 ## v0.38.0（2026-08-11）
 
 - **黑盒回到 direct-URL 定稿方案（用户拍板，弃隧道）**：

@@ -34,6 +34,9 @@ export E2B_API_KEY="${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}"
 export GATEWAY_PORT=${GATEWAY_PORT:-8001}
 export CLAUDE_GATEWAY_TUNNEL=${CLAUDE_GATEWAY_TUNNEL:-0}
 export CLAUDE_GATEWAY_PUBLIC_HOST=${CLAUDE_GATEWAY_PUBLIC_HOST:-117.50.199.93}
+# 跳过沙箱内 tmux 安装（黑盒 claude-code 不需要；该 apt-get 常卡到 E2B 180s 超时，
+# 每会话白耗 ~3 分钟，与白盒 v0.30.1 同款提速）
+export TENCENT_SANDBOX_SKIP_TMUX=1
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
 MODEL=/home/ubuntu/models/Qwen3-8B
