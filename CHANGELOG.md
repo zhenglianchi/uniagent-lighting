@@ -2,6 +2,17 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.37.4（2026-08-11）
+
+- **修复黑盒 SSH 隧道远端目标 + 增强可观测性**：
+  - `ensure_gateway_tunnel` 隧道远端目标从写死 `127.0.0.1:{port}` 改为
+    `gateway_url` 的实际 hostname（Gateway 监听 Ray node IP，如 10.60.56.10，
+    不是回环）——黑盒首跑 ECONNRESET 主嫌疑
+  - `install_claude_in_sandbox` npm 安装 timeout 600 → 900（首跑 1 个沙箱
+    npm install 超时）
+  - `claude_code_runner` 记录 claude-code 完整 stdout/stderr 到 task.log
+    （黑盒请求/断连调试用）
+
 ## v0.37.3（2026-08-11）
 
 - **修复黑盒 runner 沙箱未启动 bug（首跑崩溃根因）**：`claude_code_runner` 主流程漏调

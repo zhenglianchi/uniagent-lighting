@@ -217,6 +217,7 @@ async def ensure_gateway_tunnel(
     from urllib.parse import urlparse
 
     parsed = urlparse(gateway_url)
+    gateway_host = parsed.hostname or "127.0.0.1"
     gateway_port = parsed.port or 80
     gateway_path = parsed.path or "/v1"
     if not ssh_host:
@@ -237,7 +238,7 @@ async def ensure_gateway_tunnel(
 
     cmd = (
         f"nohup ssh -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes "
-        f"-o ServerAliveInterval=15 -N -L 127.0.0.1:{local_port}:127.0.0.1:{gateway_port} "
+        f"-o ServerAliveInterval=15 -N -L 127.0.0.1:{local_port}:{gateway_host}:{gateway_port} "
         f"-i {key_dst} {ssh_user}@{ssh_host} > /tmp/gw_tunnel.log 2>&1 &"
     )
     await sandbox.exec_shell(cmd, timeout=60)

@@ -204,7 +204,7 @@ async def install_claude_in_sandbox(sandbox: Sandbox) -> None:
         f"npm install -g @anthropic-ai/claude-code@{CLAUDE_CODE_VERSION} "
         f"--registry={NPM_REGISTRY}"
     )
-    result = await sandbox.exec_shell(install_cmd, timeout=600)
+    result = await sandbox.exec_shell(install_cmd, timeout=900)
     if result.exit_code != 0:
         raise RuntimeError(
             f"claude-code install failed rc={result.exit_code}: "
@@ -311,12 +311,18 @@ async def claude_code_runner(
         logger.info(
             "[sample %d] claude-code finished rc=%s elapsed=%.1fs", sample_index, result.exit_code, elapsed
         )
+        # 完整输出落盘（调试黑盒请求/ECONNRESET 用）
+        claude_stdout = result.stdout or ""
+        claude_stderr = result.stderr or ""
+        logger.info("[sample %d] claude-code stdout_tail=%.3000s", sample_index, claude_stdout[-3000:])
+        if claude_stderr:
+            logger.info("[sample %d] claude-code stderr_tail=%.2000s", sample_index, claude_stderr[-2000:])
         if result.exit_code != 0:
             logger.warning(
                 "[sample %d] claude-code failed stdout_tail=%r stderr_tail=%r",
                 sample_index,
-                (result.stdout or "")[-4000:],
-                (result.stderr or "")[-4000:],
+                claude_stdout[-4000:],
+                claude_stderr[-4000:],
             )
 
         eval_timeout = int(os.environ.get("SWE_AGENT_EVAL_TIMEOUT", "600"))
