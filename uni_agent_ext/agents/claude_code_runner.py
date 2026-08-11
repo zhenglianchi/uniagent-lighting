@@ -280,12 +280,11 @@ async def claude_code_runner(
             await sandbox.exec_shell("cd /testbed && git add -A", timeout=60)
 
         # 沙箱内 claude-code 访问 Gateway：
-        # - 隧道模式（CLAUDE_GATEWAY_TUNNEL=1，默认）：沙箱内 ssh -N -L 走训练机公网
-        #   22 端口转发 Gateway（只需安全组放行 22，无需开新端口）；复用白盒
-        #   ensure_gateway_tunnel（MSA_GATEWAY_SSH_HOST=训练机公网 IP）
-        # - direct-URL 模式（CLAUDE_GATEWAY_TUNNEL=0 + CLAUDE_GATEWAY_PUBLIC_HOST）：
-        #   ANTHROPIC_BASE_URL 直连公网 Gateway（需安全组放行 Gateway 端口）
-        if os.environ.get("CLAUDE_GATEWAY_TUNNEL", "1") == "1":
+        # - direct-URL 模式（默认，定稿方案 v0.35.1）：ANTHROPIC_BASE_URL 直连公网
+        #   Gateway（GATEWAY_PORT 固定 + 安全组放行 + CLAUDE_GATEWAY_PUBLIC_HOST=公网 IP）
+        # - 隧道模式（CLAUDE_GATEWAY_TUNNEL=1，备选）：沙箱内 ssh -N -L 走训练机公网
+        #   22 端口转发 Gateway（仅需放行 22）
+        if os.environ.get("CLAUDE_GATEWAY_TUNNEL", "0") == "1":
             claude_base_url = await ensure_gateway_tunnel(sandbox, gateway_url)
         else:
             public_host = os.environ.get("CLAUDE_GATEWAY_PUBLIC_HOST", "")

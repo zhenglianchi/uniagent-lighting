@@ -2,6 +2,17 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.38.0（2026-08-11）
+
+- **黑盒回到 direct-URL 定稿方案（用户拍板，弃隧道）**：
+  - 新增补丁 `patches/verl_gateway_fixed_port.patch`（`run_uvicorn` 加 `port` 参数，
+    默认 0 不影响 vLLM/SGLang 等其它调用）+ `patches/gateway_fixed_port.patch`
+    （Gateway 读 `GATEWAY_PORT` 环境变量固定监听端口）
+  - 黑盒脚本 `run_grpo_single_blackbox_ucloud.sh`：`GATEWAY_PORT=8001` +
+    `CLAUDE_GATEWAY_PUBLIC_HOST=117.50.199.93`；`CLAUDE_GATEWAY_TUNNEL` 默认改回
+    **0**（direct-URL），隧道降级为备选
+  - 前置：UCloud 安全组放行 8001（沙箱出口可达训练机公网 IP）
+
 ## v0.37.4（2026-08-11）
 
 - **修复黑盒 SSH 隧道远端目标 + 增强可观测性**：
