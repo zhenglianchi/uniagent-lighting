@@ -52,7 +52,8 @@ logger = logging.getLogger(__name__)
 # 修复 2026-06 才合入 vLLM → 必须 pin < 2.1.154
 CLAUDE_CODE_VERSION = "2.1.153"
 NPM_REGISTRY = "https://registry.npmmirror.com"
-DEFAULT_MAX_TURNS = 100
+# 与白盒 mini-swe-agent 同口径（2026-08-12 用户定）：MSA_AGENT_MAX_TURNS 默认 60
+DEFAULT_MAX_TURNS = int(os.getenv("CLAUDE_AGENT_MAX_TURNS", "60"))
 DEFAULT_AGENT_RUN_TIMEOUT = 7200
 
 

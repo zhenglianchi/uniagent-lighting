@@ -2,6 +2,13 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.38.5（2026-08-12）
+
+- **黑盒 max_turns 对齐白盒（用户定）**：白盒 mini-swe-agent 默认
+  `MSA_AGENT_MAX_TURNS=60`（数据 max_steps 60）；黑盒 `CLAUDE_AGENT_MAX_TURNS`
+  默认从 100 改为 **60**（runner 默认 + 脚本 runner_kwargs 同步），避免黑盒
+  长循环轨迹（step_2 实测 102 轮 Edit 循环）放大训练成本
+
 ## v0.38.4（2026-08-11）
 
 - **黑盒 claude 命令加 `--bare`**：debug_launcher 验证（成功）用 `--bare`

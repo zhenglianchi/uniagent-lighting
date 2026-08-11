@@ -104,7 +104,7 @@ ls -la "$TRAIN_FILE" "$VAL_FILE" "$MODEL" >/dev/null
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.dispatch_mode=ray_task \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.max_concurrent_sessions=${CONCURRENCY} \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.model_name=${SERVED_MODEL_NAME} \
-  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.max_turns=100 \
+  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.max_turns=60 \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.run_timeout=7200 \
   ++actor_rollout_ref.rollout.custom.agent_framework.mask_unfinished_episode=False \
   ++actor_rollout_ref.rollout.custom.agent_framework.use_reward_loop_worker=False \
