@@ -83,6 +83,23 @@ MOONCAKE=1 bash /home/ubuntu/swe-rl/run_grpo_multinode_async_ucloud.sh 2>&1 | te
 > Web shell 操作，不要误杀进程。腾讯沙箱按量计费：只跑单实例、任务间隙停实例
 > （`tencent_stop_all_instances.py`，仅支持停止；STOPPED 实例不计费、过期自动回收）。
 
+## 黑盒采样（Claude Code，方案 G）
+
+用 Claude Code（`claude -p`）作为黑盒 agent，通过 Gateway 的 Anthropic 适配器接入
+verl rollout，轨迹可直接进训练（token-truth）。腾讯 E2B 后端专用 runner：
+`uni_agent_ext/agents/claude_code_runner.py`——direct-URL 直连 Gateway（不走沙箱内
+隧道）+ 沙箱内 npm 安装 pin 版 claude-code（**< 2.1.154**，vLLM 0.11.1 严格 role
+校验）+ reward 复用 SWE-bench 评估。训练 yaml 配置：
+
+```yaml
+runner_fqn: uni_agent_ext.agents.claude_code_runner.claude_code_runner
+runner_kwargs:
+  model_name: <gateway served model>
+```
+
+本地联调用 ccglass（`npm install -g ccglass`，`ccglass claude --upstream <vLLM>`）。
+详见 TODO §G。
+
 ## 从零部署（新机器 → 跑通训练）
 
 面向 UCloud GPU 云主机单机部署（RTX 4090 24GB/48G 均可；48G 跑全样本 batch32 更宽裕）。

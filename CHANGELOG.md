@@ -2,6 +2,17 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.35.1（2026-08-11）
+
+- **黑盒 Claude Code 方案落地（TODO §G，腾讯 E2B direct-URL 版）**：
+  - 新增 `uni_agent_ext/agents/claude_code_runner.py`——`ANTHROPIC_BASE_URL` 直连
+    Gateway（session.base_url 去 `/v1`，绕过 openyuanrong 专用 mounts/upstream 隧道）、
+    沙箱内 `npm install -g @anthropic-ai/claude-code@2.1.153`（pin < 2.1.154 避开
+    vLLM 0.11.1 严格 role 校验；npmmirror 加速）、reward 复用
+    `uni_agent.tasks.swe_bench.reward`；纯函数测试通过
+  - 本地工具就绪：ccglass 1.1.2 + claude-code 2.1.153（npmjs 直连超时，走 npmmirror）
+  - 待服务器开机后：UCloud vLLM 连通性验证 + 腾讯沙箱端到端黑盒采样
+
 ## v0.35.0（2026-08-11）
 
 - **新增双机全异步训练脚本 `run_grpo_multinode_async_ucloud.sh`**（调研定稿，见
