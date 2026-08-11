@@ -2,7 +2,8 @@
 
 把 **uni-agent（verl 之上的 Agent RL 编排层）改造成 agentlighting 式异步架构**：本地采样/rollout
 与云端训练通过轨迹存储解耦。当前以 HumanEvalFix 为基准完成单机全样本训练 + 投机解码加速，
-gateway 解析容错修复；黑盒 Claude Code runner 已就绪待上机；下一步推进**双机全异步**
+gateway 解析容错修复；**黑盒（Claude Code）小样本验证通过（12/12 会话 reward 1.0）并已
+启动正式训练**；下一步推进**双机全异步**
 （verl v1 `colocate_async`/`separate_async` + TransferQueue SimpleStorage）。
 
 ## 定位
@@ -29,8 +30,12 @@ gateway 解析容错修复；黑盒 Claude Code runner 已就绪待上机；下�
   与 baseline final 几乎持平；期间修复 verl #7014 merge 权重物化 bug（v0.32.2）
 - ✅ **双机全异步脚本**（v0.35.0）：`run_grpo_multinode_async_ucloud.sh`——默认
   `colocate_async`（rollout+trainer 同机重叠），`separate_async` 实验性可切
-- ✅ **黑盒 Claude Code runner**（v0.35.1，腾讯 E2B direct-URL 版）：
-  `uni_agent_ext/agents/claude_code_runner.py`，纯函数测试通过，待上机验证
+- ✅ **黑盒 Claude Code 链路跑通**（v0.35.1 runner → v0.38.5 排障链）：
+  `uni_agent_ext/agents/claude_code_runner.py`（腾讯 E2B，GATEWAY_PORT 固定端口 +
+  隧道/direct-URL 双模式 + max_tokens 截断 + `--bare` + max_turns 60 对齐白盒）；
+  小样本 3 步 12/12 会话 reward 1.0（2026-08-12），轨迹与排障见
+  `work/logs/blackbox_smoke_20260812/`；**正式训练
+  `run_grpo_humanevalfix_blackbox_ucloud.sh` 已启动**（train161，与 baseline 同口径）
 - ✅ **优化路线定稿**（2026-08-11 用户拍板）：PD 分离彻底放弃；Mooncake 不单跑
   （无 RDMA 收益有限）；双机全异步 = 网络就绪后第一优先；腾讯沙箱配额已提升但并发
   保持 baseline 口径（64 / max_num_seqs 128 / util 0.8）保证速度对比可比
@@ -61,6 +66,7 @@ CHANGELOG.md              # 版本记录（每完成一项 commit 一次，语�
 | agentic 单机 | `run_grpo_single_agentic_ucloud.sh` | 完整 agent 链路，agentic 数据 | step_limit=60 |
 | 全样本 HumanEvalFix | `run_grpo_humanevalfix_ucloud.sh` | train161 / 5 epoch | batch32 / mini16 / micro4 / 并发64 |
 | **投机推理全样本** | `spec_train_run.sh` | 全样本 + EAGLE-3 投机解码 | `LORA_MERGE=1` `SPEC_ON=1` |
+| **黑盒全样本** | `run_grpo_humanevalfix_blackbox_ucloud.sh` | HumanEvalFix 161 + Claude Code 黑盒 | batch32 / 并发 64 / max_turns 60 |
 | 多机 | `run_grpo_multinode_ucloud.sh` | 双机 GRPO 冒烟 | dp=2 / tp=2 / batch=2 |
 | **多机全异步** | `run_grpo_multinode_async_ucloud.sh` | 双机 colocate_async（Trainer 与 rollout
   重叠）+ TQ SimpleStorage；`separate_async` 实验性 | `TRAINER_MODE=colocate_async` / 预热 1 / dp=2 / tp=1 |

@@ -27,14 +27,16 @@ simple-bench 极简实验已回滚）。**用户拍板：agent 不改（保持 m
 - ✅ 全样本 baseline（2026-08-08~09）：train161 / 26 步 = 5 epoch + 1 步，
   基座 76.4% → **final 83.2%（+6.8pp）**；评测与逐步统计见 `docs/训练评测分析.md`
 
-## 1b. 黑盒采样（Claude Code，✅ 代码就绪 v0.35.1，待上机验证）
+## 1b. 黑盒采样（Claude Code，✅ 小样本验证通过 2026-08-12，正式训练已启动）
 
 - runner：`uni_agent_ext/agents/claude_code_runner.py`（腾讯 E2B direct-URL 版）——
   `ANTHROPIC_BASE_URL` 直连公网 Gateway（去 `/v1`）+ 沙箱内 npm 装 pin 版
   claude-code（2.1.153，< 2.1.154）+ reward 复用 SWE-bench 评估
 - 本地工具就绪：ccglass 1.1.2 + claude-code 2.1.153（npmmirror）
-- 下一步：服务器开机后跑单机黑盒 GRPO 冒烟（复用 §D 链路，runner 换
-  claude_code_runner）；验收 = 黑盒轨迹进 session + reward 上报 + 训练步正常
+- ✅ 小样本：train3 × n=4 = 12/12 会话 reward 1.0（3 步 GRPO + LoRA 热插 +
+  checkpoint），轨迹/排障见 `work/logs/blackbox_smoke_20260812/`
+- ✅ 正式训练已启动：`run_grpo_humanevalfix_blackbox_ucloud.sh`
+  （train161 / batch32 / mini16 / micro4 / 并发 64 / max_turns 60，baseline 同口径）
 - 细节见 TODO §G
 
 ## 2. 双机全异步 GRPO（2026-08-11 用户定稿：双机网络就绪后第一优先；PD 分离已放弃）

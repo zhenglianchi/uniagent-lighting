@@ -2,6 +2,18 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.39.0（2026-08-12）
+
+- **黑盒小样本归档 + 正式训练脚本**：
+  - 归档 `work/logs/blackbox_smoke_20260812/`：12 条轨迹（tgz）+ 检查脚本 +
+    README（结果 / 轨迹检查结论 / 5 轮排障链）
+  - 新增 `scripts/run_grpo_humanevalfix_blackbox_ucloud.sh`：黑盒正式训练
+    （train161 / batch32 / mini16 / micro4 / 并发 64 / max_num_seqs 128 /
+    util 0.8 / 5 epoch，与 baseline/投机同口径；max_turns 60；GATEWAY_PORT=8001
+    隧道默认、direct-URL 可切）
+  - 文档同步：README（黑盒状态）、ROADMAP §1b（验证通过 + 正式启动）、TODO §G、
+    AGENTS.md
+
 ## v0.38.5（2026-08-12）
 
 - **黑盒 max_turns 对齐白盒（用户定）**：白盒 mini-swe-agent 默认
