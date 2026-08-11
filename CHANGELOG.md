@@ -2,6 +2,13 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.37.3（2026-08-11）
+
+- **修复黑盒 runner 沙箱未启动 bug（首跑崩溃根因）**：`claude_code_runner` 主流程漏调
+  `sandbox.start()`（白盒有），导致 `TencentAgentRuntimeSandbox not started` →
+  4 个 session 全失败 → verl `get_seqlen_balanced_partitions` 空序列断言崩训练。
+  已在建沙箱后补 `await sandbox.start()`。
+
 ## v0.37.1（2026-08-11）
 
 - **黑盒 runner 支持 SSH 隧道模式（默认）**：沙箱内 claude-code 通过

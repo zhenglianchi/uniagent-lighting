@@ -249,6 +249,7 @@ async def claude_code_runner(
 
     sandbox = create_task_sandbox(image=image, gateway_url=gateway_url)
     try:
+        await sandbox.start()
         post_setup_cmd = env_config.get("post_setup_cmd", "")
         if post_setup_cmd:
             setup_result = await sandbox.exec_shell(post_setup_cmd, timeout=120)
