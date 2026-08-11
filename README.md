@@ -52,6 +52,8 @@ CHANGELOG.md              # 版本记录（每完成一项 commit 一次，语�
 | 全样本 HumanEvalFix | `run_grpo_humanevalfix_ucloud.sh` | train161 / 5 epoch | batch32 / mini16 / micro4 / 并发64 |
 | **投机推理全样本** | `spec_train_run.sh` | 全样本 + EAGLE-3 投机解码 | `LORA_MERGE=1` `SPEC_ON=1` |
 | 多机 | `run_grpo_multinode_ucloud.sh` | 双机 GRPO 冒烟 | dp=2 / tp=2 / batch=2 |
+| **多机全异步** | `run_grpo_multinode_async_ucloud.sh` | 双机 colocate_async（Trainer 与 rollout
+  重叠）+ TQ，可切 mooncake 后端 | `MOONCAKE=0/1` / 预热 1 / dp=2 / tp=1 |
 
 ### 启动示例
 
@@ -71,6 +73,10 @@ tail -f /home/ubuntu/swe-rl/grpo_humanevalfix_spec.log
 
 # 多机（node1 上，前置 Ray 集群已起）
 bash /home/ubuntu/swe-rl/run_grpo_multinode_ucloud.sh 2>&1 | tee /home/ubuntu/swe-rl/grpo_multinode.log
+
+# 多机全异步（TQ SimpleStorage；MOONCAKE=1 切 MooncakeStore 做对照）
+MOONCAKE=0 bash /home/ubuntu/swe-rl/run_grpo_multinode_async_ucloud.sh 2>&1 | tee grpo_multinode_async.log
+MOONCAKE=1 bash /home/ubuntu/swe-rl/run_grpo_multinode_async_ucloud.sh 2>&1 | tee grpo_multinode_async_mooncake.log
 ```
 
 > ⚠️ 训练中 CPU 峰值内存较高（agentic ~65GB），SSH 可能长时间无响应——用 UCloud 控制台

@@ -2,6 +2,17 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.35.0（2026-08-11）
+
+- **新增双机全异步训练脚本 `run_grpo_multinode_async_ucloud.sh`**（调研定稿，见
+  TODO §6.4）：双机 `trainer.v1.trainer_mode=colocate_async`（Trainer 与 rollout
+  同机重叠 + partial rollout）+ `transfer_queue.enable=True` + `num_warmup_batches`；
+  `MOONCAKE=1` 时切 `transfer_queue.backend.storage_backend=MooncakeStore`
+  （metadata/master/protocol 可配，默认 tcp），与 SimpleStorage 做对照实验；
+  实验性支持 `TRAINER_MODE=separate_async`（需 nccl checkpoint engine）。
+  实测估算：全异步重叠后每步 1970s → ~1100-1200s（1.6-1.7x），双机 + 投机解码
+  预计 1.8-2.2x（uni-agent 官方 8×A100 partial rollout 2.1x）
+
 ## v0.34.2（2026-08-10）
 
 - **目录整洁**：删除已废弃的单机双卡冒烟脚本 `run_grpo_dualgpu_ucloud.sh`
