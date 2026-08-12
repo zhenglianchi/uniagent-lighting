@@ -52,6 +52,13 @@ gateway 解析容错补丁（v0.31.8）已上机验证；投机 run 另加 `lora
 ## 5. 关键决策与边界（防跑偏清单）
 
 - **agent harness 在沙箱外**（思路 1.9）：沙箱只是执行环境，不把 agent 装进沙箱
+- **agent 接入规范（2026-08-12 用户定序，勿图省事 ⛔）**：目标形态 = agent 跑在
+  **用户侧/本地**（或任意位置），模型调用指向**云端 Gateway**（on-policy 只要求
+  token-truth 轨迹由 Gateway 云侧记录，不要求 agent 在云端），沙箱永远只是执行
+  环境。白盒 harness 放训练机、黑盒 claude 装沙箱均为"图省事"中间形态，**不作为
+  终态**；Claude Code 工具本地化的远程执行适配是平台化必须解决的工程问题。
+  当前黑盒正式训练跑完后，双机阶段即开始 §D 平台化（本地 agent 直连 Gateway +
+  轨迹异步入库 + 双机全异步训练）。
 - **无测试泄露**：`test_patch` 只用于 reward 评估，不注入 agent
 - **腾讯云只用于沙箱**（HAI/COS 弃用）；训练在 UCloud；模型/数据/checkpoint 走 UCloud 本地
 - **数据集（2026-08-06）**：换 HumanEvalFix（单函数修复，8B 60 轮内可出结果）；agent 不改
@@ -63,6 +70,9 @@ gateway 解析容错补丁（v0.31.8）已上机验证；投机 run 另加 `lora
 - Algorithm ↔ **轨迹存储**（TransferQueue / 轨迹文件）↔ Runner（可分布在本地/多机）
 - 当前：runner 在训练进程内（单机闭环已通）；目标：runner 拆出、轨迹异步进云端、
   训练消费（三档路线见 TODO，方案 1 = TQ 解耦为正式目标）
+- **平台化终态（2026-08-12 定序）**：用户本地任意 agent（OpenAI 兼容 base_url）→
+  云上公共 Gateway（会话 API + token-truth 轨迹）→ TQ 异步入库 → 云端 GRPO →
+  checkpoint → 模型服务；agent 不在云端、沙箱只执行（详见 §5 接入规范）
 
 ## 7. 状态
 

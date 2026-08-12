@@ -2,6 +2,18 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.39.1（2026-08-12）
+
+- **平台化定序写入防跑偏文档（用户拍板，勿图省事）**：
+  - architecture.md §5 新增 agent 接入规范：目标形态 = agent 在用户侧/本地，
+    模型调用指向云端 Gateway（on-policy 只要求 token-truth 轨迹云侧记录），沙箱
+    永远只是执行环境；白盒 harness 放训练机 / 黑盒 claude 装沙箱均为"图省事"
+    中间形态，不作为终态；Claude Code 工具远程执行适配是平台化必做的工程问题
+  - architecture.md §6 平台化终态：本地 agent（OpenAI 兼容 base_url）→ 云上公共
+    Gateway → TQ 异步入库 → 云端 GRPO → checkpoint → 模型服务
+  - 执行顺序：当前黑盒正式训练跑完 → 双机阶段开始 §D 平台化（本地 agent 直连
+    Gateway + 轨迹异步入库 + 双机全异步训练）
+
 ## v0.39.0（2026-08-12）
 
 - **黑盒小样本归档 + 正式训练脚本**：
