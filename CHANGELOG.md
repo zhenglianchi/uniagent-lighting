@@ -2,6 +2,16 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.43.0（2026-08-12）
+
+- **训练轨迹归档补全（白盒 baseline + 黑盒正式训练）**：
+  - 新增 `work/logs/humanevalfix_full_20260809/`：白盒 baseline（26 步）+ spec
+    （25 步）会话轨迹 tgz + 主日志 + 逐步统计（此前只归档了 spec，baseline 未传）
+  - 新增 `work/logs/blackbox_full_20260812/`：黑盒正式训练 step 1-15 会话轨迹
+    tgz + README（特性观察定位、结果摘要、与白盒对比）
+  - 黑盒训练止于 **step 15/25**（服务器租用期前停止），checkpoint 15 在服务器
+    可续训；新服务器克隆镜像后 `resume_mode=auto` 直接续
+
 ## v0.42.2（2026-08-12）
 
 - **黑盒平台化端到端验证通过（reward 1.0）**：本地 claude-code（编排）→ MCP
