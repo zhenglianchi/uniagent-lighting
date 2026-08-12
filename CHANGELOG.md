@@ -2,6 +2,17 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.42.2（2026-08-12）
+
+- **黑盒平台化端到端验证通过（reward 1.0）**：本地 claude-code（编排）→ MCP
+  （Bash/Read/Write/Edit 转发）→ 云端腾讯沙箱执行 + 模型调用（Anthropic）→
+  隧道 → 云端 Gateway → token-truth 轨迹 → 云侧 reward → GRPO step。
+  POC（baseline final 权重，save_freq=-1）：num_success_sessions=1、
+  **test_solution.py::test_all PASSED（reward 1.0）**、权重 md5 未变。
+  轨迹结构正确：8 轮、工具调用 `mcp__sandbox__Read/Edit/Write/Bash`（mask=1）
+  ↔ 工具结果 `<tool_response>`（mask=0）交替 + 最终回答，与白盒同构。
+  POC 轨迹在服务器 logs/platform_test_blackbox_poc/step_1/。
+
 ## v0.42.1（2026-08-12）
 
 - **sandbox_mcp_server 改手写 stdio JSON-RPC**：mcp 2.0 已拆包（无
