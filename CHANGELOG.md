@@ -2,6 +2,14 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.42.1（2026-08-12）
+
+- **sandbox_mcp_server 改手写 stdio JSON-RPC**：mcp 2.0 已拆包（无
+  `mcp.server.fastmcp`，PyPI 亦无 mcp-fastmcp），FastMCP 版启动即
+  ModuleNotFoundError → claude 看不到 MCP 工具、把命令当文本输出（POC 首跑
+  reward 0 根因）；手写 MCP 协议（initialize/tools/list/tools/call，
+  newline-delimited JSON-RPC）后 initialize + tools/list 验证通过
+
 ## v0.42.0（2026-08-12）
 
 - **黑盒平台化组件（Claude Code 本地编排 + MCP 工具转发云端沙箱）**：
