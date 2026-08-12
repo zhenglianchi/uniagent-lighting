@@ -2,6 +2,18 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.42.0（2026-08-12）
+
+- **黑盒平台化组件（Claude Code 本地编排 + MCP 工具转发云端沙箱）**：
+  - 新增 `scripts/sandbox_mcp_server.py`：MCP server 暴露 Bash/Read/Write/Edit/Glob，
+    工具经 E2B 在云端腾讯沙箱执行（agent 在用户侧、沙箱只执行）
+  - 新增 `scripts/platform_local_claude.py`（WSL 端）：读 task.json → 隧道 →
+    MCP config（E2B_SANDBOX_ID=训练侧沙箱）→ 本地 `claude --bare`（禁用内置工具、
+    走 MCP）→ ANTHROPIC_BASE_URL 指隧道后的 Gateway → 完成 touch done
+  - 复用 `external_agent_runner`（训练侧建沙箱 + task.json + done + reward）
+  - 待端到端验证：轨迹正确性 + 训练 step（POC 用 baseline final 1 step，
+    save_freq=-1 不保存）
+
 ## v0.41.0（2026-08-12）
 
 - **平台化验证通过并定稿（用户拍板）**：
