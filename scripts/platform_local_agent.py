@@ -40,6 +40,25 @@ def load_ucloud_env() -> dict[str, str]:
     return env
 
 
+def load_sandbox_env() -> None:
+    """加载本地腾讯沙箱凭据（work/tencent_sandbox.env）并映射 E2B_* 环境变量。"""
+    env_path = ROOT / "work/tencent_sandbox.env"
+    if not env_path.exists():
+        raise SystemExit(f"missing {env_path} (腾讯云沙箱凭据)")
+    env: dict[str, str] = {}
+    for line in env_path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        env[key.strip()] = value.strip()
+    os.environ.setdefault("E2B_DOMAIN", env.get("E2B_DOMAIN", "ap-guangzhou.tencentags.com"))
+    os.environ.setdefault("E2B_API_KEY", env.get("E2B_API_KEY") or env.get("TENCENT_SANDBOX_E2B_TOKEN", ""))
+    if not os.environ.get("E2B_API_KEY"):
+        raise SystemExit("E2B_API_KEY 未设置（tencent_sandbox.env 缺 TENCENT_SANDBOX_E2B_TOKEN）")
+    print(f"E2B ready: domain={os.environ['E2B_DOMAIN']}", flush=True)
+
+
 class TunnelForwarder:
     """paramiko direct-tcpip 端口转发：本地 127.0.0.1:<port> → 远端 host:port。"""
 
@@ -189,6 +208,7 @@ def main() -> int:
     parser.add_argument("--gateway-port", type=int, default=8001)
     args = parser.parse_args()
 
+    load_sandbox_env()
     env = load_ucloud_env()
     host = env.get("UCLOUD1_HOST", "")
     user = env.get("UCLOUD1_USER", "ubuntu")

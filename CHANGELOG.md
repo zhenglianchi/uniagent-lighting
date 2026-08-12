@@ -2,6 +2,13 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.40.1（2026-08-12）
+
+- **platform_local_agent.py 加载本地腾讯沙箱凭据**：读 `work/tencent_sandbox.env`
+  并映射 `E2B_API_KEY`（TENCENT_SANDBOX_E2B_TOKEN）/ `E2B_DOMAIN`——本地 agent
+  连腾讯沙箱需要（首跑漏了导致 AuthenticationException，链路骨架已验证：
+  训练侧建沙箱 → task.json → done → reward 0 → 清理，全部正常）
+
 ## v0.40.0（2026-08-12）
 
 - **平台化（§D P0）单步验证组件（agent 在用户侧 → 云端 Gateway → 轨迹 → GRPO）**：
