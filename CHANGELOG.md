@@ -2,6 +2,19 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.41.0（2026-08-12）
+
+- **平台化验证通过并定稿（用户拍板）**：
+  - baseline final（`models/Qwen3-8B-final`）与 spec final
+    （`models/Qwen3-8B-final-spec`）各跑 1 步平台化训练测试，均通过：
+    本地 WSL mini-swe-agent → paramiko 隧道 → 云端 Gateway 8001 → token-truth
+    轨迹 → 云侧 reward（reward 1.0）→ GRPO step；`save_freq=-1` 不保存新权重，
+    models 权重 md5 测试前后一致（未覆盖）
+  - **结论（用户定）**：平台化脚本完整化（v0.40.x 组件即正式方案），不再需要
+    额外完整训练验证；**平台化训练权重 = 已有训练好的权重**
+    （baseline final + spec final）——后续双机阶段按 §D P0 从这些权重继续
+  - 黑盒正式训练保持暂停（5/25，resume_mode=auto 可续训）
+
 ## v0.40.1（2026-08-12）
 
 - **platform_local_agent.py 加载本地腾讯沙箱凭据**：读 `work/tencent_sandbox.env`
