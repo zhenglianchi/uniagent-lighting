@@ -2,6 +2,23 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.40.0（2026-08-12）
+
+- **平台化（§D P0）单步验证组件（agent 在用户侧 → 云端 Gateway → 轨迹 → GRPO）**：
+  - 新增 `uni_agent_ext/agents/external_agent_runner.py`：训练侧外部 runner——
+    建腾讯沙箱 + 注入任务文件 → 写 `<PLATFORM_TEST_DIR>/<session>.task.json`
+    （base_url / instance_id / tools_kwargs）→ 轮询本地 agent 的 done 标记 →
+    云侧 reward（pytest）→ POST reward_info
+  - 新增 `scripts/run_grpo_platform_test_ucloud.sh`：1 step 训练测试，
+    `MODEL` 可切 baseline final / spec final，**save_freq=-1 不保存新权重**
+    （红线：不覆盖 models/Qwen3-8B-final* 与 checkpoints/humanevalfix*）
+  - 新增 `scripts/platform_local_agent.py`（WSL 端）：paramiko 读 task.json +
+    direct-tcpip 隧道（本地 → 训练机内网 Gateway 8001）+ 跑 mini-swe-agent
+    （Python API，attach 云端沙箱，工具仍在沙箱执行）+ 创建 done 标记
+  - 新增 `work/data/platform_test_train.jsonl`（1 条：humanevalfix-Python-61）
+  - 备份点：git tag v0.39.1-platform-baseline；服务器 scripts_backup_20260812/
+  - 纯函数验证通过（build_config：隧道 URL / attach / step_limit）
+
 ## v0.39.1（2026-08-12）
 
 - **平台化定序写入防跑偏文档（用户拍板，勿图省事）**：
