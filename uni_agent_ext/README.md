@@ -52,3 +52,10 @@ sandbox = build_sandbox(config)
   `sweb.eval.` 开头镜像 → Cloud API `StartSandboxInstance`（镜像覆盖）→ E2B
   `Sandbox.connect` 而非 `Sandbox.create`
 - [ ] `startup_timeout` 与 uni-agent `SANDBOX_STARTUP_TIMEOUT`/`SANDBOX_STARTUP_CONCURRENCY` 联动
+
+## 平台化组件
+
+- `agents/external_agent_runner.py`：外部 agent runner（建沙箱 → 暴露任务 →
+  等本地 agent → 云侧 reward），配合 `scripts/platform_local_agent.py`
+- `scripts/sandbox_mcp_server.py`：Claude Code 工具转发 MCP server（手写
+  stdio JSON-RPC，Bash/Read/Write/Edit/Glob → 云端沙箱）

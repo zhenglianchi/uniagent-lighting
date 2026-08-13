@@ -1,123 +1,154 @@
-# 部署到训练机（UCloud node1，2026-08-08 实测；当前 117.50.189.37，1×4090 48G / 94G）
+# 部署与运维指南
 
-> 版本链（2026-08-04 起实测）：**torch 2.9.0+cu128 / vllm 0.11.1 / transformers 4.57.x /
-> verl 0.9.0.dev（uni-agent 捆绑）/ ray 2.56.1 / TransferQueue 0.1.9**；
-> vllm ≥0.11.1 为多机硬性要求。node2 不单独装环境，克隆 node1 镜像。
+## 1. 版本链
 
-## 0. 仓库管理（2026-08-06 起，git 化）
+| 组件 | 版本 | 说明 |
+|---|---|---|
+| torch | 2.9.0+cu128 | vllm 0.11 配套 |
+| vllm | 0.11.1 | verl 0.9 支持 logprobs_mode；多机硬性要求 ≥0.11.1 |
+| transformers | 4.57.x | |
+| verl | 0.9.0.dev | uni-agent 捆绑（本地副本 commit 78bba31） |
+| ray | 2.56.1 | |
+| TransferQueue | 0.1.9 | verl v1 数据平面 |
+| mini-swe-agent | 2.4.6 | 白盒 harness |
+| claude-code | 2.1.153 | 黑盒 harness（pin < 2.1.154，vLLM 0.11.1 role 校验） |
 
-服务器上的改造代码统一由 `uniagent-lighting` 仓库管理，不再手动传文件：
+## 2. 基础环境安装
 
 ```bash
-# node2 上（一次性）
+cd ~ && curl -fsSL -o install_ucloud_from_scratch.sh \
+  https://raw.githubusercontent.com/zhenglianchi/uniagent-lighting/main/scripts/install_ucloud_from_scratch.sh
+bash install_ucloud_from_scratch.sh
+```
+
+脚本完成：Miniforge + swe-rl env（Python 3.10）、清华 pip 源、HF 镜像
+（`HF_ENDPOINT=https://hf-mirror.com` + `HF_HUB_DISABLE_XET=1`）、
+clone uni-agent（含 verl 子模块）、verl 补丁（见 §3）、模型下载
+（`Qwen3-8B` 至 `~/models/`）。
+
+## 3. 补丁清单
+
+服务器侧 verl / uni-agent 补丁（部署时应用，`patches/` 内）：
+
+| 补丁 | 作用 |
+|---|---|
+| `fix_strenum_ucloud.sh` | py3.10 StrEnum 兼容 |
+| `patch_verl_ipc_cpu.py` | IPC CPU 大权重传输（bucket 2048 + 发送前 CPU→CUDA） |
+| `verl_vllm_logprobs_spec_fix.patch` | EAGLE-3 下 logprobs 0 全丢修复（0→1） |
+| `verl_merged_lora_materialize_fix.patch` | merge=True 同步基座权重 bug（backport verl#7014） |
+| `verl_debug_metrics_logprobs_guard.patch` | batch 缺 rollout_log_probs 防崩 |
+| `gateway_hermes_parse_guard.patch` | hermes 解析容错（JSON repair + 合成重试） |
+| `verl_gateway_fixed_port.patch` | Gateway 固定端口（`GATEWAY_PORT`） |
+| `gateway_fixed_port.patch` | run_uvicorn 支持固定端口 |
+| `uni_agent_py310_compat.patch` | uni-agent py3.10 兼容 |
+| `debug_launcher_py310.patch` | 官方调试工具 py3.10 兼容 |
+
+## 4. 改造仓部署
+
+```bash
 cd /home/ubuntu
 git clone https://github.com/zhenglianchi/uniagent-lighting.git
-
-# uni_agent_ext -> 仓库软链（保留旧拷贝备份）
-[ -L uni_agent_ext ] || mv uni_agent_ext uni_agent_ext.bak-20260806
-ln -sfn /home/ubuntu/uniagent-lighting/uni_agent_ext uni_agent_ext
-
-# swe-rl 运行目录（数据/凭据/checkpoint/日志）不动，脚本替换为仓库软链
-cd /home/ubuntu/swe-rl
-for f in run_grpo_smoke_ucloud.sh run_grpo_single_lora_ucloud.sh \
-         run_grpo_single_agentic_ucloud.sh run_grpo_humanevalfix_ucloud.sh \
-         run_grpo_multinode_ucloud.sh run_grpo_multinode_async_ucloud.sh \
-         spec_train_run.sh kill_train.sh start_stats_watch.sh collect_grpo_stats.py \
-         eval_humanevalfix.py convert_verl_lora_to_hf.py fix_multinode_hosts.sh \
-         nccl_multinode_test.py patch_verl_ipc_cpu.py ray_import_test.py \
-         reward_smoke.py tencent_stop_all_instances.py kill_eval.sh \
-         eval_spec_final.sh run_eval_only.sh run_eval_final_spec.sh; do
-  rm -f "$f" && ln -s /home/ubuntu/uniagent-lighting/scripts/$f "$f"
-done
+ln -sfn /home/ubuntu/uniagent-lighting/uni_agent_ext /home/ubuntu/uni_agent_ext
+echo "/home/ubuntu" > /home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/uni_agent_ext.pth
+mkdir -p /home/ubuntu/swe-rl/{data,logs,checkpoints,outputs}
 ```
 
-更新流程：本地改代码 → commit + push（语义化版本）→ 服务器 `git -C /home/ubuntu/uniagent-lighting pull`。
-`/home/ubuntu/swe-rl` 只放非仓库内容：`tencent_sandbox.env`（凭据，勿入库）、`data/`、`checkpoints/`、`logs/`。
-
-> 服务器侧 verl/uni-agent 补丁（部署时应用）：
-> - py3.10 StrEnum 兼容：`scripts/fix_strenum_ucloud.sh`
-> - 单卡 fsdp2 跳过冗余 state_dict 拷贝：内嵌于 setup 脚本（幂等）
-> - IPC CPU 大权重：`scripts/patch_verl_ipc_cpu.py`（bucket 2048 + 发送前 CPU→CUDA）
-> - `patches/verl_vllm_logprobs_spec_fix.patch`（EAGLE-3 下 logprobs 0 全丢，0→1）
-> - `patches/verl_merged_lora_materialize_fix.patch`（merge=True 同步基座权重 bug，
->   backport verl#7014；服务器另可用 `scripts/patch_verl_merged_lora.py`）
-> - `patches/verl_debug_metrics_logprobs_guard.patch`（batch 缺 rollout_log_probs 防崩）
-> - `patches/gateway_hermes_parse_guard.patch`（解析容错，git apply + commit `5cc88ec`；
->   含 import 修复，覆盖 `patches/uni_agent_vllm0111_toolparsers.patch` 的 import 段）
-
-> 历史方式（v0.18.0 前）：本地 tar 打包 uni_agent_ext → 服务器解压 → 写 `.pth` 进 PYTHONPATH。
-> `.pth` 内容必须是包的父目录（`/home/ubuntu`），不是包目录本身——否则 `import uni_agent_ext`
-> 会去找 `/home/ubuntu/uni_agent_ext/uni_agent_ext/__init__.py`，报 No module named（v0.6.0 实测踩坑）。
-
-## 1. uni_agent_ext 扩展包
+运行脚本软链到 `/home/ubuntu/swe-rl/`（训练/评测/运维脚本，
+`git pull` 后自动更新）。数据与凭据：
 
 ```bash
-# 本地打包上传
-tar -czf /tmp/uni_agent_ext.tgz uni_agent_ext
-# 训练机上解压到 /home/ubuntu/uni_agent_ext，并加 .pth 进 PYTHONPATH：
-cd /home/ubuntu && tar -xzf /tmp/uni_agent_ext.tgz
-echo "/home/ubuntu/uni_agent_ext" > \
-  /home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/uni_agent_ext.pth
-```
-
-> ⚠️ git 化后不再需要本节（软链方式）；`.pth` 已在环境中，软链解析后 `import uni_agent_ext` 正常。
-
-## 1b. 沙箱 SDK（runner 创建腾讯沙箱需要）
-
-```bash
-pip install "e2b-code-interpreter==2.9.0" tencentcloud-sdk-python-ags
-# 注意：ags 模块版本路径随 SDK 版本变化（3.1.149 是 tencentcloud.ags.v20250920）
-```
-
-## 2. uni-agent Python 3.10 兼容补丁
-
-uni-agent 一处误用 `typing.NotRequired`（3.11+ 才有）→ 3.10 下 import 失败。
-打 `patches/uni_agent_py310_compat.patch`（或手动改
-`uni_agent/gateway/adapters/types.py` 用 typing_extensions 回退）。
-
-## 3. 数据与凭据
-
-```bash
-# agentic 训练数据（make_agentic_data.py 产物）
-scp work/data/agentic_train.jsonl work/data/agentic_val.jsonl \
-  ubuntu@<训练机IP>:/home/ubuntu/swe-rl/data/
-# HumanEvalFix 数据（当前训练口径；train161 + val + smoke）
 scp work/data/humanevalfix_train161.jsonl work/data/humanevalfix_val.jsonl \
-  ubuntu@<训练机IP>:/home/ubuntu/swe-rl/data/
-# 腾讯云沙箱凭据（chmod 600，勿入库）
-scp work/tencent_sandbox.env ubuntu@<训练机IP>:/home/ubuntu/swe-rl/
+  ubuntu@<服务器IP>:/home/ubuntu/swe-rl/data/
+scp work/tencent_sandbox.env ubuntu@<服务器IP>:/home/ubuntu/swe-rl/
+chmod 600 /home/ubuntu/swe-rl/tencent_sandbox.env
 ```
 
-## 4. 验证
+mini-swe-agent 补丁（白盒/评测需要）：
 
 ```bash
-python -c "import uni_agent_ext; \
-from uni_agent_ext.agents.mini_swe_agent_runner import mini_swe_agent_runner; \
-print(mini_swe_agent_runner.__name__)"
+/home/ubuntu/miniforge3/envs/swe-rl/bin/pip install "mini-swe-agent==2.4.6"
+cp patches/tencent_e2b.py \
+  /home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/minisweagent/environments/extra/tencent_e2b.py
+cp patches/miniswe_swebench.py \
+  /home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/minisweagent/run/benchmarks/swebench.py
 ```
 
-## 5. 运行 agentic 训练
+## 5. 训练
 
-`bash /home/ubuntu/swe-rl/run_grpo_single_agentic_ucloud.sh`（脚本见 scripts/）。
-注意：腾讯沙箱需能访问训练机 Gateway（公网端口，见 docs/vllm_access.md）。
+### 5.1 冒烟验证
 
-全样本口径（当前主力）：`bash /home/ubuntu/swe-rl/run_grpo_humanevalfix_ucloud.sh`
-（train161 / batch32 / mini16 / micro4 / 并发 64 / 5 epoch）；投机解码加
-`bash /home/ubuntu/swe-rl/spec_train_run.sh`（`lora.merge=True` + EAGLE-3，独立
-checkpoint/日志目录）。双机全异步：`run_grpo_multinode_async_ucloud.sh`（见 README）。
+```bash
+bash /home/ubuntu/swe-rl/run_grpo_smoke_ucloud.sh 2>&1 | tee grpo_smoke.log
+```
 
-## 6. mini-swe-agent tencent_e2b attach 补丁（训练机必做）
+### 5.2 全样本训练（白盒 / 黑盒）
 
-训练机安装的 `mini-swe-agent` 里的 `tencent_e2b` 环境类需两处改动：
+```bash
+# 白盒 baseline / spec（环境变量可覆盖）
+bash /home/ubuntu/swe-rl/run_grpo_humanevalfix_ucloud.sh 2>&1 | tee grpo_humanevalfix.log
+SPEC_ON=1 LORA_MERGE=1 bash /home/ubuntu/swe-rl/spec_train_run.sh 2>&1 | tee grpo_spec.log
 
-1. `TencentE2BEnvironmentConfig` 增加 `attach_instance_id`；`_create()` 有 attach id 时
-   直接 `Sandbox.connect`（跳过 StartSandboxInstance）——可整文件覆盖自
-   `mini-swe-agent/src/minisweagent/environments/extra/tencent_e2b.py`
-2. `cleanup()` 在 attach 模式下**只断开、不 kill/不停实例**（生命周期归 runner，
-   reward 评估还要用）——否则 mini-extra 退出会停实例，reward 写 test_patch 报
-   "The requested resource does not exist"（v0.13.1 实测踩坑）
+# 黑盒（Claude Code，沙箱内）——后台运行
+CLAUDE_GATEWAY_TUNNEL=1 MSA_GATEWAY_SSH_HOST=<公网IP> \
+  setsid nohup bash /home/ubuntu/swe-rl/run_grpo_humanevalfix_blackbox_ucloud.sh \
+  > grpo_humanevalfix_blackbox.log 2>&1 < /dev/null &
+```
 
-另外 pip 官方版 `minisweagent/run/benchmarks/swebench.py` 的镜像注入列表只有
-`["docker", "swerex_modal"]`，**不含 `tencent_e2b`**，需覆盖为补丁版
-（`patches/miniswe_swebench.py`），否则腾讯沙箱实例启动时 image 为空、无 `/testbed`
-（v0.20.1 实测踩坑）。
+### 5.3 续训
+
+`resume_mode=auto` + `default_local_dir`（checkpoint 目录）→ 直接重跑同一脚本
+自动从 `latest_checkpointed_iteration.txt` 续训；checkpoint keep 由
+`MAX_CKPT_KEEP` 控制（=1 只留最新）。
+
+### 5.4 平台化训练（外部 agent）
+
+```bash
+# 训练侧（后台）——runner = external_agent_runner，等本地 agent 完成
+MODEL=/home/ubuntu/models/Qwen3-8B-final \
+  setsid nohup bash run_grpo_platform_test_ucloud.sh > grpo_platform.log 2>&1 < /dev/null &
+
+# 本地（WSL）——读任务、起隧道、跑 agent、回传完成标记
+PYTHONPATH=... python uniagent-lighting/scripts/platform_local_agent.py --wait
+```
+
+## 6. 评估
+
+```bash
+# 1. 合并 LoRA 到 HF 权重（不覆盖基座）
+python convert_verl_lora_to_hf.py \
+  --ckpt <ckpt>/actor/model_world_size_1_rank_0.pt \
+  --base /home/ubuntu/models/Qwen3-8B \
+  --out /home/ubuntu/models/Qwen3-8B-final-<tag>
+
+# 2. 起 vLLM + 评估（先小样本 3 条验证，再全量）
+python -m vllm.entrypoints.openai.api_server \
+  --model /home/ubuntu/models/Qwen3-8B-final-<tag> --port 8001 \
+  --enable-auto-tool-choice --tool-call-parser hermes --max-model-len 8192 \
+  --gpu-memory-utilization 0.8 --enable-prefix-caching &
+python eval_humanevalfix.py \
+  --data <val|train161>.jsonl --base-url http://127.0.0.1:8001/v1 \
+  --model <served> --temperature 0.8 --concurrency 24 --out eval_<tag>.json
+```
+
+评估前必须 `source tencent_sandbox.env`（eval 脚本的 load_envs 路径推断在
+服务器布局下失效）。
+
+## 7. 训练日志与轨迹归档
+
+训练产物（主日志 / 会话轨迹 / 评估结果）归档至代码仓 `work/logs/`：
+
+| 归档 | 内容 |
+|---|---|
+| `humanevalfix_full_20260809/` | 白盒 baseline + spec 轨迹、主日志、逐步统计 |
+| `blackbox_smoke_20260812/` | 黑盒小样本 3 步轨迹、排障记录 |
+| `blackbox_full_20260812/` | 黑盒正式训练 step 1-25 轨迹、全量评估结果 |
+| `spec_run_20260810/` | spec 日志、逐步统计、评测 |
+
+## 8. 常见问题
+
+- HF 下载必须 `HF_ENDPOINT=https://hf-mirror.com` + `HF_HUB_DISABLE_XET=1`
+- LoRA 训练必须 `use_fused_kernels=False`（与 PEFT 冲突）
+- EAGLE-3 需 `lora.merge=True`（LoRA×SD 互斥）+ logprobs 补丁
+- CPU offload 训练时 SSH 可能无响应（控制台 Web shell 操作）
+- 腾讯沙箱并发超限会 `LimitExceeded.CPU`（渐进派发，评测并发取 24）
+- 黑盒 claude-code 需 pin < 2.1.154 + `CLAUDE_CODE_MAX_OUTPUT_TOKENS=8192`

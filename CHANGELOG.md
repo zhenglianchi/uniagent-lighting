@@ -2,6 +2,15 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.46.0（2026-08-13）
+
+- **全量文档正式化**：README 重写为正式项目文档（平台化训推定位、训练成果表、
+  核心能力、训练模式、部署索引）；docs/architecture.md（正式架构）、
+  docs/deployment.md（版本链 / 补丁 / 部署 / 训练 / 评估步骤详细化）、
+  docs/ROADMAP.md（已完成 + 规划）、docs/vllm_access.md（网络方案）、
+  docs/简历亮点.md（五个亮点详细展开）、docs/训练评测分析.md（正式评测报告）、
+  uni_agent_ext/README.md（补充平台化组件）
+
 ## v0.45.2（2026-08-13）
 
 - **文档统一"平台化训练结果"口径**：README / 训练评测分析统一声明 baseline、
