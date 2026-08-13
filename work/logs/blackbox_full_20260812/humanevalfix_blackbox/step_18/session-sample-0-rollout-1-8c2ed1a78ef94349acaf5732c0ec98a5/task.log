@@ -1,0 +1,75 @@
+2026-08-13 02:33:31 | …tencent_agent_runtime | INFO     | tencent sandbox created id=itqywnhzkblqqw7kreiv2a2yshi5wwatblki3jpk template=code-interpreter-v1
+2026-08-13 02:33:37 | …ts.claude_code_runner | INFO     | claude-code 2.1.153 installed in sandbox
+2026-08-13 02:33:39 | …mini_swe_agent_runner | INFO     | gateway tunnel up: 127.0.0.1:8000 -> 117.50.178.172:8001
+2026-08-13 02:36:04 | …ts.claude_code_runner | INFO     | [sample 0] claude-code finished rc=1 elapsed=144.2s
+2026-08-13 02:36:04 | …ts.claude_code_runner | INFO     | [sample 0] claude-code stdout_tail=Error: Reached max turns (60)
+2026-08-13 02:36:04 | …ts.claude_code_runner | INFO     | [sample 0] claude-code stderr_tail=Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+
+2026-08-13 02:36:04 | …ts.claude_code_runner | WARNING  | [sample 0] claude-code failed stdout_tail='Error: Reached max turns (60)' stderr_tail='Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.\n'
+2026-08-13 02:36:04 | …ts.claude_code_runner | INFO     | [sample 0] claude-debug tail:
+18:35:54.753Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:54.754Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:54.754Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-08-12T18:35:54.754Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-12T18:35:54.754Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-12T18:35:54.754Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:54.754Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-12T18:35:54.754Z [DEBUG] [API REQUEST] /sessions/session-sample-0-rollout-1-8c2ed1a78ef94349acaf5732c0ec98a5/v1/messages source=sdk
+2026-08-12T18:35:56.925Z [DEBUG] Stream started - received first chunk
+2026-08-12T18:35:56.925Z [DEBUG] [API:timing] first byte after 2172ms
+2026-08-12T18:35:56.928Z [INFO] [Stall] tool_dispatch_start tool=Bash toolUseId=call_55a635f1 permissionDecisionMs=1
+2026-08-12T18:35:56.929Z [DEBUG] Spawning shell without login (-l flag skipped)
+2026-08-12T18:35:57.095Z [WARN] [Stall] tool_dispatch_end tool=Bash toolUseId=call_55a635f1 outcome=error durationMs=167
+2026-08-12T18:35:57.095Z [DEBUG] Bash tool error (167ms): Shell command failed
+2026-08-12T18:35:57.096Z [DEBUG] Tool search disabled: ToolSearchTool is not available (may have been disallowed via disallowedTools).
+2026-08-12T18:35:57.097Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:57.098Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:57.098Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-08-12T18:35:57.098Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-12T18:35:57.098Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-12T18:35:57.098Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:57.098Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-12T18:35:57.098Z [DEBUG] [API REQUEST] /sessions/session-sample-0-rollout-1-8c2ed1a78ef94349acaf5732c0ec98a5/v1/messages source=sdk
+2026-08-12T18:35:59.269Z [DEBUG] Stream started - received first chunk
+2026-08-12T18:35:59.269Z [DEBUG] [API:timing] first byte after 2171ms
+2026-08-12T18:35:59.273Z [INFO] [Stall] tool_dispatch_start tool=Bash toolUseId=call_e4c47b94 permissionDecisionMs=2
+2026-08-12T18:35:59.273Z [DEBUG] Spawning shell without login (-l flag skipped)
+2026-08-12T18:35:59.444Z [WARN] [Stall] tool_dispatch_end tool=Bash toolUseId=call_e4c47b94 outcome=error durationMs=171
+2026-08-12T18:35:59.444Z [DEBUG] Bash tool error (171ms): Shell command failed
+2026-08-12T18:35:59.444Z [DEBUG] Tool search disabled: ToolSearchTool is not available (may have been disallowed via disallowedTools).
+2026-08-12T18:35:59.445Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:59.445Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:59.445Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-08-12T18:35:59.445Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-12T18:35:59.445Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-12T18:35:59.445Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:35:59.445Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-12T18:35:59.446Z [DEBUG] [API REQUEST] /sessions/session-sample-0-rollout-1-8c2ed1a78ef94349acaf5732c0ec98a5/v1/messages source=sdk
+2026-08-12T18:36:01.598Z [DEBUG] Stream started - received first chunk
+2026-08-12T18:36:01.598Z [DEBUG] [API:timing] first byte after 2153ms
+2026-08-12T18:36:01.602Z [INFO] [Stall] tool_dispatch_start tool=Bash toolUseId=call_cb588811 permissionDecisionMs=1
+2026-08-12T18:36:01.603Z [DEBUG] Spawning shell without login (-l flag skipped)
+2026-08-12T18:36:01.771Z [WARN] [Stall] tool_dispatch_end tool=Bash toolUseId=call_cb588811 outcome=error durationMs=170
+2026-08-12T18:36:01.771Z [DEBUG] Bash tool error (170ms): Shell command failed
+2026-08-12T18:36:01.772Z [DEBUG] Tool search disabled: ToolSearchTool is not available (may have been disallowed via disallowedTools).
+2026-08-12T18:36:01.772Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:36:01.772Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:36:01.772Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-08-12T18:36:01.772Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-12T18:36:01.773Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-12T18:36:01.773Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:36:01.773Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-12T18:36:01.773Z [DEBUG] [API REQUEST] /sessions/session-sample-0-rollout-1-8c2ed1a78ef94349acaf5732c0ec98a5/v1/messages source=sdk
+2026-08-12T18:36:03.967Z [DEBUG] Stream started - received first chunk
+2026-08-12T18:36:03.967Z [DEBUG] [API:timing] first byte after 2194ms
+2026-08-12T18:36:03.969Z [INFO] [Stall] tool_dispatch_start tool=Bash toolUseId=call_cc096f95 permissionDecisionMs=1
+2026-08-12T18:36:03.969Z [DEBUG] Spawning shell without login (-l flag skipped)
+2026-08-12T18:36:04.134Z [WARN] [Stall] tool_dispatch_end tool=Bash toolUseId=call_cc096f95 outcome=error durationMs=165
+2026-08-12T18:36:04.134Z [DEBUG] Bash tool error (165ms): Shell command failed
+2026-08-12T18:36:04.135Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-12T18:36:04.136Z [DEBUG] Cleaned up session snapshot: /root/.claude/shell-snapshots/snapshot-bash-1786559637890-dzxbvp.sh
+
+2026-08-13 02:36:04 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-17]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-13 02:36:04 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-17 -> 1.0 (test_solution.py::test_all: PASS)
+2026-08-13 02:36:04 | …ts.claude_code_runner | INFO     | [sample 0] reward done score=1.0 resolved=True
+2026-08-13 02:36:05 | …tencent_agent_runtime | INFO     | tencent sandbox killed

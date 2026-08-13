@@ -2,6 +2,18 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.45.0（2026-08-13）
+
+- **黑盒正式训练 25/25 完成 + 全量评估（平台化成果）**：
+  - 换新服务器（117.50.178.172，镜像克隆）后从 step 15 续训至 **25/25**
+    （resume_mode=auto，checkpoint 25 保存），最终权重
+    `models/Qwen3-8B-final-blackbox`（convert_verl_lora_to_hf.py 合并）
+  - 评估：**130/161 = 80.75%**（n=1 / temp 0.8 / 并发 24；先 3 条小样本验证
+    轨迹/真实 pytest 后全量）——vs 基座 76.4%（**+4.35pp**）、白盒 baseline
+    83.2%、spec 82.61%；**计为平台化训练通过率**
+  - 评估产物：服务器 `logs/eval_blackbox_full.json` + 轨迹
+    `logs/eval_blackbox_full_dir/`（161 条 .traj.json）
+
 ## v0.44.0（2026-08-13）
 
 - **新增 `docs/简历亮点.md`**：项目简介 + 5 个亮点（Agent RL 链路排障 /
