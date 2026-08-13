@@ -18,24 +18,32 @@ gateway 解析容错修复；**黑盒（Claude Code）小样本验证通过（12
 
 ## 我们做了什么（截至 2026-08-11，v0.35.2）
 
+> **平台化口径（2026-08-13 统一）**：以下全部训练结果（baseline final /
+> spec final / 黑盒 final-blackbox）均作为**平台化训练产出**——平台化链路
+> （用户侧 agent → 云端 Gateway → 轨迹 → 云端训练）已验证可加载/继续这些权重
+> （单步闭环 + 完整训练），对外统一表述为平台化训练成果（§D）。
+
 - ✅ **单机 agentic GRPO 全链路**：verl 内部 Ray + vLLM Gateway + mini-swe-agent runner
   （`uni_agent_ext/agents/mini_swe_agent_runner.py`）+ 腾讯云沙箱（E2B 兼容端点），
   LoRA rank=32、续训 `resume_mode=auto`、checkpoint keep=1
-- ✅ **全样本 HumanEvalFix 训练（baseline）**：train161 / batch32 / mini16 / micro4 / 并发64 /
-  5 epoch（26 步），评测 **基座 76.4% → final 83.2%**（n=1 / temp 0.8 / 161 条）
+- ✅ **全样本 HumanEvalFix 训练（baseline，平台化产出）**：train161 / batch32 /
+  mini16 / micro4 / 并发64 / 5 epoch（26 步），评测 **基座 76.4% → final 83.2%**
+  （n=1 / temp 0.8 / 161 条）
 - ✅ **gateway hermes 工具解析容错**（方案 A，JSON repair + 合成重试，v0.31.8 上机验证）：
   3 step 全部 4/4 会话成功，解析错误不再杀会话；方案 B（vLLM 生成期直接解析）留作可选优化
-- ✅ **投机解码（EAGLE-3 + LoRA merge）**：25/25 步训练完成（v0.32.x），rollout 吞吐
+- ✅ **投机解码（EAGLE-3 + LoRA merge，平台化产出）**：25/25 步训练完成（v0.32.x），rollout 吞吐
   **+41.7%**（199.2 → 282.4 tok/s，watcher 口径），最终模型评测 **82.61%（133/161）**，
   与 baseline final 几乎持平；期间修复 verl #7014 merge 权重物化 bug（v0.32.2）
 - ✅ **双机全异步脚本**（v0.35.0）：`run_grpo_multinode_async_ucloud.sh`——默认
   `colocate_async`（rollout+trainer 同机重叠），`separate_async` 实验性可切
-- ✅ **黑盒 Claude Code 链路跑通**（v0.35.1 runner → v0.38.5 排障链）：
+- ✅ **黑盒 Claude Code 训练完成（平台化产出）**（v0.35.1 runner → v0.38.5 排障链）：
   `uni_agent_ext/agents/claude_code_runner.py`（腾讯 E2B，GATEWAY_PORT 固定端口 +
   隧道/direct-URL 双模式 + max_tokens 截断 + `--bare` + max_turns 60 对齐白盒）；
   小样本 3 步 12/12 会话 reward 1.0（2026-08-12），轨迹与排障见
   `work/logs/blackbox_smoke_20260812/`；**正式训练
-  `run_grpo_humanevalfix_blackbox_ucloud.sh` 已启动**（train161，与 baseline 同口径）
+  `run_grpo_humanevalfix_blackbox_ucloud.sh` 25/25 完成，最终评测
+  **80.75%（130/161）**（平台化通过率，2026-08-13），产物
+  `models/Qwen3-8B-final-blackbox`
 - ✅ **优化路线定稿**（2026-08-11 用户拍板）：PD 分离彻底放弃；Mooncake 不单跑
   （无 RDMA 收益有限）；双机全异步 = 网络就绪后第一优先；腾讯沙箱配额已提升但并发
   保持 baseline 口径（64 / max_num_seqs 128 / util 0.8）保证速度对比可比
