@@ -18,12 +18,17 @@
 #     + offload 全开，4 卡分片后每卡峰值 ~13G 物理可行
 set -xeuo pipefail
 
-export RAY_ADDRESS=10.60.173.163:6379
+export RAY_ADDRESS=10.60.188.85:6379
 export MODEL_PATH=/home/ubuntu/models/Qwen3-8B
 export TRAIN_FILE=/home/ubuntu/swe-rl/data/smoke_train.jsonl
 export VAL_FILE=/home/ubuntu/swe-rl/data/smoke_val.jsonl
 export REWARD_PATH=/home/ubuntu/swe-rl/reward_smoke.py
 export PYTHON=/home/ubuntu/miniforge3/envs/swe-rl/bin/python
+# 投机解码（2026-08-14：对照实验统一开启）
+LORA_MERGE=${LORA_MERGE:-1}
+SPEC_ON=${SPEC_ON:-1}
+SPEC_DRAFT=${SPEC_DRAFT:-/home/ubuntu/models/Qwen3-8B-speculator.eagle3}
+SPEC_TOKENS=${SPEC_TOKENS:-3}
 
 # 多机通信：指定内网网卡
 export GLOO_SOCKET_IFNAME=eth0
@@ -47,8 +52,18 @@ EXTRA_OPTS=(
   # vllm 0.11.1 多节点：dp=2/tp=1 = 每节点一个单卡引擎（新硬件每节点 1×48G）
   actor_rollout_ref.rollout.data_parallel_size=2
   actor_rollout_ref.rollout.tensor_model_parallel_size=1
-  +ray_kwargs.ray_init.address=10.60.173.163:6379
+  +ray_kwargs.ray_init.address="$RAY_ADDRESS"
 )
+
+EXTRA_ARGS=()
+if [ "$LORA_MERGE" = "1" ]; then
+  EXTRA_ARGS+=(actor_rollout_ref.model.lora.merge=True)
+fi
+if [ "$SPEC_ON" = "1" ]; then
+  EXTRA_ARGS+=(
+    "+actor_rollout_ref.rollout.engine_kwargs.vllm.speculative_config='{\"method\": \"eagle3\", \"model\": \"$SPEC_DRAFT\", \"num_speculative_tokens\": $SPEC_TOKENS, \"draft_tensor_parallel_size\": 1}'"
+  )
+fi
 
 "$PYTHON" -m verl.trainer.main_ppo \
   algorithm.adv_estimator=grpo \
@@ -93,4 +108,5 @@ EXTRA_OPTS=(
   trainer.project_name=swe-rl-smoke \
   trainer.experiment_name=qwen25-7b-grpo-multinode-lora-ucloud \
   "${EXTRA_OPTS[@]}" \
+  "${EXTRA_ARGS[@]}" \
   "$@"

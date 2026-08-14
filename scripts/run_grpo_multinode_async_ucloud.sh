@@ -46,14 +46,19 @@ VAL_FILE=${VAL_FILE:-/home/ubuntu/swe-rl/data/smoke_val.jsonl}
 REWARD_PATH=${REWARD_PATH:-/home/ubuntu/swe-rl/reward_smoke.py}
 PYTHON=${PYTHON:-$ENV/bin/python}
 
-RAY_ADDRESS=${RAY_ADDRESS:-10.60.173.163:6379}
+RAY_ADDRESS=${RAY_ADDRESS:-10.60.188.85:6379}
 TRAINER_MODE=${TRAINER_MODE:-colocate_async}
 NUM_WARMUP_BATCHES=${NUM_WARMUP_BATCHES:-1}
 MOONCAKE=${MOONCAKE:-0}
 MOONCAKE_PROTOCOL=${MOONCAKE_PROTOCOL:-tcp}
-MOONCAKE_MASTER=${MOONCAKE_MASTER:-10.60.173.163:50124}
-MOONCAKE_METADATA=${MOONCAKE_METADATA:-10.60.173.163:50123}
+MOONCAKE_MASTER=${MOONCAKE_MASTER:-10.60.188.85:50124}
+MOONCAKE_METADATA=${MOONCAKE_METADATA:-10.60.188.85:50123}
 VLLM_GPU_MEM_UTIL=${VLLM_GPU_MEM_UTIL:-0.5}
+# 投机解码（2026-08-14：对照实验统一开启）
+LORA_MERGE=${LORA_MERGE:-1}
+SPEC_ON=${SPEC_ON:-1}
+SPEC_DRAFT=${SPEC_DRAFT:-/home/ubuntu/models/Qwen3-8B-speculator.eagle3}
+SPEC_TOKENS=${SPEC_TOKENS:-3}
 
 # 多机通信：指定内网网卡
 export GLOO_SOCKET_IFNAME=${GLOO_SOCKET_IFNAME:-eth0}
@@ -108,6 +113,16 @@ else
   )
 fi
 
+EXTRA_ARGS=()
+if [ "$LORA_MERGE" = "1" ]; then
+  EXTRA_ARGS+=(actor_rollout_ref.model.lora.merge=True)
+fi
+if [ "$SPEC_ON" = "1" ]; then
+  EXTRA_ARGS+=(
+    "+actor_rollout_ref.rollout.engine_kwargs.vllm.speculative_config='{\"method\": \"eagle3\", \"model\": \"$SPEC_DRAFT\", \"num_speculative_tokens\": $SPEC_TOKENS, \"draft_tensor_parallel_size\": 1}'"
+  )
+fi
+
 "$PYTHON" -m verl.trainer.main_ppo \
   algorithm.adv_estimator=grpo \
   data.train_files="['$TRAIN_FILE']" \
@@ -150,4 +165,5 @@ fi
   trainer.project_name=swe-rl-smoke \
   trainer.experiment_name=qwen3-8b-grpo-multinode-async-ucloud \
   "${EXTRA_OPTS[@]}" \
+  "${EXTRA_ARGS[@]}" \
   "$@"

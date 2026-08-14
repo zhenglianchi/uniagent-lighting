@@ -2,6 +2,13 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.46.2（2026-08-14）
+
+- **多机脚本统一开投机解码**（对照实验）：`run_grpo_multinode_ucloud.sh` +
+  `run_grpo_multinode_async_ucloud.sh` 默认 `LORA_MERGE=1` + `SPEC_ON=1`
+  （EAGLE-3 drafter），Ray/Mooncake 默认地址更新为新双机内网
+  （10.60.188.85 / 10.60.253.166）
+
 ## v0.46.0（2026-08-13）
 
 - **全量文档正式化**：README 重写为正式项目文档（平台化训推定位、训练成果表、
