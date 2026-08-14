@@ -42,6 +42,59 @@ clone uni-agent（含 verl 子模块）、verl 补丁（见 §3）、模型下�
 | `gateway_fixed_port.patch` | run_uvicorn 支持固定端口 |
 | `uni_agent_py310_compat.patch` | uni-agent py3.10 兼容 |
 | `debug_launcher_py310.patch` | 官方调试工具 py3.10 兼容 |
+| `uni_agent_skip_empty_response_trajectory.patch` | framework 跳过空响应轨迹（Mooncake 0 字节 slice 修复，2026-08-15） |
+| `tq_mooncake_zero_slice_warn.patch` | TQ mooncake_client 0 字节 slice 告警（2026-08-15） |
+| padding_utils num_turns 修复 | `verl/trainer/ppo/padding_utils.py` 第 109 行 `num_turns=0` → `torch.tensor(0, dtype=torch.long)`（padding 行 13B→8B，2026-08-15，node2 重启后需同步） |
+
+## 4. 环境变量与启动顺序（重要）
+
+**核心原则：Ray worker 的环境变量在 `ray start` 时固定，不继承训练脚本内的
+`export`。凡 agent/沙箱/Gateway 运行需要的变量，必须在 `ray start` 之前
+`export`，否则 Ray task 内拿不到（2026-08-15 实测踩坑：`E2B_API_KEY` 未传入，
+24 会话全部 `AuthenticationException`）。**
+
+### 4.1 标准启动顺序（node1 / node2 相同）
+
+```bash
+# 1) 沙箱/腾讯云凭据（必须在 ray start 前，Ray worker 需要）
+set -a; source /home/ubuntu/swe-rl/tencent_sandbox.env; set +a
+export E2B_DOMAIN=${E2B_DOMAIN:-ap-guangzhou.tencentags.com}
+export E2B_API_KEY=${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}
+
+# 2) Gateway / 白盒 harness 变量（ray worker 继承，脚本内 export 无效）
+export GATEWAY_PORT=${GATEWAY_PORT:-8001}
+export MSA_GATEWAY_TUNNEL=${MSA_GATEWAY_TUNNEL:-0}
+export MSA_INSTALL_AGENT=${MSA_INSTALL_AGENT:-1}
+export MSA_REWARD_INCLUDE_P2P=${MSA_REWARD_INCLUDE_P2P:-1}
+export MSA_REWARD_P2P_SAMPLE=${MSA_REWARD_P2P_SAMPLE:-20}
+export TENCENT_SANDBOX_SKIP_TMUX=1
+
+# 3) Ray（带 GPU 资源；如需跨节点先配好 hosts/SSH 互信）
+/home/ubuntu/miniforge3/envs/swe-rl/bin/ray stop --force
+/home/ubuntu/miniforge3/envs/swe-rl/bin/ray start --head --port=6379 --num-gpus=1
+# 双机：node2 用 --address=node1内网IP:6379 加入
+
+# 4) Mooncake master（node1，独立进程，不受 ray stop 影响）
+# 见 scripts/run_grpo_dual_async_mooncake_ucloud.sh 内 MOONCAKE_AUTO_INIT 逻辑
+
+# 5) 跑训练脚本（脚本内的 export 仅训练进程可见）
+cd /home/ubuntu/swe-rl && bash run_grpo_xxx.sh
+```
+
+### 4.2 环境变量清单（脚本内已 export，供参考）
+
+| 变量 | 值 | 作用 |
+|---|---|---|
+| `VLLM_USE_V1` | 1 | verl v1 引擎 |
+| `RAY_memory_monitor_refresh_ms` | 0 | 关 Ray 内存监控（大对象误杀） |
+| `HF_ENDPOINT` | https://hf-mirror.com | HF 国内镜像 |
+| `HF_HUB_DISABLE_XET` | 1 | hf-mirror 不走 Xet 协议 |
+| `MC_STORE_MEMCPY` | 0 | Mooncake 禁用 GPU memcpy（与 vLLM 同卡冲突） |
+| `CUDA_DEVICE_MAX_CONNECTIONS` | 1 | 多流稳定 |
+| `GATEWAY_PORT` | 8001 | Gateway 固定端口 |
+| `MSA_GATEWAY_TUNNEL` | 0 | 白盒本地直连 Gateway，不走沙箱内隧道 |
+| `TENCENT_SANDBOX_SKIP_TMUX` | 1 | 跳过沙箱 tmux 安装（省 180s） |
+| `E2B_DOMAIN` / `E2B_API_KEY` | tencent_sandbox.env | 腾讯沙箱 E2B 兼容端点 |
 
 ## 4. 改造仓部署
 
@@ -152,3 +205,11 @@ python eval_humanevalfix.py \
 - CPU offload 训练时 SSH 可能无响应（控制台 Web shell 操作）
 - 腾讯沙箱并发超限会 `LimitExceeded.CPU`（渐进派发，评测并发取 24）
 - 黑盒 claude-code 需 pin < 2.1.154 + `CLAUDE_CODE_MAX_OUTPUT_TOKENS=8192`
+- **Ray worker 不继承脚本内 export**：`E2B_API_KEY` / `E2B_DOMAIN` /
+  `GATEWAY_PORT` 等必须在 `ray start` 前 export（见 §4.1），否则 agent 起沙箱报
+  `AuthenticationException: API key is required`
+- **Mooncake 0 字节 slice**：空响应轨迹（`max_trajectory_length` 截断）写入会被
+  master 以 `INVALID_PARAMS` 拒绝 → framework 已跳过（补丁 #20），训练日志出现
+  `skip empty-response trajectory` 为正常
+- **vLLM EAGLE-3 illegal memory**：util 必须 ≥0.8（baseline/spec 同口径），
+  util 0.6 下长上下文会触发 `Failed to reset prefix cache` → rejection sampler 越界

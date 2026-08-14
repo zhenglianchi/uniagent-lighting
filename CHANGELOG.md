@@ -15,6 +15,17 @@
   轨迹（`patches/uni_agent_skip_empty_response_trajectory.patch`）+ TQ 空 slice
   告警（`patches/tq_mooncake_zero_slice_warn.patch`）
 
+## v0.48.2（2026-08-15）
+
+- **文档补全（镜像保存前）**：
+  - 训练评测分析 §7.8：**为何历史白盒 run 不出现这些问题**——baseline/spec 日志
+    `transfer_queue.enable=False`（未走 TQ KV + Mooncake），13B/空 slice 无触发
+    路径；vLLM illegal memory 为 util 0.6 触发（spec run util 0.8 0 次 reset 失败）
+  - deployment §4：**环境变量与启动顺序**（Ray worker 不继承脚本 export，
+    `E2B_API_KEY`/`E2B_DOMAIN`/`GATEWAY_PORT` 必须 ray start 前 export）+
+    环境变量清单；§8 常见问题补三条
+  - 修改与补丁汇总新增 #22 padding_utils num_turns 8B 修复（13B 根因）
+
 ## v0.47.3（2026-08-15）
 
 - **Mooncake num_turns 13B 排查定论 + 离线真实轨迹验证**（docs/训练评测分析.md
