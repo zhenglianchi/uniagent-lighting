@@ -16,10 +16,10 @@ cd /home/ubuntu/swe-rl
 ENV_PY=/home/ubuntu/miniforge3/envs/swe-rl/bin/python
 NODE2=ubuntu@10.60.253.166
 LOG=grpo_humanevalfix_dual_async_mooncake.log
-CKPT_DIR=/home/ubuntu/swe-rl/checkpoints/humanevalfix_dual_async_mooncake
-OUT=/home/ubuntu/models/Qwen3-8B-final-dual-async-mooncake
-EVAL_OUT=/home/ubuntu/swe-rl/eval_dual_async_mooncake.json
-EVAL_DIR=/home/ubuntu/swe-rl/eval_dual_async_mooncake_dir
+CKPT_DIR=/home/ubuntu/swe-rl/checkpoints/humanevalfix_dual_async
+OUT=/home/ubuntu/models/Qwen3-8B-final-dual-async
+EVAL_OUT=/home/ubuntu/swe-rl/eval_dual_async.json
+EVAL_DIR=/home/ubuntu/swe-rl/eval_dual_async_dir
 
 echo "==== dual formal chain start $(date) ====" >> "$LOG"
 
@@ -33,7 +33,7 @@ for attempt in 1 2 3; do
   set +a
   "$ENV_PY" /home/ubuntu/swe-rl/tencent_stop_all_instances.py >> "$LOG" 2>&1
   sleep 10
-  MAX_CKPT_KEEP=3 bash run_grpo_dual_async_mooncake_ucloud.sh >> "$LOG" 2>&1
+  MAX_CKPT_KEEP=3 MOONCAKE=0 bash run_grpo_dual_async_mooncake_ucloud.sh >> "$LOG" 2>&1
   TRAIN_EXIT=$?
   echo "TRAIN_EXIT=$TRAIN_EXIT attempt=$attempt $(date)" >> "$LOG"
   if [ "$TRAIN_EXIT" -eq 0 ]; then
@@ -77,10 +77,10 @@ echo "CONVERT_EXIT=$CONV_EXIT $(date)" >> "$LOG"
 # 5. vLLM server + 评估（等训练释放 GPU）
 echo "==== vllm serve + eval $(date) ====" >> "$LOG"
 sleep 60
-pkill -f "Qwen3-8B-final-dual-async-mooncake" 2>/dev/null || true
+pkill -f "Qwen3-8B-final-dual-async" 2>/dev/null || true
 sleep 2
 nohup "$ENV_PY" -m vllm.entrypoints.openai.api_server \
-  --model "$OUT" --port 8001 --served-model-name Qwen3-8B-final-dual-async-mooncake \
+  --model "$OUT" --port 8001 --served-model-name Qwen3-8B-final-dual-async \
   --max-model-len 8192 --enforce-eager --gpu-memory-utilization 0.8 \
   --max-num-seqs 128 --enable-prefix-caching --enable-chunked-prefill \
   --enable-auto-tool-choice --tool-call-parser hermes \
@@ -104,7 +104,7 @@ export TENCENT_SANDBOX_SKIP_TMUX=1
 "$ENV_PY" eval_humanevalfix.py \
   --data /home/ubuntu/swe-rl/data/humanevalfix_train161.jsonl \
   --base-url http://127.0.0.1:8001/v1 \
-  --model Qwen3-8B-final-dual-async-mooncake \
+  --model Qwen3-8B-final-dual-async \
   --max-turns 40 --temperature 0.8 --concurrency 24 \
   --out "$EVAL_OUT" --out-dir "$EVAL_DIR" > eval_dual_async_mooncake.log 2>&1
 echo "EVAL_EXIT=$? $(date)" >> "$LOG"

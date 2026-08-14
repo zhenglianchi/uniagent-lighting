@@ -62,11 +62,12 @@ ROLLOUT_N=${ROLLOUT_N:-4}
 MAX_CKPT_KEEP=${MAX_CKPT_KEEP:-1}
 VLLM_MAX_NUM_SEQS=${VLLM_MAX_NUM_SEQS:-128}
 VLLM_GPU_MEM_UTIL=${VLLM_GPU_MEM_UTIL:-0.8}
-CKPT_DIR=${CKPT_DIR:-/home/ubuntu/swe-rl/checkpoints/humanevalfix_dual_async_mooncake}
-LOG_DIR=${LOG_DIR:-/home/ubuntu/swe-rl/logs/humanevalfix_dual_async_mooncake}
+CKPT_DIR=${CKPT_DIR:-/home/ubuntu/swe-rl/checkpoints/humanevalfix_dual_async}
+LOG_DIR=${LOG_DIR:-/home/ubuntu/swe-rl/logs/humanevalfix_dual_async}
 RAY_ADDRESS=${RAY_ADDRESS:-10.60.188.85:6379}
 MOONCAKE_MASTER=${MOONCAKE_MASTER:-10.60.188.85:50124}
 MOONCAKE_METADATA=${MOONCAKE_METADATA:-10.60.188.85:50123}
+MOONCAKE=${MOONCAKE:-0}   # 0=SimpleStorage（正式训练默认，稳定）；1=MooncakeStore（实验）
 SPEC_ON=${SPEC_ON:-1}
 SPEC_DRAFT=${SPEC_DRAFT:-/home/ubuntu/models/Qwen3-8B-speculator.eagle3}
 SPEC_TOKENS=${SPEC_TOKENS:-3}
@@ -91,16 +92,24 @@ EXTRA_OPTS=(
   actor_rollout_ref.rollout.data_parallel_size=1
   actor_rollout_ref.rollout.tensor_model_parallel_size=1
   +ray_kwargs.ray_init.address="$RAY_ADDRESS"
-  # ---- MooncakeStore ----
-  transfer_queue.backend.storage_backend=MooncakeStore
-  transfer_queue.backend.MooncakeStore.auto_init=False
-  transfer_queue.backend.MooncakeStore.metadata_server="$MOONCAKE_METADATA"
-  transfer_queue.backend.MooncakeStore.master_server_address="$MOONCAKE_MASTER"
-  transfer_queue.backend.MooncakeStore.protocol=tcp
-  transfer_queue.backend.MooncakeStore.local_hostname=""
-  transfer_queue.backend.MooncakeStore.global_segment_size=8589934592
-  transfer_queue.backend.MooncakeStore.local_buffer_size=2147483648
 )
+if [ "$MOONCAKE" = "1" ]; then
+  EXTRA_OPTS+=(
+    transfer_queue.backend.storage_backend=MooncakeStore
+    transfer_queue.backend.MooncakeStore.auto_init=False
+    transfer_queue.backend.MooncakeStore.metadata_server="$MOONCAKE_METADATA"
+    transfer_queue.backend.MooncakeStore.master_server_address="$MOONCAKE_MASTER"
+    transfer_queue.backend.MooncakeStore.protocol=tcp
+    transfer_queue.backend.MooncakeStore.local_hostname=""
+    transfer_queue.backend.MooncakeStore.global_segment_size=8589934592
+    transfer_queue.backend.MooncakeStore.local_buffer_size=2147483648
+  )
+else
+  EXTRA_OPTS+=(
+    transfer_queue.backend.SimpleStorage.num_data_storage_units=2
+    transfer_queue.backend.SimpleStorage.total_storage_size=1000
+  )
+fi
 
 EXTRA_ARGS=()
 if [ "$SPEC_ON" = "1" ]; then
@@ -171,7 +180,7 @@ fi
   trainer.balance_batch=True \
   trainer.logger='["console"]' \
   trainer.project_name=swe-rl-blackbox-dual \
-  trainer.experiment_name=qwen3-8b-grpo-humanevalfix-dual-async-mooncake \
+  trainer.experiment_name=qwen3-8b-grpo-humanevalfix-dual-async \
   trainer.save_freq=1 \
   trainer.resume_mode=auto \
   trainer.default_local_dir="$CKPT_DIR" \

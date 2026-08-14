@@ -2,6 +2,26 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.47.3（2026-08-15）
+
+- **Mooncake num_turns 13B 排查定论 + 离线真实轨迹验证**（docs/训练评测分析.md
+  §7.6）：
+  - 13B 内容确认为 TQ msgpack 小整数打包（= int 0），即 `num_turns` 偶发被非张量
+    字节路径写入，训练端按 int64 8B 读 → 写读类型不一致，非内存损坏
+  - 官方社区三个最接近的 C++ bug（#1704 / #2086+#2850 / #2477+#2714）均已修复且
+    包含在已装 0.3.12.post1；TQ/C++ 写路径顺序与 size 透传无逻辑错误
+  - **离线验证通过**：508 条真实轨迹构造框架同款字段 → TQ+MooncakeStore 写
+    2048 keys（8 writer × 4 轮 + kv_clear 复用），写路径全 Tensor、store dump
+    全 8B、0 异常 → 单机/离线无法复现，13B 依赖双机跨节点条件
+- **防御落地**：TQ 写路径新增 `@num_turns` size!=8 断言日志（node2 待重启同步）；
+  读端 padded 兜底保持
+- **新增排查脚本**：`scripts/offline_mooncake_verify.py`（离线真实轨迹写入验证）、
+  `scripts/repro_tq_mooncake.py`（合成并发复现）、
+  `scripts/run_grpo_single_mooncake_ucloud.sh`（单机 v1 sync + Mooncake 验证）
+- **排查期环境问题修复记录**：GatewayActor 需在 `ray start` 前 export
+  `GATEWAY_PORT`；腾讯沙箱 CPU 配额被残留 RUNNING 实例占满（实例字段
+  `InstanceSet`）；node1 sshd 默认 `MaxStartups 10` 高并发隧道限流
+
 ## v0.47.0（2026-08-14）
 
 - **全量补丁汇总文档**：docs/修改与补丁汇总.md —— 覆盖 verl / uni_agent /
