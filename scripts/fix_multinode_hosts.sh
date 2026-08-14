@@ -6,8 +6,9 @@
 # 注意：若恢复后的内网 IP 变化，先改本脚本里的 NODE1_IP/NODE2_IP 再执行。
 set -e
 
-NODE1_IP=10.60.173.163
-NODE2_IP=10.60.46.121
+# 2026-08-14 双机新内网 IP（可按环境变量覆盖）
+NODE1_IP=${NODE1_IP:-10.60.188.85}
+NODE2_IP=${NODE2_IP:-10.60.253.166}
 
 HOST_IP=$(hostname -I 2>/dev/null | awk '{print $1}')
 echo "本机 IP: $HOST_IP"
