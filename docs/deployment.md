@@ -57,27 +57,17 @@ clone uni-agent（含 verl 子模块）、verl 补丁（见 §3）、模型下�
 
 ```bash
 # 1) 沙箱/腾讯云凭据（必须在 ray start 前，Ray worker 需要）
-set -a; source /home/ubuntu/swe-rl/tencent_sandbox.env; set +a
-export E2B_DOMAIN=${E2B_DOMAIN:-ap-guangzhou.tencentags.com}
-export E2B_API_KEY=${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}
+source /home/ubuntu/uniagent-lighting/scripts/bootstrap_ray_env.sh
 
-# 2) Gateway / 白盒 harness 变量（ray worker 继承，脚本内 export 无效）
-export GATEWAY_PORT=${GATEWAY_PORT:-8001}
-export MSA_GATEWAY_TUNNEL=${MSA_GATEWAY_TUNNEL:-0}
-export MSA_INSTALL_AGENT=${MSA_INSTALL_AGENT:-1}
-export MSA_REWARD_INCLUDE_P2P=${MSA_REWARD_INCLUDE_P2P:-1}
-export MSA_REWARD_P2P_SAMPLE=${MSA_REWARD_P2P_SAMPLE:-20}
-export TENCENT_SANDBOX_SKIP_TMUX=1
-
-# 3) Ray（带 GPU 资源；如需跨节点先配好 hosts/SSH 互信）
+# 2) Ray（带 GPU 资源；如需跨节点先配好 hosts/SSH 互信）
 /home/ubuntu/miniforge3/envs/swe-rl/bin/ray stop --force
 /home/ubuntu/miniforge3/envs/swe-rl/bin/ray start --head --port=6379 --num-gpus=1
 # 双机：node2 用 --address=node1内网IP:6379 加入
 
-# 4) Mooncake master（node1，独立进程，不受 ray stop 影响）
+# 3) Mooncake master（node1，独立进程，不受 ray stop 影响）
 # 见 scripts/run_grpo_dual_async_mooncake_ucloud.sh 内 MOONCAKE_AUTO_INIT 逻辑
 
-# 5) 跑训练脚本（脚本内的 export 仅训练进程可见）
+# 4) 跑训练脚本（脚本内的 export 仅训练进程可见）
 cd /home/ubuntu/swe-rl && bash run_grpo_xxx.sh
 ```
 
