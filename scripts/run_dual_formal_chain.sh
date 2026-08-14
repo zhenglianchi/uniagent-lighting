@@ -27,6 +27,12 @@ echo "==== dual formal chain start $(date) ====" >> "$LOG"
 TRAIN_EXIT=1
 for attempt in 1 2 3; do
   echo "==== train attempt $attempt $(date) ====" >> "$LOG"
+  # 先清理残留沙箱（崩溃/被杀会泄漏 E2B 实例，64 并发 × 2 次尝试即可打爆 CPU 配额）
+  set -a
+  source /home/ubuntu/swe-rl/tencent_sandbox.env
+  set +a
+  "$ENV_PY" /home/ubuntu/swe-rl/tencent_stop_all_instances.py >> "$LOG" 2>&1
+  sleep 10
   MAX_CKPT_KEEP=3 bash run_grpo_dual_async_mooncake_ucloud.sh >> "$LOG" 2>&1
   TRAIN_EXIT=$?
   echo "TRAIN_EXIT=$TRAIN_EXIT attempt=$attempt $(date)" >> "$LOG"

@@ -35,6 +35,9 @@
   - separate_async checkpoint 跨节点落盘：FSDP worker 在 node2，actor 权重存
     node2 本地盘、trainer 侧 data.pt/tracker 在 node1；正式链脚本负责训练后
     拉回 node2 actor 目录再合并评估
+  - 腾讯沙箱 CPU 配额（100000 mc）会被崩溃/中断残留的 E2B 实例打爆
+    （LimitExceeded.CPU）→ 链脚本每次训练尝试前先 `tencent_stop_all_instances.py`
+    清理残留沙箱；正式训练需人工中断时也必须先停实例再杀训练进程
 
 ## v0.46.2（2026-08-14）
 
