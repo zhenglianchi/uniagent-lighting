@@ -48,11 +48,17 @@ LATEST=$(cat "$CKPT_DIR/latest_checkpointed_iteration.txt" 2>/dev/null | tr -d "
 [ -z "$LATEST" ] && LATEST=$(ls "$CKPT_DIR" 2>/dev/null | grep global_step | sort -V | tail -1 | sed "s/global_step_//")
 echo "latest_step=$LATEST $(date)" >> "$LOG"
 
-# 3. 从 node2 收集 actor checkpoint
+# 3. 收集 actor checkpoint（FSDP worker 落点不固定：本地 node1 优先，node2 兜底）
 CKPT_SUB="global_step_${LATEST}"
 mkdir -p "$CKPT_DIR/$CKPT_SUB"
 echo "==== collect actor from node2 $(date) ====" >> "$LOG"
-scp -r -o StrictHostKeyChecking=no "$NODE2:$CKPT_DIR/$CKPT_SUB/actor" "$CKPT_DIR/$CKPT_SUB/" >> "$LOG" 2>&1
+if [ -d "$CKPT_DIR/$CKPT_SUB/actor" ]; then
+  echo "actor already on node1" >> "$LOG"
+else
+  scp -r -o StrictHostKeyChecking=no "$NODE2:$CKPT_DIR/$CKPT_SUB/actor" "$CKPT_DIR/$CKPT_SUB/" >> "$LOG" 2>&1 \
+    && echo "actor collected from node2" >> "$LOG" \
+    || echo "actor missing on node1 and node2" >> "$LOG"
+fi
 CKPT="$CKPT_DIR/$CKPT_SUB/actor/model_world_size_1_rank_0.pt"
 LORA_META="$CKPT_DIR/$CKPT_SUB/actor/lora_train_meta.json"
 if [ ! -f "$CKPT" ] || [ ! -f "$LORA_META" ]; then

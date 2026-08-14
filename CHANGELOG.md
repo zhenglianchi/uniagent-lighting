@@ -4,6 +4,9 @@
 
 ## v0.47.0（2026-08-14）
 
+- **全量补丁汇总文档**：docs/修改与补丁汇总.md —— 覆盖 verl / uni_agent /
+  TransferQueue / 训练脚本四层共 19 项修改（白盒、黑盒、双机三个阶段），
+  每项含改动内容、原因、影响与验证状态
 - **双机全异步 + Mooncake 对照实验完成（A-E 五组）**，见 docs/训练评测分析.md §7：
   - sync 79.4s/步（基线）→ colocate_async 77.5s（不稳定）→ **separate_async
     48.1s/步（-39%）**
