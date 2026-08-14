@@ -40,6 +40,8 @@ export HF_ENDPOINT=https://hf-mirror.com
 export HF_HUB_DISABLE_XET=1
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
+# MooncakeStore auto_init 需要 mooncake_master/metadata 二进制，确保 Ray worker 的 PATH 带 conda bin
+export PATH="$ENV/bin:$PATH"
 MODEL_PATH=${MODEL_PATH:-/home/ubuntu/models/Qwen3-8B}
 TRAIN_FILE=${TRAIN_FILE:-/home/ubuntu/swe-rl/data/smoke_train.jsonl}
 VAL_FILE=${VAL_FILE:-/home/ubuntu/swe-rl/data/smoke_val.jsonl}
@@ -50,6 +52,7 @@ RAY_ADDRESS=${RAY_ADDRESS:-10.60.188.85:6379}
 TRAINER_MODE=${TRAINER_MODE:-colocate_async}
 NUM_WARMUP_BATCHES=${NUM_WARMUP_BATCHES:-1}
 MOONCAKE=${MOONCAKE:-0}
+MOONCAKE_AUTO_INIT=${MOONCAKE_AUTO_INIT:-True}
 MOONCAKE_PROTOCOL=${MOONCAKE_PROTOCOL:-tcp}
 MOONCAKE_MASTER=${MOONCAKE_MASTER:-10.60.188.85:50124}
 MOONCAKE_METADATA=${MOONCAKE_METADATA:-10.60.188.85:50123}
@@ -98,10 +101,11 @@ fi
 if [ "$MOONCAKE" = "1" ]; then
   EXTRA_OPTS+=(
     transfer_queue.backend.storage_backend=MooncakeStore
-    transfer_queue.backend.MooncakeStore.auto_init=True
+    transfer_queue.backend.MooncakeStore.auto_init=$MOONCAKE_AUTO_INIT
     transfer_queue.backend.MooncakeStore.metadata_server="$MOONCAKE_METADATA"
     transfer_queue.backend.MooncakeStore.master_server_address="$MOONCAKE_MASTER"
     transfer_queue.backend.MooncakeStore.protocol="$MOONCAKE_PROTOCOL"
+    transfer_queue.backend.MooncakeStore.local_hostname=""
     transfer_queue.backend.MooncakeStore.global_segment_size=8589934592
     transfer_queue.backend.MooncakeStore.local_buffer_size=2147483648
   )

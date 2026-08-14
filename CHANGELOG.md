@@ -2,6 +2,40 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.47.0（2026-08-14）
+
+- **双机全异步 + Mooncake 对照实验完成（A-E 五组）**，见 docs/训练评测分析.md §7：
+  - sync 79.4s/步（基线）→ colocate_async 77.5s（不稳定）→ **separate_async
+    48.1s/步（-39%）**
+  - colocate_async + vLLM 0.11.1 崩溃根因确认（CUDA illegal memory access，
+    多轮生成 sleep/wake 竞态，与 Mooncake 无关）→ 正式架构定为 separate_async
+  - MooncakeStore 双机 TCP 与 SimpleStorage 无差异（48.2 vs 48.1s），但链路稳定
+  - **投机解码恢复**：separate_async 独立引擎单节点 dp=1，避开 EAGLE-3+dp>1
+    死锁，正式 E 训练全开 EAGLE-3
+- **双机 + Mooncake 排障链**（全部归档进文档/TODO）：
+  - `run_grpo_multinode_async_ucloud.sh`：PATH 导出、MOONCAKE_AUTO_INIT /
+    local_hostname 可配置
+  - mooncake_master 预启动（LD_LIBRARY_PATH 补 libcudart.so.12）+ node2 补装
+    mooncake-transfer-engine 0.3.12.post1
+  - `MC_STORE_MEMCPY=0`（mooncake 禁用 GPU memcpy，与 vLLM 同卡冲突）
+  - TQ 0.1.9 MooncakeStore clear_data 与 verl kv_clear 不兼容补丁（双机）
+  - verl `_compute_metrics` NestedTensor num_turns 兼容补丁（agent 框架轨迹）
+- **正式双机训练启动**：`scripts/run_grpo_dual_async_mooncake_ucloud.sh`
+  （黑盒 HumanEvalFix 161 条，separate_async + Mooncake + EAGLE-3，batch32 /
+  mini16 / micro4 / pss2，并发 64 / 128 / 0.8，5 epoch）；train3 小样本全链路
+  验证通过后启动，训练完成自动接全量评估；配套
+  `scripts/run_dual_formal_chain.sh`（训练失败自动 resume 重试 → 从 node2 收集
+  actor checkpoint → LoRA 合并 → vLLM 评估）
+- **验证阶段新增排障**：
+  - verl `_compute_metrics` NestedTensor num_turns 补丁已实跑验证（step1 全
+    指标正常，reward 1.0 / num_turns mean 8）
+  - vLLM 0.11.1 spec-decode + chunked prefill 的 logprobs 错位 bug（PR #29216
+    同族）导致 standalone 引擎偶发 500 → verl 提取逻辑改防御式（dict/list 兼容，
+    缺失回退 0.0 并告警，引擎不再崩）
+  - separate_async checkpoint 跨节点落盘：FSDP worker 在 node2，actor 权重存
+    node2 本地盘、trainer 侧 data.pt/tracker 在 node1；正式链脚本负责训练后
+    拉回 node2 actor 目录再合并评估
+
 ## v0.46.2（2026-08-14）
 
 - **多机脚本统一开投机解码**（对照实验）：`run_grpo_multinode_ucloud.sh` +
