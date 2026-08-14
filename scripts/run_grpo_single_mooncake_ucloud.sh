@@ -12,6 +12,10 @@
 set -xeuo pipefail
 
 export CUDA_DEVICE_MAX_CONNECTIONS=1
+export VLLM_USE_V1=1
+export RAY_memory_monitor_refresh_ms=0
+export HF_ENDPOINT=https://hf-mirror.com
+export HF_HUB_DISABLE_XET=1
 export MC_STORE_MEMCPY=0   # mooncake 禁用 GPU memcpy，避免与 vLLM 同卡冲突
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
@@ -44,6 +48,14 @@ SPEC_TOKENS=${SPEC_TOKENS:-3}
 source /home/ubuntu/swe-rl/tencent_sandbox.env
 export E2B_DOMAIN="${E2B_DOMAIN:-ap-guangzhou.tencentags.com}"
 export E2B_API_KEY="${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}"
+# GATEWAY 固定端口（白盒 harness 在训练机本地直连，无需沙箱内隧道）
+export GATEWAY_PORT=${GATEWAY_PORT:-8001}
+# 白盒（mini-swe-agent）：harness 在训练机，沙箱为执行环境
+export MSA_GATEWAY_TUNNEL=${MSA_GATEWAY_TUNNEL:-0}
+export MSA_INSTALL_AGENT=${MSA_INSTALL_AGENT:-1}
+export MSA_REWARD_INCLUDE_P2P=${MSA_REWARD_INCLUDE_P2P:-1}
+export MSA_REWARD_P2P_SAMPLE=${MSA_REWARD_P2P_SAMPLE:-20}
+export TENCENT_SANDBOX_SKIP_TMUX=1
 
 cd /home/ubuntu/uni-agent/verl
 
@@ -138,12 +150,12 @@ fi
   "++actor_rollout_ref.rollout.agent.agent_loop_manager_class=uni_agent.framework.entry.AgentFrameworkRolloutAdapter" \
   "++actor_rollout_ref.rollout.custom.agent_framework.gateway_count=$GATEWAY_COUNT" \
   "++actor_rollout_ref.rollout.custom.agent_framework.log_dir=$LOG_DIR" \
-  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_fqn=uni_agent_ext.agents.claude_code_runner.claude_code_runner" \
-  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.dispatch_mode=ray_task" \
-  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.max_concurrent_sessions=$CONCURRENCY" \
-  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.model_name=Qwen3-8B" \
-  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.max_turns=60" \
-  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.run_timeout=7200" \
+  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_fqn=uni_agent_ext.agents.mini_swe_agent_runner.mini_swe_agent_runner" \
+  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.dispatch_mode=ray_task" \
+  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.max_concurrent_sessions=$CONCURRENCY" \
+  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_kwargs.model_name=Qwen3-8B" \
+  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_kwargs.max_turns=60" \
+  "++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_kwargs.run_timeout=7200" \
   "++actor_rollout_ref.rollout.custom.agent_framework.mask_unfinished_episode=False" \
   "++actor_rollout_ref.rollout.custom.agent_framework.use_reward_loop_worker=False" \
   reward.reward_manager.name=naive \
