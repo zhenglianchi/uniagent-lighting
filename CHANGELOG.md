@@ -2,6 +2,19 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.48.0（2026-08-15）
+
+- **单机在线验证（24 会话，util 0.8 + Mooncake + EAGLE-3）全链路通过**：
+  rollout 24/24、GRPO step 1 完成（202348 tokens）、checkpoint 保存、0 崩溃
+- **定位 vLLM EAGLE-3 rejection sampler illegal memory（与 Mooncake 无关）**：
+  util 0.6 下 `Failed to reset prefix cache`（939 blocks 未释放）→ 后续采样越界；
+  vLLM 0.11.1 老版本上游竞态（#47900/#48055/#50183 均未包含），历史白盒 run 0 次，
+  恢复 util 0.8 后 24 会话 0 崩溃（docs/训练评测分析.md §7.7）
+- **修复 Mooncake INVALID_PARAMS 空 slice**：`max_trajectory_length` 截断的空响应
+  轨迹被 framework 照常写入，4 字段 0 字节被 master 拒绝 → framework 跳过空响应
+  轨迹（`patches/uni_agent_skip_empty_response_trajectory.patch`）+ TQ 空 slice
+  告警（`patches/tq_mooncake_zero_slice_warn.patch`）
+
 ## v0.47.3（2026-08-15）
 
 - **Mooncake num_turns 13B 排查定论 + 离线真实轨迹验证**（docs/训练评测分析.md

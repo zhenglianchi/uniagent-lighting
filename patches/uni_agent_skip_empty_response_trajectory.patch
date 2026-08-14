@@ -1,0 +1,28 @@
+diff --git a/uni_agent/framework/framework.py b/uni_agent/framework/framework.py
+index 4272a35..fc69942 100644
+--- a/uni_agent/framework/framework.py
++++ b/uni_agent/framework/framework.py
+@@ -888,7 +888,22 @@ class OpenAICompatibleAgentFramework(AgentFramework):
+         keys = []
+         fields = []
+         tags = []
+-        for index, trajectory in enumerate(trajectories):
++        for trajectory in trajectories:
++            # [swe-rl] 空响应轨迹（如 max_trajectory_length 截断的占位）写入 Mooncake 时
++            # responses/rm_scores/loss_mask/response_mask 均为 0 字节 slice，master 以
++            # INVALID_PARAMS 拒绝，导致整个 session 的 TQ 写入失败。此类轨迹无训练
++            # 价值，跳过并重编号 index，保证写入 key 连续。
++            if len(trajectory.response_ids) == 0:
++                reason = (trajectory.extra_fields or {}).get('materialization_reason')
++                logger.warning(
++                    'session uid=%s session_index=%s: skip empty-response trajectory '
++                    '(materialization_reason=%s)',
++                    uid,
++                    session_index,
++                    reason,
++                )
++                continue
++            index = len(keys)
+             field, tag = self._trajectory_to_tq_field_and_tag(
+                 trajectory=trajectory,
+                 sample_fields=sample_fields,

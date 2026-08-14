@@ -1,0 +1,11 @@
+# [swe-rl] mooncake_client.py 空 slice 告警（0 字节 slice 会被 master 以 INVALID_PARAMS 拒绝）
+# 位置：site-packages/transfer_queue/storage/clients/mooncake_client.py
+# _batch_upsert_with_retry() 内、num_turns 防御断言之前新增：
+# ---
+#         # [swe-rl] 告警：0 字节 slice（如空响应轨迹字段）会被 master 以 INVALID_PARAMS
+#         # 拒绝，进而拖垮整批 upsert。framework 侧已跳过空响应轨迹；此处保留显式告警
+#         # 以便任何其他空 tensor 写入路径能立即被发现。
+#         for k, s in zip(batch_keys, batch_sizes, strict=True):
+#             if s <= 0:
+#                 logger.error(f"[swe-rl] zero-length slice for key {k} (size={s}): "
+#                              f"Mooncake master will reject it; batch_keys_head={batch_keys[:5]}")
