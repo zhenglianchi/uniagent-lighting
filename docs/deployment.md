@@ -242,6 +242,116 @@ cd /home/ubuntu/swe-rl
 bash eval_dual_async_final.sh   # 合并 LoRA + vLLM serve + 161 条全量评估
 ```
 
+### 5.6 训练参数与环境变量全集（正式口径）
+
+#### 5.6.1 训练超参数（双机正式训练 = 单机 baseline/spec 同口径）
+
+| 类别 | 参数 | 值 | 说明 |
+|---|---|---|---|
+| 数据 | `train_files` | humanevalfix_train161.jsonl | 161 条，无测试泄露 |
+| 数据 | `val_files` | humanevalfix_val.jsonl | 2 条 |
+| 数据 | `max_prompt_length` | 8192 | 超长过滤（filter_overlong） |
+| 数据 | `max_response_length` | 8192 | |
+| 数据 | `truncation` | error | 超长报错而非截断 |
+| Batch | `train_batch_size` | 32 | 每步 32 prompts |
+| Batch | `ppo_mini_batch_size` | 16 | mini-batch = batch/2 |
+| Batch | `ppo_micro_batch_size_per_gpu` | 4 | |
+| Batch | `rollout.n` | 4 | 每 prompt 4 条轨迹 → 每步 128 会话 |
+| Batch | `parameter_sync_step` | 2 | separate_async 权重同步周期（batch==pss×mini） |
+| 训练 | `total_epochs` | 5 | 161/32≈5.03 步/epoch，共 25 步 |
+| 训练 | `adv_estimator` | grpo | |
+| 训练 | `lr` | 1e-5 | AdamW（torch.optim，fp32） |
+| 训练 | `LoRA rank/alpha` | 32 / 32 | 全样本验证口径 |
+| 训练 | `use_fused_kernels` | False | 与 PEFT 冲突 |
+| 训练 | `use_kl_loss` / `entropy_coeff` | False / 0 | |
+| 模型 | `strategy` | fsdp2 | |
+| 模型 | `offload_policy/param/optimizer` | True/True/True | CPU offload 全开 |
+| 模型 | `model_dtype` | bf16 | |
+| 模型 | `enable_gradient_checkpointing` | True | |
+| 模型 | `attn_implementation` | sdpa | |
+| 模型 | `use_remove_padding` | True | |
+| 模型 | `use_dynamic_bsz` / `ppo_max_token_len_per_gpu` | True / 16384 | |
+| Rollout | `mode` | async | |
+| Rollout | `gpu_memory_utilization` | **0.8** | ⚠️ 低于 0.8 会触发 EAGLE-3 prefix-cache reset 竞态（见 §8） |
+| Rollout | `max_num_seqs` | 128 | |
+| Rollout | `max_model_len` | 16384 | = prompt+response 上限 |
+| Rollout | `load_format` / `enforce_eager` | safetensors / True | |
+| Rollout | `free_cache_engine` | True | 每步释放引擎 |
+| Rollout | `multi_turn.enable` / `max_parallel_calls` | True / 1 | |
+| Rollout | `max_turns` | 60 | 与白盒/黑盒对齐 |
+| Rollout | `run_timeout` | 7200s | |
+| Rollout | `format`（tool parser） | hermes | |
+| Agent | `gateway_count` | 1 | |
+| Agent | `max_concurrent_sessions` | 64 | 腾讯沙箱并发口径 |
+| 投机 | `speculative_config` | EAGLE-3 / k=3 / draft_tp=1 | 独立引擎 dp=1 |
+| 数据平面 | `checkpoint_engine.backend` | nccl | |
+| Checkpoint | `save_freq` | 1 | 每步保存 |
+| Checkpoint | `max_actor_ckpt_to_keep` | 1 | 滚动保留（旧大文件自动清理） |
+| Checkpoint | `resume_mode` | auto | 续训 |
+| 调度 | `trainer.v1.trainer_mode` | separate_async | 双机；单机为 sync |
+| 调度 | `num_warmup_batches` | 1 | separate_async 流水线预填充 |
+| 调度 | `balance_batch` | True | 按 seqlen 均衡分片 |
+
+#### 5.6.2 Off-policy（全异步）配置
+
+| 参数 | 值 | 含义 |
+|---|---|---|
+| `max_off_policy_threshold` | **8** | 轨迹生成版本与当前训练版本落后 ≥8 轮即处理（verl 默认） |
+| `max_off_policy_strategy` | **drop** | 超阈值直接丢弃轨迹（可选 wait） |
+| 实际落后 | 2~4 轮 | `parameter_sync_step=2` + 流水线传播延迟，远小于阈值 |
+
+丢弃判定（`replay_buffer.py`）：`(global_steps - prompt_global_steps + 1) > 8`
+→ 丢弃，即**允许最多落后 7 轮**；正常运行时几乎不触发。
+
+#### 5.6.3 环境变量全集（脚本可覆盖项）
+
+**训练相关（脚本默认值，可按需覆盖）**：
+
+| 变量 | 默认值 | 说明 |
+|---|---|---|
+| `MODEL` | /home/ubuntu/models/Qwen3-8B | 基座模型 |
+| `TRAIN_FILE` | humanevalfix_train161.jsonl | 训练数据 |
+| `VAL_FILE` | humanevalfix_val.jsonl | 验证数据 |
+| `TRAIN_BATCH_SIZE` | 32 | |
+| `PPO_MINI_BATCH` | 16 | |
+| `PPO_MICRO_BATCH` | 4 | |
+| `PARAM_SYNC_STEP` | 2 | |
+| `ROLLOUT_N` | 4 | |
+| `TOTAL_EPOCHS` | 5 | |
+| `CONCURRENCY` | 64 | 并发 agent 会话 |
+| `VLLM_MAX_NUM_SEQS` | 128 | |
+| `VLLM_GPU_MEM_UTIL` | 0.8 | ⚠️ 保持 0.8 |
+| `MAX_CKPT_KEEP` | 1 | checkpoint 滚动 |
+| `CKPT_DIR` / `LOG_DIR` | checkpoints/... / logs/... | 独立目录隔离 run |
+| `TOOL_PARSER` | hermes | |
+| `GATEWAY_COUNT` | 1 | |
+| `SERVED_MODEL_NAME` | Qwen3-8B | |
+| `SPEC_ON` | 1 | EAGLE-3 开关 |
+| `SPEC_DRAFT` | Qwen3-8B-speculator.eagle3 | |
+| `SPEC_TOKENS` | 3 | num_speculative_tokens |
+| `MOONCAKE` | 0（SimpleStorage）/ 1（Mooncake） | 双机正式用 1 |
+| `RAY_ADDRESS` | node1内网:6379 | |
+| `MOONCAKE_MASTER` / `MOONCAKE_METADATA` | node1:50124 / node1:50123 | |
+
+**环境/运行（脚本 export，Ray worker 需要 ray start 前注入）**：
+
+| 变量 | 值 | 作用 |
+|---|---|---|
+| `CUDA_DEVICE_MAX_CONNECTIONS` | 1 | 多流稳定 |
+| `VLLM_USE_V1` | 1 | verl v1 引擎 |
+| `RAY_memory_monitor_refresh_ms` | 0 | 关 Ray 内存监控 |
+| `HF_ENDPOINT` | https://hf-mirror.com | HF 国内镜像 |
+| `HF_HUB_DISABLE_XET` | 1 | hf-mirror 不走 Xet |
+| `MC_STORE_MEMCPY` | 0 | Mooncake 禁用 GPU memcpy |
+| `GATEWAY_PORT` | 8001 | Gateway 固定端口 |
+| `MSA_GATEWAY_TUNNEL` | 0 | 白盒 harness 直连 Gateway |
+| `MSA_INSTALL_AGENT` | 1 | 沙箱装 agent |
+| `MSA_REWARD_INCLUDE_P2P` / `MSA_REWARD_P2P_SAMPLE` | 1 / 20 | reward 口径 |
+| `TENCENT_SANDBOX_SKIP_TMUX` | 1 | 跳过沙箱 tmux 安装 |
+| `E2B_DOMAIN` | ap-guangzhou.tencentags.com | 腾讯沙箱 E2B 端点 |
+| `E2B_API_KEY` | tencent_sandbox.env | ⚠️ 必须 ray start 前 export |
+| `TENCENT_SANDBOX_TOKEN` / `SECRET_ID` / `SECRET_KEY` | tencent_sandbox.env | 沙箱/Cloud API 凭据 |
+
 ```bash
 # 训练侧（后台）——runner = external_agent_runner，等本地 agent 完成
 MODEL=/home/ubuntu/models/Qwen3-8B-final \
