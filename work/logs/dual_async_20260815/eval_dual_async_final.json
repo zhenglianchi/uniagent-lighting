@@ -1,0 +1,2586 @@
+{
+  "model": "qwen3-8b-final-dual-async",
+  "base_url": "http://127.0.0.1:8001/v1",
+  "total": 161,
+  "passed": 134,
+  "pass_rate": 0.8323,
+  "reward_mean": 0.8323,
+  "per_sample": [
+    {
+      "instance_id": "humanevalfix-Python-61",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 54.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-61.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-0",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 64.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-0.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-112",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 58.3,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-112.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-64",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 79.5,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-64.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-120",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 152.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-120.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-21",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 124.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-21.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-100",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 72.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-100.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-48",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 79.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-48.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-148",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 69.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-148.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-59",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 25.8,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-59.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-163",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 102.6,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-163.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-104",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 41.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-104.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-17",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 73.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-17.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-3",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 40.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-3.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-16",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 26.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-16.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-74",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 142.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-74.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-122",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 64.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-122.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-113",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 144.3,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-113.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-15",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 37.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-15.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-39",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 57.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-39.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-55",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 92.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-55.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-105",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 101.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-105.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-52",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 84.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-52.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-102",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 104.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-102.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-83",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 106.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-83.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-51",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 22,
+      "elapsed_s": 106.7,
+      "agent_rc": 1,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-51.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8360 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-9",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 68.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-9.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-111",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 643.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-111.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-68",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 121.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-68.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-138",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 34.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-138.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-23",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 65.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-23.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-42",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 129.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-42.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-123",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 13,
+      "elapsed_s": 246.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-123.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-54",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 174.6,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-54.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-69",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 96.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-69.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-136",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 3,
+      "elapsed_s": 40.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-136.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-82",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 34.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-82.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-98",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 38.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-98.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-58",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 44.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-58.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-87",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 268.9,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-87.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-7",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 38.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-7.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-145",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 366.4,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-145.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-38",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 44.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-38.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-32",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 482.6,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-32.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-131",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 39.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-131.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-4",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 3,
+      "elapsed_s": 31.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-4.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-34",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 8,
+      "elapsed_s": 144.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-34.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-29",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 50.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-29.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-93",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 314.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-93.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-152",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 21.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-152.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-8",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 26.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-8.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-130",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 154.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-130.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-72",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 67.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-72.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-75",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 63.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-75.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-25",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 3,
+      "elapsed_s": 97.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-25.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-96",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 8,
+      "elapsed_s": 69.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-96.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-85",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 154.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-85.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-84",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 57.4,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-84.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-5",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 87.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-5.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-40",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 3,
+      "elapsed_s": 174.4,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-40.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-108",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 121.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-108.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-88",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 3,
+      "elapsed_s": 42.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-88.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-132",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 98.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-132.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-14",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 44.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-14.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-78",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 29.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-78.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-150",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 9,
+      "elapsed_s": 73.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-150.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-146",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 204.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-146.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-119",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 128.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-119.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-103",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 46.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-103.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-1",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 103.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-1.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-151",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 163.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-151.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-11",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 87.8,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-11.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-95",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 2,
+      "elapsed_s": 74.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-95.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-128",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 108.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-128.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-110",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 110.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-110.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-41",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 59.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-41.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-125",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 99.9,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-125.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-153",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 15,
+      "elapsed_s": 206.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-153.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-33",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 102.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-33.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-71",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 38.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-71.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-22",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 72.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-22.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-137",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 82.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-137.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-2",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 63.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-2.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-53",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 46.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-53.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-13",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 83.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-13.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-162",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 52.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-162.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-47",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 11,
+      "elapsed_s": 347.1,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-47.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-90",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 79.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-90.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-77",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 117.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-77.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-114",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 67.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-114.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-139",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 35.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-139.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-66",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 50.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-66.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-19",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 84.3,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-19.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-43",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 383.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-43.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-91",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 139.1,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-91.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-133",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 3,
+      "elapsed_s": 38.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-133.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-20",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 98.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-20.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-24",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 55.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-24.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-44",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 118.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-44.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-56",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 93.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-56.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-26",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 124.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-26.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-30",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 87.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-30.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-76",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 145.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-76.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-63",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 57.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-63.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-134",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 417.2,
+      "agent_rc": 1,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-134.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8369 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-101",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 101.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-101.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-141",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 243.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-141.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-73",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 66.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-73.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-135",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 47.6,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-135.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-107",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 50.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-107.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-35",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 44.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-35.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-124",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 255.9,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-124.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-109",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 365.1,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-109.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-99",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 65.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-99.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-140",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 125.1,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-140.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-94",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 3,
+      "elapsed_s": 42.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-94.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-81",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 141.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-81.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-46",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 118.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-46.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-45",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 40,
+      "elapsed_s": 64.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-45.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-155",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 26.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-155.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-57",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 125.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-57.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-154",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 139.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-154.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-67",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 48.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-67.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-49",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 71.1,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-49.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-36",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 72.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-36.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-147",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 76.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-147.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-117",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 76.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-117.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-79",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 24.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-79.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-12",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 98.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-12.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-50",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 110.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-50.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-62",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 83.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-62.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-18",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 86.1,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-18.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-159",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 84.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-159.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-65",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 63.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-65.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-60",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 63.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-60.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-89",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 57.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-89.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-157",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 48.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-157.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-80",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 42.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-80.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-97",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 108.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-97.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-143",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 93.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-143.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-70",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 63.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-70.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-127",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 3,
+      "elapsed_s": 121.3,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-127.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-158",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 34.2,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-158.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-118",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 172.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-118.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-92",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 65.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-92.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-31",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 63.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-31.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-142",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 117.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-142.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-106",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 23,
+      "elapsed_s": 445.4,
+      "agent_rc": 0,
+      "reward": 0.0,
+      "resolved": false,
+      "passed": 0,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: FAIL"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-106.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-149",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 153.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-149.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-161",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 65.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-161.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-6",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 10,
+      "elapsed_s": 416.2,
+      "agent_rc": 1,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-6.traj.json",
+      "log_tail": "ContextWindowExceededError: litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: OpenAIException - This model's maximum context length is 8192 tokens. However, your request has 8264 input tokens. Please reduce the length of the input messages. None"
+    },
+    {
+      "instance_id": "humanevalfix-Python-121",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 72.2,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-121.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-144",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 127.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-144.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-115",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 7,
+      "elapsed_s": 106.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-115.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-27",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 51.9,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-27.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-116",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 181.4,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-116.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-126",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 333.7,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-126.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-37",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 4,
+      "elapsed_s": 79.5,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-37.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-86",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 123.0,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-86.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-129",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 5,
+      "elapsed_s": 60.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-129.traj.json",
+      "log_tail": ""
+    },
+    {
+      "instance_id": "humanevalfix-Python-28",
+      "model": "qwen3-8b-final-dual-async",
+      "rounds": 6,
+      "elapsed_s": 58.8,
+      "agent_rc": 0,
+      "reward": 1.0,
+      "resolved": true,
+      "passed": 1,
+      "total": 1,
+      "per_test": [
+        "test_solution.py::test_all: PASS"
+      ],
+      "traj": "logs/eval_dual_async_final_dir/humanevalfix_humanevalfix-Python-28.traj.json",
+      "log_tail": ""
+    }
+  ]
+}

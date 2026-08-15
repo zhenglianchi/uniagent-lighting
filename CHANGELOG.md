@@ -14,6 +14,16 @@
 - **文档更新**：训练评测分析 §8（双机平台化训练配置/过程/评估/产物）、deployment
   §5.5（双机平台化训练部署）、修改与补丁汇总 #23（checkpoint 滚动修复）、TODO
 
+## v0.49.1（2026-08-15）
+
+- **镜像清理定稿**：服务器仅保留双机平台化成果——`models/Qwen3-8B-final-dual-async`
+  （16G）+ `checkpoints/humanevalfix_dual_async/global_step_25`（16G）；
+  其余旧权重/checkpoint 全部删除（磁盘 81%→31%），训练轨迹与日志全部保留
+- **日志/轨迹同步代码仓**：`work/logs/dual_async_20260815/`（43M：25 步轨迹 +
+  grpo 日志 + 评估产物 + 合并/清理日志）
+- **deployment §9 权重与镜像清单**：命名规范（`Qwen3-8B-final-<形态>`）、
+  镜像内容、复现要点
+
 ## v0.48.0（2026-08-15）
 
 - **单机在线验证（24 会话，util 0.8 + Mooncake + EAGLE-3）全链路通过**：

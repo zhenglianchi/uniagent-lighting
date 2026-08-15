@@ -1,0 +1,3420 @@
+== vllm serve qwen3-8b-final-dual-async ==
+vllm pid=133211, waiting for ready...
+READY
+== eval qwen3-8b-final-dual-async ==
+[eval] 161 samples model=qwen3-8b-final-dual-async base=http://127.0.0.1:8001/v1 concurrency=16
+[worker 13] sandbox up: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+[worker 13] 1/10 humanevalfix-Python-18
+[worker 1] sandbox up: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+[worker 1] 1/10 humanevalfix-Python-104
+[worker 3] sandbox up: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+[worker 3] 1/10 humanevalfix-Python-42
+[worker 4] sandbox up: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+[worker 4] 1/10 humanevalfix-Python-145
+[worker 0] sandbox up: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+[worker 0] 1/11 humanevalfix-Python-61
+[worker 7] sandbox up: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+[worker 7] 1/10 humanevalfix-Python-11
+[worker 9] sandbox up: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+[worker 9] 1/10 humanevalfix-Python-66
+[worker 2] sandbox up: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+[worker 2] 1/10 humanevalfix-Python-105
+[worker 11] sandbox up: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+[worker 11] 1/10 humanevalfix-Python-124
+[worker 10] sandbox up: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+[worker 10] 1/10 humanevalfix-Python-30
+[worker 5] sandbox up: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+[worker 5] 1/10 humanevalfix-Python-130
+[worker 12] sandbox up: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+[worker 12] 1/10 humanevalfix-Python-154
+[worker 8] sandbox up: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+[worker 8] 1/10 humanevalfix-Python-137
+[worker 14] sandbox up: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+[worker 14] 1/10 humanevalfix-Python-127
+[worker 15] sandbox up: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+[worker 15] 1/10 humanevalfix-Python-121
+[worker 6] sandbox up: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+[worker 6] 1/10 humanevalfix-Python-88
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/ubuntu/.config/mini-swe-agent/.env'
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:38:51,915:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:38:52,128:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:38:52,148:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 18:38:52,150:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 18:38:52,159:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:38:52,162:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:38:52,182:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:38:52,219:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:38:52,221:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:38:52,226:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:38:52,230:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:38:52,233:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:38:52,238:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:38:52,300:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:38:52,342:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:38:52,394:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-104 reward=1.0 resolved=True
+[worker 1] 2/10 humanevalfix-Python-17
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:39:34,158:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-88 reward=1.0 resolved=True
+[worker 6] 2/10 humanevalfix-Python-132
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:39:35,901:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-66 reward=1.0 resolved=True
+[worker 9] 2/10 humanevalfix-Python-19
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:39:43,722:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-61 reward=1.0 resolved=True
+[worker 0] 2/11 humanevalfix-Python-0
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:39:47,130:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-121 reward=1.0 resolved=True
+[worker 15] 2/10 humanevalfix-Python-144
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:40:05,605:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 8] done humanevalfix-Python-137 reward=1.0 resolved=True
+[worker 8] 2/10 humanevalfix-Python-2
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:40:15,855:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-18 reward=0.0 resolved=False
+[worker 13] 2/10 humanevalfix-Python-159
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:40:19,067:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 10] done humanevalfix-Python-30 reward=1.0 resolved=True
+[worker 10] 2/10 humanevalfix-Python-76
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:40:20,539:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+[worker 7] done humanevalfix-Python-11 reward=0.0 resolved=False
+[worker 7] 2/10 humanevalfix-Python-95
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:40:21,296:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-105 reward=1.0 resolved=True
+[worker 2] 2/10 humanevalfix-Python-52
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 18:40:34,110:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-17 reward=1.0 resolved=True
+[worker 1] 3/10 humanevalfix-Python-3
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:40:48,877:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-0 reward=1.0 resolved=True
+[worker 0] 3/11 humanevalfix-Python-112
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:40:52,561:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-127 reward=1.0 resolved=True
+[worker 14] 2/10 humanevalfix-Python-158
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:40:55,003:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-42 reward=1.0 resolved=True
+[worker 3] 2/10 humanevalfix-Python-123
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:41:02,284:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-19 reward=0.0 resolved=False
+[worker 9] 3/10 humanevalfix-Python-43
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:41:08,947:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-154 reward=1.0 resolved=True
+[worker 12] 2/10 humanevalfix-Python-67
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:41:12,094:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-132 reward=1.0 resolved=True
+[worker 6] 3/10 humanevalfix-Python-14
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:41:15,122:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 8] done humanevalfix-Python-2 reward=1.0 resolved=True
+[worker 8] 3/10 humanevalfix-Python-53
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:41:20,426:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-130 reward=1.0 resolved=True
+[worker 5] 2/10 humanevalfix-Python-72
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:41:27,557:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-3 reward=1.0 resolved=True
+[worker 1] 4/10 humanevalfix-Python-16
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-158 reward=0.0 resolved=False
+[worker 14] 3/10 humanevalfix-Python-118
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:41:30,481:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:41:30,524:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-95 reward=1.0 resolved=True
+[worker 7] 3/10 humanevalfix-Python-128
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:41:36,177:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-159 reward=1.0 resolved=True
+[worker 13] 3/10 humanevalfix-Python-65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:41:44,756:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-112 reward=0.0 resolved=False
+[worker 0] 4/11 humanevalfix-Python-64
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:41:51,725:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-16 reward=1.0 resolved=True
+[worker 1] 5/10 humanevalfix-Python-74
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:41:58,100:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-52 reward=1.0 resolved=True
+[worker 2] 3/10 humanevalfix-Python-102
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 18:41:59,479:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-14 reward=1.0 resolved=True
+[worker 6] 4/10 humanevalfix-Python-78
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:42:00,251:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-67 reward=1.0 resolved=True
+[worker 12] 3/10 humanevalfix-Python-49
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:42:01,702:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 8] done humanevalfix-Python-53 reward=1.0 resolved=True
+[worker 8] 4/10 humanevalfix-Python-13
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:42:07,668:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-144 reward=1.0 resolved=True
+[worker 15] 3/10 humanevalfix-Python-115
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:42:14,510:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-78 reward=1.0 resolved=True
+[worker 6] 5/10 humanevalfix-Python-150
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:42:30,432:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-72 reward=1.0 resolved=True
+[worker 5] 3/10 humanevalfix-Python-75
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:42:36,247:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 10] done humanevalfix-Python-76 reward=1.0 resolved=True
+[worker 10] 3/10 humanevalfix-Python-63
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:42:46,492:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-65 reward=1.0 resolved=True
+[worker 13] 4/10 humanevalfix-Python-60
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:42:49,069:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-124 reward=0.0 resolved=False
+[worker 11] 2/10 humanevalfix-Python-109
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:43:09,350:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-64 reward=0.0 resolved=False
+[worker 0] 5/11 humanevalfix-Python-120
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:43:11,974:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-49 reward=1.0 resolved=True
+[worker 12] 4/10 humanevalfix-Python-36
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:43:13,613:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-128 reward=1.0 resolved=True
+[worker 7] 4/10 humanevalfix-Python-110
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:43:25,324:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 8] done humanevalfix-Python-13 reward=1.0 resolved=True
+[worker 8] 5/10 humanevalfix-Python-162
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:43:32,044:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-75 reward=1.0 resolved=True
+[worker 5] 4/10 humanevalfix-Python-25
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:43:41,021:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-102 reward=1.0 resolved=True
+[worker 2] 4/10 humanevalfix-Python-83
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 18:43:44,529:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+[worker 6] done humanevalfix-Python-150 reward=1.0 resolved=True
+[worker 6] 6/10 humanevalfix-Python-146
+[worker 10] done humanevalfix-Python-63 reward=1.0 resolved=True
+[worker 10] 4/10 humanevalfix-Python-134
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:43:45,303:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:43:45,549:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-60 reward=1.0 resolved=True
+[worker 13] 5/10 humanevalfix-Python-89
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:43:53,704:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-115 reward=1.0 resolved=True
+[worker 15] 4/10 humanevalfix-Python-27
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:44:01,465:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-74 reward=1.0 resolved=True
+[worker 1] 6/10 humanevalfix-Python-122
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:44:21,571:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-118 reward=1.0 resolved=True
+[worker 14] 4/10 humanevalfix-Python-92
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:44:24,212:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+[worker 8] done humanevalfix-Python-162 reward=1.0 resolved=True
+[worker 8] 6/10 humanevalfix-Python-47
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:44:25,189:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-36 reward=1.0 resolved=True
+[worker 12] 5/10 humanevalfix-Python-147
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:44:27,393:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-89 reward=1.0 resolved=True
+[worker 13] 6/10 humanevalfix-Python-157
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:44:51,673:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-27 reward=1.0 resolved=True
+[worker 15] 5/10 humanevalfix-Python-116
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:44:54,278:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-145 reward=0.0 resolved=False
+[worker 4] 2/10 humanevalfix-Python-38
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 18:44:59,706:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-123 reward=1.0 resolved=True
+[worker 3] 3/10 humanevalfix-Python-54
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:45:10,386:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-110 reward=1.0 resolved=True
+[worker 7] 5/10 humanevalfix-Python-41
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:45:16,597:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-25 reward=1.0 resolved=True
+[worker 5] 5/10 humanevalfix-Python-96
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:45:19,485:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-122 reward=1.0 resolved=True
+[worker 1] 7/10 humanevalfix-Python-113
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:45:27,145:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-92 reward=1.0 resolved=True
+[worker 14] 5/10 humanevalfix-Python-31
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:45:30,141:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-83 reward=1.0 resolved=True
+[worker 2] 5/10 humanevalfix-Python-51
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 18:45:32,107:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-157 reward=1.0 resolved=True
+[worker 13] 7/10 humanevalfix-Python-80
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:45:41,178:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-147 reward=1.0 resolved=True
+[worker 12] 6/10 humanevalfix-Python-117
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:45:44,215:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-38 reward=1.0 resolved=True
+[worker 4] 3/10 humanevalfix-Python-32
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 18:45:45,245:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+[worker 0] done humanevalfix-Python-120 reward=1.0 resolved=True
+[worker 0] 6/11 humanevalfix-Python-21
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:45:45,886:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-41 reward=1.0 resolved=True
+[worker 7] 6/10 humanevalfix-Python-125
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:46:16,980:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-80 reward=1.0 resolved=True
+[worker 13] 8/10 humanevalfix-Python-97
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:46:24,329:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-96 reward=1.0 resolved=True
+[worker 5] 6/10 humanevalfix-Python-85
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:46:29,405:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-31 reward=1.0 resolved=True
+[worker 14] 6/10 humanevalfix-Python-142
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:46:34,137:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-117 reward=1.0 resolved=True
+[worker 12] 7/10 humanevalfix-Python-79
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:47:01,288:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-146 reward=1.0 resolved=True
+[worker 6] 7/10 humanevalfix-Python-119
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:47:10,812:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+[worker 2] done humanevalfix-Python-51 reward=0.0 resolved=False
+[worker 2] 6/10 humanevalfix-Python-9
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 18:47:19,509:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-79 reward=1.0 resolved=True
+[worker 12] 8/10 humanevalfix-Python-12
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:47:26,387:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-43 reward=1.0 resolved=True
+[worker 9] 4/10 humanevalfix-Python-91
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:47:33,582:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-21 reward=1.0 resolved=True
+[worker 0] 7/11 humanevalfix-Python-100
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:47:50,903:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-113 reward=0.0 resolved=False
+[worker 1] 8/10 humanevalfix-Python-15
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:47:52,215:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-116 reward=1.0 resolved=True
+[worker 15] 6/10 humanevalfix-Python-126
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:47:56,892:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-125 reward=0.0 resolved=False
+[worker 7] 7/10 humanevalfix-Python-153
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:47:57,790:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-54 reward=0.0 resolved=False
+[worker 3] 4/10 humanevalfix-Python-69
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:48:05,776:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-97 reward=1.0 resolved=True
+[worker 13] 9/10 humanevalfix-Python-143
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:48:13,906:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-9 reward=1.0 resolved=True
+[worker 2] 7/10 humanevalfix-Python-111
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 18:48:29,193:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-15 reward=1.0 resolved=True
+[worker 1] 9/10 humanevalfix-Python-39
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:48:30,411:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-142 reward=1.0 resolved=True
+[worker 14] 7/10 humanevalfix-Python-106
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:48:33,067:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-100 reward=1.0 resolved=True
+[worker 0] 8/11 humanevalfix-Python-48
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:49:04,606:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+[worker 5] done humanevalfix-Python-85 reward=1.0 resolved=True
+[worker 5] 7/10 humanevalfix-Python-84
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:49:05,529:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+[worker 12] done humanevalfix-Python-12 reward=1.0 resolved=True
+[worker 12] 9/10 humanevalfix-Python-50
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:49:06,328:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-109 reward=0.0 resolved=False
+[worker 11] 3/10 humanevalfix-Python-99
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:49:15,447:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-119 reward=1.0 resolved=True
+[worker 6] 8/10 humanevalfix-Python-103
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:49:19,466:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-39 reward=1.0 resolved=True
+[worker 1] 10/10 humanevalfix-Python-55
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5                                        
+INFO:2026-08-15 18:49:28,459:E2B attached to sandbox: icmcw2v5zvaket77pne2zwecabhfhv7oss73n2w5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-69 reward=1.0 resolved=True
+[worker 3] 5/10 humanevalfix-Python-136
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:49:43,418:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-143 reward=1.0 resolved=True
+[worker 13] 10/10 humanevalfix-Python-70
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb                                        
+INFO:2026-08-15 18:49:48,460:E2B attached to sandbox: hgnm7vn4bdpqrhr5oaqsyno2vjexgjykjumr67mb
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-91 reward=0.0 resolved=False
+[worker 9] 5/10 humanevalfix-Python-133
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:49:53,316:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-84 reward=0.0 resolved=False
+[worker 5] 8/10 humanevalfix-Python-5
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:50:03,708:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-103 reward=1.0 resolved=True
+[worker 6] 9/10 humanevalfix-Python-1
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:50:06,852:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 8] done humanevalfix-Python-47 reward=0.0 resolved=False
+[worker 8] 7/10 humanevalfix-Python-90
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:50:13,442:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-99 reward=1.0 resolved=True
+[worker 11] 4/10 humanevalfix-Python-140
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:50:21,571:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-136 reward=1.0 resolved=True
+[worker 3] 6/10 humanevalfix-Python-82
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:50:24,294:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+[worker 0] done humanevalfix-Python-48 reward=1.0 resolved=True
+[worker 0] 9/11 humanevalfix-Python-148
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:50:25,446:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-133 reward=1.0 resolved=True
+[worker 9] 6/10 humanevalfix-Python-20
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:50:32,932:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+[worker 10] done humanevalfix-Python-134 reward=1.0 resolved=True
+[worker 10] 5/10 humanevalfix-Python-101
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:50:44,065:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 13] done humanevalfix-Python-70 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-50 reward=1.0 resolved=True
+[worker 12] 10/10 humanevalfix-Python-62
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3                                        
+INFO:2026-08-15 18:50:57,379:E2B attached to sandbox: 3dypyvxtzejqqzzd7fse27zwvb4jus3pmbqougi3
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-82 reward=1.0 resolved=True
+[worker 3] 7/10 humanevalfix-Python-98
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:50:59,497:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 1] done humanevalfix-Python-55 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-153 reward=0.0 resolved=False
+[worker 7] 8/10 humanevalfix-Python-33
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:51:25,371:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-5 reward=1.0 resolved=True
+[worker 5] 9/10 humanevalfix-Python-40
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:51:31,827:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 8] done humanevalfix-Python-90 reward=1.0 resolved=True
+[worker 8] 8/10 humanevalfix-Python-77
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:51:34,149:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-148 reward=1.0 resolved=True
+[worker 0] 10/11 humanevalfix-Python-59
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:51:35,963:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-98 reward=1.0 resolved=True
+[worker 3] 8/10 humanevalfix-Python-58
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:51:39,448:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-1 reward=1.0 resolved=True
+[worker 6] 10/10 humanevalfix-Python-151
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf                                        
+INFO:2026-08-15 18:51:50,799:E2B attached to sandbox: lki3qawrwqgqrmyld6b37pmgncgn5yi774ojhgkf
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-59 reward=0.0 resolved=False
+[worker 0] 11/11 humanevalfix-Python-163
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5                                        
+INFO:2026-08-15 18:52:02,680:E2B attached to sandbox: k6hxcogd2m7v2plrw43syczg4sxjyyiunmdzyav5
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-20 reward=1.0 resolved=True
+[worker 9] 7/10 humanevalfix-Python-24
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:52:12,852:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 12] done humanevalfix-Python-62 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-58 reward=1.0 resolved=True
+[worker 3] 9/10 humanevalfix-Python-87
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:52:25,268:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 10] done humanevalfix-Python-101 reward=1.0 resolved=True
+[worker 10] 6/10 humanevalfix-Python-141
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:52:27,036:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+[worker 11] done humanevalfix-Python-140 reward=0.0 resolved=False
+[worker 11] 5/10 humanevalfix-Python-94
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:52:27,807:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-33 reward=1.0 resolved=True
+[worker 7] 9/10 humanevalfix-Python-71
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:53:08,529:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+[worker 9] done humanevalfix-Python-24 reward=1.0 resolved=True
+[worker 9] 8/10 humanevalfix-Python-44
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:53:09,062:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-94 reward=1.0 resolved=True
+[worker 11] 6/10 humanevalfix-Python-81
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:53:10,990:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-126 reward=1.0 resolved=True
+[worker 15] 7/10 humanevalfix-Python-37
+[worker 8] done humanevalfix-Python-77 reward=1.0 resolved=True
+[worker 8] 9/10 humanevalfix-Python-114
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:53:31,995:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:53:32,696:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 0] done humanevalfix-Python-163 reward=0.0 resolved=False
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-71 reward=1.0 resolved=True
+[worker 7] 10/10 humanevalfix-Python-22
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc                                        
+INFO:2026-08-15 18:53:48,403:E2B attached to sandbox: dc2ofu4svffpo66qsbgg5eajkpt3mgpwrehf6rsc
+[worker 4] done humanevalfix-Python-32 reward=0.0 resolved=False
+[worker 4] 4/10 humanevalfix-Python-131
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 18:53:49,411:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-40 reward=0.0 resolved=False
+[worker 5] 10/10 humanevalfix-Python-108
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc                                        
+INFO:2026-08-15 18:54:27,558:E2B attached to sandbox: cv3cwj2tes6kfu5kepjcimtpayny5yji24mkcifc
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-131 reward=0.0 resolved=False
+[worker 4] 5/10 humanevalfix-Python-4
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 18:54:29,731:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 6] done humanevalfix-Python-151 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 8] done humanevalfix-Python-114 reward=1.0 resolved=True
+[worker 8] 10/10 humanevalfix-Python-139
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe                                        
+INFO:2026-08-15 18:54:41,398:E2B attached to sandbox: xhj5x7o7llrv3zu7367zdgexzn6r7hhd7qlypvhe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-37 reward=1.0 resolved=True
+[worker 15] 8/10 humanevalfix-Python-86
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:54:52,835:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 7] done humanevalfix-Python-22 reward=0.0 resolved=False
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-4 reward=1.0 resolved=True
+[worker 4] 6/10 humanevalfix-Python-34
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 18:55:02,559:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-44 reward=1.0 resolved=True
+[worker 9] 9/10 humanevalfix-Python-56
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:55:09,458:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 8] done humanevalfix-Python-139 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-81 reward=1.0 resolved=True
+[worker 11] 7/10 humanevalfix-Python-46
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:55:33,359:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-106 reward=0.0 resolved=False
+[worker 14] 8/10 humanevalfix-Python-149
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:56:00,445:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 5] done humanevalfix-Python-108 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 10] done humanevalfix-Python-141 reward=1.0 resolved=True
+[worker 10] 7/10 humanevalfix-Python-73
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:56:31,930:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-56 reward=1.0 resolved=True
+[worker 9] 10/10 humanevalfix-Python-26
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe                                        
+INFO:2026-08-15 18:56:44,864:E2B attached to sandbox: x65sw76iihfkf4aayp6ry2jhkml7367lxneprcfe
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-87 reward=0.0 resolved=False
+[worker 3] 10/10 humanevalfix-Python-7
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no                                        
+INFO:2026-08-15 18:56:55,996:E2B attached to sandbox: 5772hzeebglkfyyfkkuebqpvqg2hiu5qjih4b5no
+[worker 15] done humanevalfix-Python-86 reward=1.0 resolved=True
+[worker 15] 9/10 humanevalfix-Python-129
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:56:57,527:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-34 reward=1.0 resolved=True
+[worker 4] 7/10 humanevalfix-Python-29
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 18:57:28,658:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-46 reward=1.0 resolved=True
+[worker 11] 8/10 humanevalfix-Python-45
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:57:33,672:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 3] done humanevalfix-Python-7 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 10] done humanevalfix-Python-73 reward=1.0 resolved=True
+[worker 10] 8/10 humanevalfix-Python-135
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:57:39,652:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-129 reward=1.0 resolved=True
+[worker 15] 10/10 humanevalfix-Python-28
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu                                        
+INFO:2026-08-15 18:57:59,413:E2B attached to sandbox: xe5nxb5hb76f3w47o4cymeaglrzbb6bobvocc2eu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-29 reward=1.0 resolved=True
+[worker 4] 8/10 humanevalfix-Python-93
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 18:58:19,481:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 10] done humanevalfix-Python-135 reward=1.0 resolved=True
+[worker 10] 9/10 humanevalfix-Python-107
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:58:28,057:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-149 reward=1.0 resolved=True
+[worker 14] 9/10 humanevalfix-Python-161
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:58:35,649:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-45 reward=0.0 resolved=False
+[worker 11] 9/10 humanevalfix-Python-155
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:58:38,836:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 9] done humanevalfix-Python-26 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 15] done humanevalfix-Python-28 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-155 reward=1.0 resolved=True
+[worker 11] 10/10 humanevalfix-Python-57
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65                                        
+INFO:2026-08-15 18:59:06,430:E2B attached to sandbox: ftnmkvk7cj42fjzzn24ihgdzn56a7px3mjpjub65
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-111 reward=1.0 resolved=True
+[worker 2] 8/10 humanevalfix-Python-68
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 18:59:14,725:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 10] done humanevalfix-Python-107 reward=1.0 resolved=True
+[worker 10] 10/10 humanevalfix-Python-35
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw                                        
+INFO:2026-08-15 18:59:19,698:E2B attached to sandbox: nltd7eoabxa7pbpx6iotzgvyouj7yhcx3ekstsuw
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 14] done humanevalfix-Python-161 reward=1.0 resolved=True
+[worker 14] 10/10 humanevalfix-Python-6
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx                                        
+INFO:2026-08-15 18:59:43,249:E2B attached to sandbox: w3tufxmrdwiv3wtp5tt2d6otwqy5mmhidbspzpgx
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 10] done humanevalfix-Python-35 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 11] done humanevalfix-Python-57 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-68 reward=1.0 resolved=True
+[worker 2] 9/10 humanevalfix-Python-138
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 19:01:17,612:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-138 reward=1.0 resolved=True
+[worker 2] 10/10 humanevalfix-Python-23
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu                                        
+INFO:2026-08-15 19:01:53,170:E2B attached to sandbox: dosjvnshwekqrli7s5ht2wnk6bqazc37fj5hxlyu
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 2] done humanevalfix-Python-23 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-93 reward=1.0 resolved=True
+[worker 4] 9/10 humanevalfix-Python-152
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 19:03:35,873:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-152 reward=1.0 resolved=True
+[worker 4] 10/10 humanevalfix-Python-8
+minisweagent.tencent_e2b: INFO: E2B attached to sandbox:                        
+s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63                                        
+INFO:2026-08-15 19:03:58,044:E2B attached to sandbox: s5hw7zayp5u2ea4cztfhsibvpvg6pyhifwul3y63
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+[worker 4] done humanevalfix-Python-8 reward=1.0 resolved=True
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+[worker 14] done humanevalfix-Python-6 reward=1.0 resolved=True
+
+[eval] done: 134/161 passed, pass_rate=0.8323, mean_reward=0.8323
+[eval] summary -> logs/eval_dual_async_final.json
+== DONE ==
+final-dual-async: 134 / 161 = 0.8323

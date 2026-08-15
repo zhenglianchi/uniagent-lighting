@@ -1,0 +1,24 @@
+2026-08-15 12:12:54 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-127]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-15 12:12:55 | …tencent_agent_runtime | INFO     | tencent sandbox created id=t6zc5l4sufwppefibhm6b4eavb73m7mfbqv3mjqy template=code-interpreter-v1
+2026-08-15 12:12:55 | …isweagent.tencent_e2b | INFO     | E2B attached to sandbox: t6zc5l4sufwppefibhm6b4eavb73m7mfbqv3mjqy
+2026-08-15 12:12:55 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 12:12:57 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 12:12:57 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 12:12:58 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 12:12:58 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 12:12:59 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 12:12:59 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 12:13:06 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 12:13:06 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 12:13:07 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 12:13:07 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 12:13:09 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 12:13:09 | …mini_swe_agent_runner | INFO     | [sample 13] mini-swe-agent rc=0 elapsed=13.9s traj=humanevalfix-Python-127
+2026-08-15 12:13:10 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-127 -> 1.0 (test_solution.py::test_all: PASS)
+2026-08-15 12:13:10 | …tencent_agent_runtime | INFO     | tencent sandbox killed

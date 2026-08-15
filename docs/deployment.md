@@ -238,3 +238,36 @@ python eval_humanevalfix.py \
   `skip empty-response trajectory` 为正常
 - **vLLM EAGLE-3 illegal memory**：util 必须 ≥0.8（baseline/spec 同口径），
   util 0.6 下长上下文会触发 `Failed to reset prefix cache` → rejection sampler 越界
+
+## 9. 权重与镜像清单（2026-08-15 定稿）
+
+### 9.1 权重命名规范
+
+统一命名 `Qwen3-8B-final-<训练形态>`，由 `convert_verl_lora_to_hf.py` 合并
+对应训练最后一步 checkpoint 到基座生成（16G，BF16）：
+
+| 权重 | 训练形态 | 通过率 | 状态 |
+|---|---|---|---|
+| `Qwen3-8B-final` | 单机白盒 baseline（sync 26 步） | 83.2% | 已归档（旧镜像/文档） |
+| `Qwen3-8B-final-spec` | 单机白盒投机（25 步） | — | 已归档（旧镜像/文档） |
+| `Qwen3-8B-final-blackbox` | 单机黑盒（25 步） | 80.75% | 已归档（旧镜像/文档） |
+| **`Qwen3-8B-final-dual-async`** | **双机 separate_async + Mooncake + EAGLE-3（25 步）** | **83.23%** | **当前镜像唯一保留权重（平台化训练结果）** |
+
+### 9.2 当前镜像内容（2026-08-15 清理后）
+
+- **models/**：仅 `Qwen3-8B-final-dual-async`（16G，最终合并权重）；
+  基座/投机器/旧 final 权重已删除（如需复现训练可重新下载基座 Qwen3-8B）
+- **checkpoints/**：仅 `humanevalfix_dual_async/global_step_25`
+  （双机训练最终 checkpoint，16G，LoRA adapter）
+- **logs/**：全部保留（训练轨迹 25 步、grpo 日志、评估轨迹、合并/清理日志），
+  已同步本地代码仓 `uniagent-lighting/work/logs/dual_async_20260815/`
+- **data/**：训练数据保留（humanevalfix_train161.jsonl 等）
+- 训练/评估脚本与全部补丁：见仓库 `scripts/` + `patches/`
+
+### 9.3 复现要点
+
+- 正式训练：`scripts/run_grpo_dual_async_mooncake_ucloud.sh`（双机
+  separate_async + Mooncake + EAGLE-3 + 白盒，配置见训练评测分析 §8）
+- 评估：`scripts/eval_dual_async_final.sh`（合并 + vLLM serve + 161 条全量）
+- 双机环境：`scripts/bootstrap_ray_env.sh`（ray start 前环境变量）+
+  `scripts/fix_multinode_hosts.sh`（内网映射，新 IP 需先改脚本）
