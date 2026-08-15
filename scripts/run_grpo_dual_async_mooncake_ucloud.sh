@@ -113,6 +113,10 @@ else
 fi
 
 EXTRA_ARGS=()
+EXTRA_ARGS+=(
+  # 只保留最近 1 个完整 checkpoint（旧的大文件滚动删除，防磁盘累积爆盘）
+  trainer.max_actor_ckpt_to_keep="$MAX_CKPT_KEEP"
+)
 if [ "$SPEC_ON" = "1" ]; then
   EXTRA_ARGS+=(
     actor_rollout_ref.model.lora.merge=True
