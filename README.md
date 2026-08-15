@@ -209,7 +209,7 @@ bash scripts/eval_dual_async_final.sh          # 合并 LoRA + vLLM + 161 条全
 ```
 uni_agent_ext/        # uni-agent 扩展包（腾讯沙箱后端 / 白盒/黑盒/外部三套 runner）
 scripts/              # 数据构建 / 训练 / 评测 / 平台化 / 运维（含 bootstrap_ray_env）
-patches/              # verl / uni-agent / TQ 全部补丁（23 项，可复现重建）
+patches/              # verl / uni-agent / TQ 补丁 + 幂等部署脚本（对应 23 项源码修改，可复现重建）
 docs/                 # 架构 / 部署 / 训练评测分析 / 补丁汇总 / 简历亮点
 work/logs/            # 训练轨迹与日志归档（blackbox、dual_async 等）
 work/source_20260815/ # 服务器 uni-agent/verl 源码快照（含全部修改）
