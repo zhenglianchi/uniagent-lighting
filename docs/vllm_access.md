@@ -5,8 +5,9 @@
 训练机 Gateway 监听内网固定端口（`GATEWAY_PORT`，默认 8001，补丁
 `verl_gateway_fixed_port.patch` + `gateway_fixed_port.patch`）。访问路径：
 
-- **训练机本地**（白盒 harness）：直接调 `session.base_url`（内网）
-- **腾讯沙箱 / 用户侧**：SSH 隧道（`ssh -L 127.0.0.1:8001:<内网IP>:8001`，
+- **白盒 harness（任意位置 / 用户侧）**：调云端 Gateway `session.base_url`
+  （训练机内网直连，或经 SSH 隧道 / 安全组放行从外部接入）
+- **腾讯沙箱 / 远端**：SSH 隧道（`ssh -L 127.0.0.1:8001:<内网IP>:8001`，
   走公网 22）或安全组放行 8001 后公网直连（`CLAUDE_GATEWAY_PUBLIC_HOST`）
 
 黑盒 runner 默认隧道模式（`CLAUDE_GATEWAY_TUNNEL=1` + `MSA_GATEWAY_SSH_HOST`），

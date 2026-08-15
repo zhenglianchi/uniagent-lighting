@@ -26,6 +26,64 @@ bash install_ucloud_from_scratch.sh
 clone uni-agent（含 verl 子模块）、verl 补丁（见 §3）、模型下载
 （`Qwen3-8B` 至 `~/models/`）。
 
+### 2.1 从裸机到全部训练（分步总路线）
+
+以下是从一台裸机（或镜像恢复后的机器）跑通全部训练的分步清单，每一步完成后
+才进入下一步：
+
+```bash
+# ========== 第 0 步：镜像 / 机器准备 ==========
+# 推荐：直接使用本项目固化的 UCloud 镜像（node1 48G 镜像，含全部环境/模型/
+# 代码/补丁/数据），恢复后仅需改 IP 与凭据；裸机则执行 §2 脚本。
+
+# ========== 第 1 步：环境与代码就绪 ==========
+git clone https://github.com/zhenglianchi/uniagent-lighting.git
+cd ~/uniagent-lighting
+# 把 scripts/ 部署到训练工作目录（/home/ubuntu/swe-rl）并应用补丁：
+#   - fix_strenum_ucloud.sh（py3.10 兼容）
+#   - patch_verl_ipc_cpu.py（IPC 大权重）
+#   - patches/*.patch（verl/uni-agent/TQ 全部补丁，见 §3）
+# 确认版本链：torch 2.9.0+cu128 / vllm 0.11.1 / verl 0.9.0.dev /
+#   ray 2.56.1 / TransferQueue 0.1.9 / mooncake-transfer-engine 0.3.12.post1
+
+# ========== 第 2 步：腾讯沙箱凭据 ==========
+# 准备 /home/ubuntu/swe-rl/tencent_sandbox.env：
+#   TENCENT_SANDBOX_TOKEN（ark_*）、TENCENT_SANDBOX_E2B_TOKEN（e2b_*）、
+#   TENCENT_SECRET_ID / TENCENT_SECRET_KEY
+# 并用 Cloud API 创建沙箱工具（code-interpreter-v1 / swebench-v1），
+# 或确认控制台已有（脚本 scripts/tencent_create_sandbox_tool.py）
+
+# ========== 第 3 步：冒烟验证（单机） ==========
+cd /home/ubuntu/swe-rl
+bash run_grpo_single_agentic_ucloud.sh        # 1 个样本 × n2，验证 agent→Gateway→沙箱→训练全链路
+# 检查：轨迹目录生成、reward 正确、checkpoint 保存、无异常退出
+
+# ========== 第 4 步：单机正式训练（白盒 / 黑盒 / 投机） ==========
+bash run_grpo_humanevalfix_ucloud.sh          # 白盒 baseline（train161 / 5 epoch / 26 步）
+# spec_train_run.sh                            # 白盒 + EAGLE-3（25 步）
+# run_grpo_humanevalfix_blackbox_ucloud.sh     # 黑盒 Claude Code（25 步）
+
+# ========== 第 5 步：双机全异步 + Mooncake（推荐正式形态） ==========
+# node1：Ray head + Mooncake master；node2：ray join（见 §4 启动顺序 + §5.5）
+source ~/uniagent-lighting/scripts/bootstrap_ray_env.sh   # 必须 ray start 前
+bash run_grpo_dual_async_mooncake_ucloud.sh    # separate_async + Mooncake + EAGLE-3
+
+# ========== 第 6 步：评估 ==========
+bash eval_dual_async_final.sh                  # 合并 LoRA → vLLM → 161 条全量评估
+# 或 eval_spec_final.sh（单机 spec / baseline 对比）
+```
+
+**验证清单**（每一步的"通过"标准）：
+
+| 步骤 | 通过标志 |
+|---|---|
+| 1 环境 | `vllm 0.11.1`、`ray 2.56.1`、`mooncake-transfer-engine 0.3.12.post1` 可 import |
+| 2 沙箱 | `scripts/run_tencent_sandbox_demo.py` 最小连通（E2B attach 成功） |
+| 3 冒烟 | 会话轨迹落盘 + trainer step 完成 + `num_success_sessions>0` |
+| 4 单机 | 25-26 步完成、checkpoint 保存、评估 80%+ |
+| 5 双机 | 双节点 Ray `ray status` 2 GPU、25 步 0 硬错误、磁盘 ≤85% |
+| 6 评估 | `eval_dual_async_final.json` 输出 pass_rate |
+
 ## 3. 补丁清单
 
 服务器侧 verl / uni-agent 补丁（部署时应用，`patches/` 内）：
@@ -82,7 +140,7 @@ cd /home/ubuntu/swe-rl && bash run_grpo_xxx.sh
 | `MC_STORE_MEMCPY` | 0 | Mooncake 禁用 GPU memcpy（与 vLLM 同卡冲突） |
 | `CUDA_DEVICE_MAX_CONNECTIONS` | 1 | 多流稳定 |
 | `GATEWAY_PORT` | 8001 | Gateway 固定端口 |
-| `MSA_GATEWAY_TUNNEL` | 0 | 白盒本地直连 Gateway，不走沙箱内隧道 |
+| `MSA_GATEWAY_TUNNEL` | 0 | 白盒 harness 直连云端 Gateway，工具不走沙箱内隧道 |
 | `TENCENT_SANDBOX_SKIP_TMUX` | 1 | 跳过沙箱 tmux 安装（省 180s） |
 | `E2B_DOMAIN` / `E2B_API_KEY` | tencent_sandbox.env | 腾讯沙箱 E2B 兼容端点 |
 
@@ -126,12 +184,16 @@ bash /home/ubuntu/swe-rl/run_grpo_smoke_ucloud.sh 2>&1 | tee grpo_smoke.log
 
 ### 5.2 全样本训练（白盒 / 黑盒）
 
+> 以下为**内部训练形态**（agent runner 部署在训练机侧，加速迭代；模型调用
+> 同样走云端 Gateway，轨迹云侧物化，on-policy 本质与平台化形态一致）。
+> 平台化主线形态（用户侧 agent）见 §5.4 / §5.5。
+
 ```bash
 # 白盒 baseline / spec（环境变量可覆盖）
 bash /home/ubuntu/swe-rl/run_grpo_humanevalfix_ucloud.sh 2>&1 | tee grpo_humanevalfix.log
 SPEC_ON=1 LORA_MERGE=1 bash /home/ubuntu/swe-rl/spec_train_run.sh 2>&1 | tee grpo_spec.log
 
-# 黑盒（Claude Code，沙箱内）——后台运行
+# 黑盒（Claude Code，经 Gateway + MCP 工具转发接入）——后台运行
 CLAUDE_GATEWAY_TUNNEL=1 MSA_GATEWAY_SSH_HOST=<公网IP> \
   setsid nohup bash /home/ubuntu/swe-rl/run_grpo_humanevalfix_blackbox_ucloud.sh \
   > grpo_humanevalfix_blackbox.log 2>&1 < /dev/null &
@@ -147,7 +209,7 @@ CLAUDE_GATEWAY_TUNNEL=1 MSA_GATEWAY_SSH_HOST=<公网IP> \
 
 ### 5.5 双机平台化正式训练（separate_async + Mooncake，2026-08-15 定稿）
 
-**定位**：平台化训推链路的双机形态——白盒 mini-swe-agent（训练机本地）→
+**定位**：平台化训推链路的双机形态——白盒 mini-swe-agent（任意位置）→ 云端
 Gateway → 轨迹 → TQ/Mooncake → 云端训练（node1 trainer + node2 独立 rollout
 引擎）→ LoRA 合并 → 全量评估。**25 步评估 83.23%，计为平台化训练结果。**
 
