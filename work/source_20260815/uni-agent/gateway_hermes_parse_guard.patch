@@ -1,0 +1,110 @@
+diff --git a/uni_agent/gateway/session/codec.py b/uni_agent/gateway/session/codec.py
+index d5bc29e..6474084 100644
+--- a/uni_agent/gateway/session/codec.py
++++ b/uni_agent/gateway/session/codec.py
+@@ -8,6 +8,8 @@ from __future__ import annotations
+ 
+ import json
+ import logging
++import re
++import shlex
+ from types import SimpleNamespace
+ from typing import Any
+ from uuid import uuid4
+@@ -76,8 +78,14 @@ def _process_tool_calls_vllm(
+     parser_name: str,
+     tokenizer,
+ ) -> tuple[str, list[Any]]:
+-    from vllm.entrypoints.openai.chat_completion.protocol import ChatCompletionToolsParam
+-    from vllm.tool_parsers import ToolParserManager
++    try:
++        from vllm.entrypoints.openai.protocol import ChatCompletionToolsParam  # vllm >= 0.11.1
++    except ImportError:
++        from vllm.entrypoints.openai.chat_completion.protocol import ChatCompletionToolsParam  # 旧版
++    try:
++        from vllm.entrypoints.openai.tool_parsers import ToolParserManager  # vllm >= 0.11
++    except ImportError:
++        from vllm.tool_parsers import ToolParserManager  # vllm < 0.11
+ 
+     parser_cls = ToolParserManager.get_tool_parser(parser_name)
+     parser = parser_cls(tokenizer)
+@@ -86,12 +94,78 @@ def _process_tool_calls_vllm(
+         tool_choice="auto",
+         skip_special_tokens=True,
+     )
+-    parsed = parser.extract_tool_calls(text, request)
++    try:
++        parsed = parser.extract_tool_calls(text, request)
++    except Exception as exc:  # noqa: BLE001 - 模型工具调用 JSON 偶尔格式瑕疵，需容错
++        repaired = _repair_tool_call_json(text)
++        try:
++            parsed = parser.extract_tool_calls(repaired, request)
++        except Exception as exc2:  # noqa: BLE001
++            # 仍无法解析：注入一个"重试提示"工具调用，把错误反馈给 agent，
++            # 而不是静默返回无工具消息（那会让 agent 误以为对话结束，reward=0）
++            logger.warning(
++                "hermes tool-call JSON unrecoverable (%s); injecting retry tool_result",
++                exc2,
++            )
++            return text, [_synthetic_retry_call(text, exc2)]
+     if not parsed.tools_called:
+         return text, []
+     return parsed.content or "", [tool_call.function for tool_call in parsed.tool_calls]
+ 
+ 
++def _repair_tool_call_json(text: str) -> str:
++    """轻量修复 hermes ``<tool_call>`` JSON 的常见瑕疵，尽量让 ``json.loads`` 可解析。
++
++    覆盖三类高频问题：
++    1. 尾逗号（``{"a": 1,}``）
++    2. 相邻 JSON 键值间缺逗号（``"name": "bash" "arguments": {``）
++    3. 字符串值内的裸换行（bash 命令常带真实换行）
++    无法修复的剩余情况由调用方注入重试提示。
++    """
++    # 1. 尾逗号
++    text = re.sub(r",\s*([}\]])", r"\1", text)
++    # 2. 相邻引号字符串间缺逗号（仅空白分隔的两个字符串字面量）
++    str_lit = r'"(?:[^"\\]|\\.)*"'
++    text = re.sub(rf"({str_lit})\s+({str_lit})", r"\1, \2", text)
++    # 3. 字符串值内的裸换行 → 转义（保留字符串外作为空白的分隔换行）
++    out: list[str] = []
++    in_str = False
++    esc = False
++    for ch in text:
++        if esc:
++            out.append(ch)
++            esc = False
++            continue
++        if ch == "\\" and in_str:
++            out.append(ch)
++            esc = True
++            continue
++        if ch == '"':
++            in_str = not in_str
++            out.append(ch)
++            continue
++        if ch == "\n" and in_str:
++            out.append("\\n")
++            continue
++        out.append(ch)
++    return "".join(out)
++
++
++def _synthetic_retry_call(text: str, exc: Exception) -> SimpleNamespace:
++    """构造一个"重试提示"工具调用：执行无害 echo，把 JSON 错误反馈给 agent。"""
++    m = re.search(r'"name"\s*:\s*"([^"]+)"', text)
++    name = m.group(1) if m else "bash"
++    msg = (
++        "[tool-call JSON parse error] your previous tool call could not be parsed "
++        f"({type(exc).__name__}: {exc}). Retry with strictly valid JSON inside "
++        "<tool_call> tags: no trailing commas, escape quotes and newlines properly."
++    )
++    return SimpleNamespace(
++        name=name,
++        arguments=json.dumps({"command": f"echo {shlex.quote(msg)}"}),
++    )
++
++
+ def _extract_tool_calls_with_sglang_or_vllm(
+     text: str,
+     tools: list[dict[str, Any]],
