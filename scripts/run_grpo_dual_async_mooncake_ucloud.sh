@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 双机分离式全异步 + Mooncake + EAGLE-3 黑盒（Claude Code）GRPO 正式训练
-# 2026-08-14：基于 run_grpo_humanevalfix_blackbox_ucloud.sh（单机黑盒正式，
+# 双机分离式全异步 + Mooncake + EAGLE-3 白盒（mini-swe-agent）GRPO 正式训练
+# 2026-08-14：基于 run_grpo_humanevalfix_blackbox_ucloud.sh（单机正式，
 # 并发 64 / max_num_seqs 128 / util 0.8 口径不变），架构切换为：
 #   - trainer.v1.trainer_mode=separate_async：trainer 占 node1 1 卡、
 #     独立 rollout 引擎占 node2 1 卡（dp=1/tp=1，生成与训练重叠）
@@ -36,11 +36,12 @@ source /home/ubuntu/swe-rl/tencent_sandbox.env
 set +a
 export E2B_DOMAIN="${E2B_DOMAIN:-ap-guangzhou.tencentags.com}"
 export E2B_API_KEY="${E2B_API_KEY:-${TENCENT_SANDBOX_E2B_TOKEN}}"
-# 黑盒：GATEWAY 固定端口 + 隧道（走公网 22，无需放行 8001）
+# 白盒（mini-swe-agent）：harness 在训练机 node1，沙箱为腾讯云执行环境
 export GATEWAY_PORT=${GATEWAY_PORT:-8001}
-export CLAUDE_GATEWAY_TUNNEL=${CLAUDE_GATEWAY_TUNNEL:-1}
-export MSA_GATEWAY_SSH_HOST=${MSA_GATEWAY_SSH_HOST:-117.50.221.12}
-# 跳过沙箱内 tmux 安装（黑盒 claude-code 不需要；每会话白耗 180s 超时）
+export MSA_GATEWAY_TUNNEL=${MSA_GATEWAY_TUNNEL:-0}
+export MSA_INSTALL_AGENT=${MSA_INSTALL_AGENT:-1}
+export MSA_REWARD_INCLUDE_P2P=${MSA_REWARD_INCLUDE_P2P:-1}
+export MSA_REWARD_P2P_SAMPLE=${MSA_REWARD_P2P_SAMPLE:-20}
 export TENCENT_SANDBOX_SKIP_TMUX=1
 
 ENV=/home/ubuntu/miniforge3/envs/swe-rl
@@ -64,9 +65,9 @@ VLLM_MAX_NUM_SEQS=${VLLM_MAX_NUM_SEQS:-128}
 VLLM_GPU_MEM_UTIL=${VLLM_GPU_MEM_UTIL:-0.8}
 CKPT_DIR=${CKPT_DIR:-/home/ubuntu/swe-rl/checkpoints/humanevalfix_dual_async}
 LOG_DIR=${LOG_DIR:-/home/ubuntu/swe-rl/logs/humanevalfix_dual_async}
-RAY_ADDRESS=${RAY_ADDRESS:-10.60.188.85:6379}
-MOONCAKE_MASTER=${MOONCAKE_MASTER:-10.60.188.85:50124}
-MOONCAKE_METADATA=${MOONCAKE_METADATA:-10.60.188.85:50123}
+RAY_ADDRESS=${RAY_ADDRESS:-10.60.216.3:6379}
+MOONCAKE_MASTER=${MOONCAKE_MASTER:-10.60.216.3:50124}
+MOONCAKE_METADATA=${MOONCAKE_METADATA:-10.60.216.3:50123}
 MOONCAKE=${MOONCAKE:-0}   # 0=SimpleStorage（正式训练默认，稳定）；1=MooncakeStore（实验）
 SPEC_ON=${SPEC_ON:-1}
 SPEC_DRAFT=${SPEC_DRAFT:-/home/ubuntu/models/Qwen3-8B-speculator.eagle3}
@@ -168,12 +169,12 @@ fi
   ++actor_rollout_ref.rollout.agent.agent_loop_manager_class=uni_agent.framework.entry.AgentFrameworkRolloutAdapter \
   ++actor_rollout_ref.rollout.custom.agent_framework.gateway_count=${GATEWAY_COUNT} \
   ++actor_rollout_ref.rollout.custom.agent_framework.log_dir="$LOG_DIR" \
-  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_fqn=uni_agent_ext.agents.claude_code_runner.claude_code_runner \
-  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.dispatch_mode=ray_task \
-  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.max_concurrent_sessions=${CONCURRENCY} \
-  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.model_name=${SERVED_MODEL_NAME} \
-  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.max_turns=60 \
-  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.claude_code.runner_kwargs.run_timeout=7200 \
+  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_fqn=uni_agent_ext.agents.mini_swe_agent_runner.mini_swe_agent_runner \
+  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.dispatch_mode=ray_task \
+  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.max_concurrent_sessions=${CONCURRENCY} \
+  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_kwargs.model_name=${SERVED_MODEL_NAME} \
+  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_kwargs.max_turns=60 \
+  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.mini_swe_agent.runner_kwargs.run_timeout=7200 \
   ++actor_rollout_ref.rollout.custom.agent_framework.mask_unfinished_episode=False \
   ++actor_rollout_ref.rollout.custom.agent_framework.use_reward_loop_worker=False \
   reward.reward_manager.name=naive \
