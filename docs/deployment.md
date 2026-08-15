@@ -145,6 +145,41 @@ CLAUDE_GATEWAY_TUNNEL=1 MSA_GATEWAY_SSH_HOST=<公网IP> \
 
 ### 5.4 平台化训练（外部 agent）
 
+### 5.5 双机平台化正式训练（separate_async + Mooncake，2026-08-15 定稿）
+
+**定位**：平台化训推链路的双机形态——白盒 mini-swe-agent（训练机本地）→
+Gateway → 轨迹 → TQ/Mooncake → 云端训练（node1 trainer + node2 独立 rollout
+引擎）→ LoRA 合并 → 全量评估。**25 步评估 83.23%，计为平台化训练结果。**
+
+**前置**（两台均执行）：
+```bash
+# hosts / SSH 互信（新 IP 需先改 fix_multinode_hosts.sh 内 NODE1_IP/NODE2_IP）
+source /home/ubuntu/uniagent-lighting/scripts/bootstrap_ray_env.sh
+bash /home/ubuntu/uniagent-lighting/scripts/fix_multinode_hosts.sh
+
+# node1：Ray head + Mooncake master
+/home/ubuntu/miniforge3/envs/swe-rl/bin/ray stop --force
+/home/ubuntu/miniforge3/envs/swe-rl/bin/ray start --head --port=6379 --num-gpus=1
+# node2 加入：ray start --address=<node1内网>:6379 --num-gpus=1
+# Mooncake master（node1，独立进程）见 scripts/run_grpo_dual_async_mooncake_ucloud.sh 注释
+```
+
+**正式训练**（node1 后台）：
+```bash
+cd /home/ubuntu/swe-rl
+setsid nohup bash run_grpo_dual_async_mooncake_ucloud.sh \
+  > logs/grpo_humanevalfix_dual_async_mooncake.log 2>&1 < /dev/null &
+```
+（默认配置即正式口径：train161/batch32/并发64/util0.8/5epoch/EAGLE-3/Mooncake；
+`MAX_CKPT_KEEP=1` 已传递，checkpoint 自动滚动；另可挂
+`ckpt_cleanup_daemon.sh` 独立守护兜底磁盘）
+
+**评估**：
+```bash
+cd /home/ubuntu/swe-rl
+bash eval_dual_async_final.sh   # 合并 LoRA + vLLM serve + 161 条全量评估
+```
+
 ```bash
 # 训练侧（后台）——runner = external_agent_runner，等本地 agent 完成
 MODEL=/home/ubuntu/models/Qwen3-8B-final \

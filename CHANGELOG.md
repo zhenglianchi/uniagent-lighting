@@ -2,6 +2,18 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.49.0（2026-08-15）
+
+- **✅ 双机平台化正式训练完成（separate_async + Mooncake + EAGLE-3 + 白盒）**：
+  25 步 7:11:40、0 硬错误、磁盘 ≤81%；**全量评估 83.23%（134/161）**，与白盒
+  baseline 83.2% 持平，**计为平台化训练结果**（docs/训练评测分析.md §8）
+- **新增评估脚本** `scripts/eval_dual_async_final.sh`（合并 + vLLM serve + 161 条
+  全量评估）
+- **脚本修复**：`run_grpo_dual_async_mooncake_ucloud.sh` 传递
+  `max_actor_ckpt_to_keep=1`（v0.48.6，checkpoint 滚动）+ 服务器守护进程兜底
+- **文档更新**：训练评测分析 §8（双机平台化训练配置/过程/评估/产物）、deployment
+  §5.5（双机平台化训练部署）、修改与补丁汇总 #23（checkpoint 滚动修复）、TODO
+
 ## v0.48.0（2026-08-15）
 
 - **单机在线验证（24 会话，util 0.8 + Mooncake + EAGLE-3）全链路通过**：
