@@ -263,6 +263,9 @@ python eval_humanevalfix.py \
   已同步本地代码仓 `uniagent-lighting/work/logs/dual_async_20260815/`
 - **data/**：训练数据保留（humanevalfix_train161.jsonl 等）
 - 训练/评估脚本与全部补丁：见仓库 `scripts/` + `patches/`
+- **源码快照**：服务器 uni-agent（b139419）+ verl（fc6b33c）+
+  uni_agent_ext 工作区已归档本地代码仓
+  `uniagent-lighting/work/source_20260815/`（35M，含全部本地修改）
 
 ### 9.3 复现要点
 
