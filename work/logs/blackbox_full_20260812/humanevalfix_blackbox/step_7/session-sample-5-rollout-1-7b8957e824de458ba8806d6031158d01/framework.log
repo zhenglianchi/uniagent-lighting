@@ -1,0 +1,16 @@
+2026-08-12 10:39:23 | framework.framework    | INFO     | session session-sample-5-rollout-1-7b8957e824de458ba8806d6031158d01 start: runner=claude_code sample_index=5 session_index=1 global_steps=7
+2026-08-12 10:47:28 | framework.framework    | ERROR    | session session-sample-5-rollout-1-7b8957e824de458ba8806d6031158d01 failed (runner=claude_code); aborting session
+Traceback (most recent call last):
+  File "/home/ubuntu/uni-agent/uni_agent/framework/framework.py", line 688, in _run_session
+    await object_ref
+ray.exceptions.RayTaskError(RuntimeError): [36mray::_run_agent_runner_ray_task()[39m (pid=246268, ip=10.60.56.10)
+  File "/home/ubuntu/uni-agent/uni_agent/framework/framework.py", line 126, in _run_agent_runner_ray_task
+    asyncio.run(
+  File "/home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/home/ubuntu/uni_agent_ext/agents/claude_code_runner.py", line 271, in claude_code_runner
+    await install_claude_in_sandbox(sandbox)
+  File "/home/ubuntu/uni_agent_ext/agents/claude_code_runner.py", line 217, in install_claude_in_sandbox
+    raise RuntimeError(
+RuntimeError: claude-code install failed rc=-1:

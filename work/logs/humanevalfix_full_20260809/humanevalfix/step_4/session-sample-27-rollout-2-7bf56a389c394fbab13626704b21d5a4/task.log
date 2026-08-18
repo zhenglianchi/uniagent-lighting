@@ -1,0 +1,33 @@
+2026-08-08 21:02:52 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-148]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-08 21:02:52 | …tencent_agent_runtime | INFO     | tencent sandbox created id=sqzbpnsmk6lv3f2ncqytxq45vyxg2njiilmex2yv template=code-interpreter-v1
+2026-08-08 21:02:53 | …isweagent.tencent_e2b | INFO     | E2B attached to sandbox: sqzbpnsmk6lv3f2ncqytxq45vyxg2njiilmex2yv
+2026-08-08 21:02:53 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:02:54 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:02:54 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:03:15 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:03:16 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:03:36 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:03:37 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:03:47 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:03:47 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:03:48 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:03:48 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:03:58 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:03:58 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:04:00 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:04:00 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:04:02 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:04:02 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 21:04:03 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 21:04:03 | …mini_swe_agent_runner | INFO     | [sample 27] mini-swe-agent rc=0 elapsed=70.8s traj=humanevalfix-Python-148
+2026-08-08 21:04:04 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-148 -> 1.0 (test_solution.py::test_all: PASS)
+2026-08-08 21:04:04 | …tencent_agent_runtime | INFO     | tencent sandbox killed

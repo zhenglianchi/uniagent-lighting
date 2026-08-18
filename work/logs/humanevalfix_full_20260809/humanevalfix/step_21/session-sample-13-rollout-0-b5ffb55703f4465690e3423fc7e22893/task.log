@@ -1,0 +1,24 @@
+2026-08-09 06:32:12 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-5]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-09 06:32:12 | …tencent_agent_runtime | INFO     | tencent sandbox created id=52gixfmpdorarj2avsv534wm2lublspavbdst3jz template=code-interpreter-v1
+2026-08-09 06:32:13 | …isweagent.tencent_e2b | INFO     | E2B attached to sandbox: 52gixfmpdorarj2avsv534wm2lublspavbdst3jz
+2026-08-09 06:32:13 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-09 06:32:14 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-09 06:32:14 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-09 06:32:24 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-09 06:32:24 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-09 06:32:27 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-09 06:32:27 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-09 06:32:29 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-09 06:32:29 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-09 06:32:32 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-09 06:32:32 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-09 06:32:35 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-09 06:32:35 | …mini_swe_agent_runner | INFO     | [sample 13] mini-swe-agent rc=0 elapsed=22.3s traj=humanevalfix-Python-5
+2026-08-09 06:32:36 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-5 -> 0.0 (test_solution.py::test_all: FAIL)
+2026-08-09 06:32:36 | …tencent_agent_runtime | INFO     | tencent sandbox killed

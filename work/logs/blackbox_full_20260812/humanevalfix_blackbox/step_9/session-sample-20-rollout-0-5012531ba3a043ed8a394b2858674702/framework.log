@@ -1,0 +1,36 @@
+2026-08-12 13:35:15 | framework.framework    | INFO     | session session-sample-20-rollout-0-5012531ba3a043ed8a394b2858674702 start: runner=claude_code sample_index=20 session_index=0 global_steps=9
+2026-08-12 15:00:41 | framework.framework    | ERROR    | session session-sample-20-rollout-0-5012531ba3a043ed8a394b2858674702 failed (runner=claude_code); aborting session
+Traceback (most recent call last):
+  File "/home/ubuntu/uni-agent/uni_agent/framework/framework.py", line 688, in _run_session
+    await object_ref
+ray.exceptions.RayTaskError(RuntimeError): [36mray::_run_agent_runner_ray_task()[39m (pid=246269, ip=10.60.56.10)
+  File "/home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+  File "/home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/e2b/sandbox_sync/filesystem/filesystem.py", line 293, in write
+    result = self.write_files(
+  File "/home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/e2b/sandbox_sync/filesystem/filesystem.py", line 435, in write_files
+    raise err
+e2b.exceptions.AuthenticationException: {"error":{"code":"AUTHENTICATION_FAILED","message":"Authentication failed"},"method":"POST","path":"/files","timestamp":"2026-08-12T07:00:41Z"}
+
+
+During handling of the above exception, another exception occurred:
+
+[36mray::_run_agent_runner_ray_task()[39m (pid=246269, ip=10.60.56.10)
+  File "/home/ubuntu/uni-agent/uni_agent/framework/framework.py", line 126, in _run_agent_runner_ray_task
+    asyncio.run(
+  File "/home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/home/ubuntu/uni_agent_ext/agents/claude_code_runner.py", line 346, in claude_code_runner
+    score, eval_result = await evaluate_in_env(sandbox, raw_prompt, tools_kwargs, eval_timeout)
+  File "/home/ubuntu/uni_agent_ext/agents/claude_code_runner.py", line 232, in evaluate_in_env
+    score, details = await evaluate_reward_msa(sandbox, task, timeout=eval_timeout)
+  File "/home/ubuntu/uni_agent_ext/agents/mini_swe_agent_runner.py", line 464, in evaluate_reward
+    await env.write_file(f"/testbed/{rel_path}", content)
+  File "/home/ubuntu/uni_agent_ext/agents/mini_swe_agent_runner.py", line 411, in write_file
+    await self._sandbox.write_file(str(path), content.encode())
+  File "/home/ubuntu/uni_agent_ext/sandbox/tencent_agent_runtime.py", line 274, in write_file
+    raise RuntimeError(f"base64 write failed: {result.stderr[:500]}")
+RuntimeError: base64 write failed: e2b commands.run failed: {"error":{"code":"AUTHENTICATION_FAILED","message":"Authentication failed"},"method":"POST","path":"/process.Process/Start","timestamp":"2026-08-12T07:00:41Z"}

@@ -1,0 +1,12 @@
+2026-08-12 18:47:40 | …tencent_agent_runtime | INFO     | tencent sandbox created id=25nwlusz4zsaqwgt76kywd4eat746kom5eswzdlz template=code-interpreter-v1
+2026-08-12 18:47:44 | …ts.claude_code_runner | INFO     | claude-code 2.1.153 installed in sandbox
+2026-08-12 18:47:46 | …mini_swe_agent_runner | INFO     | gateway tunnel up: 127.0.0.1:8000 -> 117.50.199.93:8001
+2026-08-12 18:48:29 | …ts.claude_code_runner | INFO     | [sample 24] claude-code finished rc=0 elapsed=42.4s
+2026-08-12 18:48:29 | …ts.claude_code_runner | INFO     | [sample 24] claude-code stdout_tail=The task has been completed and the fix has been submitted. The implementation now correctly calculates the minimum sum of any non-empty sub-array. The examples provided in the docstring should now pass, and the hidden tests will be run after submission.
+
+2026-08-12 18:48:29 | …ts.claude_code_runner | INFO     | [sample 24] claude-code stderr_tail=Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+
+2026-08-12 18:48:29 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-114]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-12 18:48:29 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-114 -> 0.0 (test_solution.py::test_all: FAIL)
+2026-08-12 18:48:29 | …ts.claude_code_runner | INFO     | [sample 24] reward done score=0.0 resolved=False
+2026-08-12 18:48:30 | …tencent_agent_runtime | INFO     | tencent sandbox killed
