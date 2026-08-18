@@ -207,6 +207,7 @@ bash scripts/eval_dual_async_final.sh          # 合并 LoRA + vLLM + 161 条全
 ## 仓库结构
 
 ```
+vendor/uni-agent/     # 侵入式修改过的官方 uni-agent（b139419）+ verl（fc6b33c）源码，可直接 debug
 uni_agent_ext/        # uni-agent 扩展包（腾讯沙箱后端 / 白盒/黑盒/外部三套 runner）
 scripts/              # 数据构建 / 训练 / 评测 / 平台化 / 运维（含 bootstrap_ray_env）
 patches/              # verl / uni-agent / TQ 补丁 + 幂等部署脚本（对应 23 项源码修改，可复现重建）
@@ -216,7 +217,6 @@ work/logs/            # 训练轨迹与日志归档（均已解压，可读）�
                       #   blackbox_full_20260812 / blackbox_smoke（黑盒轨迹）
                       #   dual_async_20260815（双机轨迹）、spec_run（统计/日志）
                       #   swebench_early_20260804（早期单样本轨迹）
-work/source_20260815/ # 服务器 uni-agent/verl 源码快照（含全部修改）
 work/data/            # 数据集与脚本
 ```
 
