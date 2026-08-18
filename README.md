@@ -226,9 +226,26 @@ work/data/            # 数据集与脚本
 |---|---|
 | [docs/deployment.md](docs/deployment.md) | **从裸机到全部训练**：环境/镜像/补丁/双机/评测/FAQ |
 | [docs/architecture.md](docs/architecture.md) | 平台化架构设计（agent/Gateway/沙箱/训练分层） |
+| [docs/数据流与网关导读.md](docs/数据流与网关导读.md) | **学习主线**：数据流 + Gateway 轨迹处理 + 训练链路源码导读 |
 | [docs/训练评测分析.md](docs/训练评测分析.md) | 全量实验数据：baseline/spec/黑盒/双机对照、bug 根因 |
 | [docs/修改与补丁汇总.md](docs/修改与补丁汇总.md) | 23 项源码修改的完整记录（原因/影响/验证） |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | 演进规划 |
+
+## 学习指南
+
+**推荐路径（从数据流开始，重点看 Gateway 轨迹处理）**：
+
+1. [docs/数据流与网关导读.md](docs/数据流与网关导读.md) §1 数据流图 ——
+   agent → Gateway 物化轨迹 → TransferQueue → verl 训练 全链路心智模型
+2. `vendor/uni-agent/uni_agent/gateway/session/session.py` ——
+   `run_generation` → `_commit_generation_to_chain` → `finalize`
+   （一条轨迹如何在 Gateway 中诞生）
+3. `vendor/uni-agent/uni_agent/framework/framework.py` ——
+   `_trajectory_to_tq_field_and_tag`（轨迹如何变成 verl 训练样本）
+4. `vendor/uni-agent/verl/verl/trainer/ppo/v1/trainer_base.py` +
+   `padding_utils.py`（verl 如何消费轨迹）
+5. 实战：`python scripts/analyze_trajectory.py <会话目录>` 分析一条真实轨迹
+   （轨迹位置见「仓库结构」work/logs/）
 
 ## 已知问题与修复
 
