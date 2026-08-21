@@ -2,6 +2,19 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.54.0（2026-08-21）
+
+- **仓库成为完整项目根（用户拍板，参考 SmolVLA-Verl 布局）**：
+  - 外层工作区内容全部并入仓库：`AGENTS.md` / `TODO.md` / `思路.md`
+    （项目长期记忆与进度）、`mini-swe-agent`（采样 harness，剥离 .git 后
+    vendored，221 个源码文件随仓入库）
+  - 外层 `scripts/` 软链与空目录（`.agents` / `.codex` / `.git`）清理，
+    外层工作区只剩 `uniagent-lighting/` 一个目录
+  - 路径归一：AGENTS.md 全部改为仓库相对路径（代理开关、config/work 引用等）；
+    `platform_local_agent.py` / `platform_local_claude.py` 的 `ROOT` 改为仓库根
+    （`parents[1]`）、MCP server 与 PYTHONPATH 示例同步修正
+  - README「仓库结构」更新为完整项目布局（config / mini-swe-agent / 记忆文档）
+
 ## v0.53.2（2026-08-21）
 
 - **原始轨迹恢复保留（用户拍板：轨迹用于学习与网关处理，必须可读）**：

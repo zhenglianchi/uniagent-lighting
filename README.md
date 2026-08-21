@@ -206,8 +206,14 @@ bash scripts/eval_dual_async_final.sh          # 合并 LoRA + vLLM + 161 条全
 
 ## 仓库结构
 
+仓库即完整项目根（2026-08-21 起外层工作区内容全部并入，参考 SmolVLA-Verl 布局），
+clone 后即可用，所有相对路径以仓库根为基准：
+
 ```
+AGENTS.md / TODO.md / 思路.md # 项目长期记忆 / 进度 / 思路记录
+config/               # 采样与本地模型配置（mini_aliyun / tencent_swebench）
 vendor/uni-agent/     # 侵入式修改过的官方 uni-agent（b139419）+ verl（fc6b33c）源码，可直接 debug
+mini-swe-agent/       # 采样 harness（vendored，含 tencent_e2b 扩展，对应 patches/tencent_e2b.py）
 uni_agent_ext/        # uni-agent 扩展包（腾讯沙箱后端 / 白盒/黑盒/外部三套 runner）
 scripts/              # 数据构建 / 训练 / 评测 / 平台化 / 运维（含 bootstrap_ray_env）
 patches/              # verl / uni-agent / TQ 补丁 + 幂等部署脚本（对应 23 项源码修改，可复现重建）

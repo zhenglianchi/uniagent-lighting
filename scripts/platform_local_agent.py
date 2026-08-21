@@ -9,8 +9,8 @@
 4. 完成后经 SSH 创建远程 ``<session_id>.done`` 标记，训练侧 runner 收到后评估 reward
 
 用法（WSL，swe-rl 环境；训练先启动，等 runner 写好 task.json）：
-  PYTHONPATH=/home/zhenglianchi/swe-rl-local/work/uni-agent:/home/zhenglianchi/swe-rl-local/uniagent-lighting \
-  python uniagent-lighting/scripts/platform_local_agent.py --wait --timeout 1800
+  PYTHONPATH=$PWD/vendor/uni-agent:$PWD \
+  python scripts/platform_local_agent.py --wait --timeout 1800
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ from pathlib import Path
 import paramiko
 import yaml
 
-ROOT = Path(__file__).resolve().parents[2]  # swe-rl-local
+ROOT = Path(__file__).resolve().parents[1]  # 仓库根（uniagent-lighting）
 
 
 def load_ucloud_env() -> dict[str, str]:

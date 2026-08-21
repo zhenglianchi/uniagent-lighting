@@ -10,8 +10,8 @@
 5. 完成后经 SSH 创建远程 done 标记
 
 用法（WSL；训练先启动，等 task.json）：
-  PYTHONPATH=/home/zhenglianchi/swe-rl-local/work/uni-agent:/home/zhenglianchi/swe-rl-local/uniagent-lighting \
-  python uniagent-lighting/scripts/platform_local_claude.py --wait --timeout 3600
+  PYTHONPATH=$PWD/vendor/uni-agent:$PWD \
+  python scripts/platform_local_claude.py --wait --timeout 3600
 """
 
 from __future__ import annotations
@@ -34,9 +34,9 @@ from platform_local_agent import (
     wait_for_task,
 )
 
-ROOT = Path(__file__).resolve().parents[2]  # swe-rl-local
+ROOT = Path(__file__).resolve().parents[1]  # 仓库根（uniagent-lighting）
 CLAUDE_BIN = os.environ.get("CLAUDE_BIN", str(Path.home() / ".npm-global/bin/claude"))
-MCP_SERVER = str(ROOT / "uniagent-lighting/scripts/sandbox_mcp_server.py")
+MCP_SERVER = str(ROOT / "scripts/sandbox_mcp_server.py")
 PYTHON_BIN = os.environ.get("PLATFORM_PYTHON", "/home/zhenglianchi/miniconda3/envs/swe-rl/bin/python")
 
 

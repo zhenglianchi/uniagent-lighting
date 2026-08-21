@@ -2,8 +2,9 @@ __pycache__/
 *.pyc
 *.log
 *.traj.json
-checkpoints/
-work/
-models/
+!mini-swe-agent/tests/test_data/*.traj.json
+/checkpoints/
+/work/
+/models/
 .env
 *.env
