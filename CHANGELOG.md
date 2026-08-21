@@ -2,6 +2,22 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.53.1（2026-08-21）
+
+- **外层 config/work 并入仓库，仓库成为唯一真源**：
+  - 外层 `config/mini_aliyun.yaml`、`config/tencent_swebench.yaml` 移入仓库
+    `config/`（此前仓库脚本 `$ROOT/config/...` 实际会缺文件），外层 `config/`
+    改为指向仓库的软链
+  - 外层 `work/tencent_sandbox.env`、`work/ucloud.env` 移入仓库 `work/`
+    （gitignore 已排除，不入库），外层 `work/` 改为软链，与 v0.53.0 的
+    scripts 软链模式一致
+  - `config/mini_aliyun.yaml` 模型名同步为定稿 `qwen3.7-plus`
+    （此前残留调试期 deepseek-v4-flash-0731）
+- **work/logs 瘦身（264M → 58M）**：黑盒/白盒/双机原始逐会话轨迹目录
+  压缩为 tgz 归档后删除（黑盒旧 tgz 缺 step_16 之后 5090 个文件，已重建
+  完整归档；双机新建 `dual_async_trajectories.tgz`）；4 个大训练日志 gzip；
+  README/docs 路径描述同步更新
+
 ## v0.53.0（2026-08-21）
 
 - **仓库清理与去重（用户确认全量处理）**：

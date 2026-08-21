@@ -1,4 +1,0 @@
-2026-08-12 05:27:49 | framework.framework    | INFO     | session session-sample-20-rollout-2-e771cfac7c274d1d8bf147da582c73ad start: runner=claude_code sample_index=20 session_index=2 global_steps=4
-2026-08-12 06:02:14 | framework.framework    | INFO     | session session-sample-20-rollout-2-e771cfac7c274d1d8bf147da582c73ad: scored via reward_info
-2026-08-12 06:02:14 | framework.framework    | INFO     | session session-sample-20-rollout-2-e771cfac7c274d1d8bf147da582c73ad: 1 trajectory(ies)
-  [0] turns=23 prompt_tokens=1452 response_tokens=2383 model_tokens=1255 finished=None logprobs=yes experts=no reward_score=0.0 reward_info={'reward': 0.0, 'reward_score': 0.0, 'claude_code_exit_code': -1, 'resolved': False, 'passed': 0, 'total': 1, 'per_test': ['test_solution.py::test_all: FAIL'], 'log': '============================= test session starts ==============================\ncollecting ... ', 'apply_status': '', 'p2p_sampled': 0}

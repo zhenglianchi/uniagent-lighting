@@ -2,8 +2,9 @@
 """分析一条训练轨迹（framework.log / trajectory.json / trajectory.npz）。
 
 用法：
-  python analyze_trajectory.py <session_dir>
-  python analyze_trajectory.py work/logs/humanevalfix_full_20260809/humanevalfix/step_1/session-sample-0-rollout-0-xxx
+  # 轨迹已压缩归档，先解压再分析
+  tar -xzf work/logs/humanevalfix_full_20260809/humanevalfix_trajectories.tgz -C /tmp
+  python analyze_trajectory.py /tmp/humanevalfix/step_1/session-sample-0-rollout-0-xxx
 
 输出：会话摘要 + token 级字段形状 + logprob/reward 统计。
 """

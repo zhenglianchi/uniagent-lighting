@@ -1,0 +1,7 @@
+# mini-swe-agent 本地样例用模型配置（阿里云百炼 OpenAI 兼容端点）
+model:
+  model_name: qwen3.7-plus
+  cost_tracking: ignore_errors
+  model_kwargs:
+    custom_llm_provider: openai
+    api_base: https://llm-b9y4isivchvzsk8e.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
