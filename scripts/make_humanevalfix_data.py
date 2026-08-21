@@ -7,7 +7,8 @@ agent 修好后按 mini-swe 模板提交 git patch；隐藏测试 ``test_solutio
 
 与 ``make_agentic_data.py``（SWE-bench 原始方案，保留不动）的 schema 对齐：
 ``data_source / prompt / extra_info.tools_kwargs{task, env, reward} / reward_model.ground_truth``。
-默认输出 ``humanevalfix_train.jsonl`` / ``humanevalfix_val.jsonl``（不覆盖 SWE-bench 数据）。
+默认输出 ``humanevalfix_train{--train-num}.jsonl``（如 161 → ``humanevalfix_train161.jsonl``）
+/ ``humanevalfix_val.jsonl``（不覆盖 SWE-bench 数据）。
 
 用法：
   HF_ENDPOINT=https://hf-mirror.com HF_HUB_DISABLE_XET=1 \\
@@ -263,7 +264,10 @@ def main() -> None:
             file=sys.stderr,
         )
 
-    for name, num in (("humanevalfix_train.jsonl", args.train_num), ("humanevalfix_val.jsonl", args.val_num)):
+    for name, num in (
+        (f"humanevalfix_train{args.train_num}.jsonl", args.train_num),
+        ("humanevalfix_val.jsonl", args.val_num),
+    ):
         path = Path(args.out_dir) / name
         chosen = selected[:num]
         with open(path, "w", encoding="utf-8") as f:

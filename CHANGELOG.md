@@ -2,6 +2,47 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.53.0（2026-08-21）
+
+- **仓库清理与去重（用户确认全量处理）**：
+  - 归档 19 个过时/一次性脚本到 `scripts/archive/`（git 历史完整保留，附 README 说明
+    归档原因与替代脚本）：ray_cluster 三件套、ray_import_test、setup_ssh_trust、
+    ssh_poll_node1、vllm_tunnel、kill_eval/kill_train、start_stats_watch、
+    spec_ab_run/spec_bench_ab、run_eval_only/run_eval_final_spec、
+    run_grpo_single_blackbox/run_grpo_single_mooncake/run_grpo_multinode、
+    offline_mooncake_verify/repro_tq_mooncake
+  - 数据去重：`work/data/humanevalfix_train.jsonl` 与 `humanevalfix_train161.jsonl`
+    字节一致（md5 相同），删除前者；`make_humanevalfix_data.py` 输出名改为
+    `humanevalfix_train{--train-num}.jsonl`（161→train161 / 3→train3，与现有产物一致），
+    `run_grpo_humanevalfix_ucloud.sh` 默认 `TRAIN_FILE` 同步指向 train161
+  - 补丁同步：`patches/tencent_e2b.py` 更新到与本地 mini-swe-agent 一致
+    （补上 v0.30.6 `request_timeout` 兜底，此前新机器按补丁部署会漏掉）
+  - 工作区去重：外层 `scripts/ssh_ucloud.py`（≡ 仓内副本）与 `proxy.sh` 改为指向
+    仓库的软链；删除外层重复 `config/tencent_swebench_vllm.yaml`（≡ 仓内
+    `work/config/config_qwen3_vllm.yaml`）与孤儿脚本 `work/scripts/ssh_cmd.py`
+  - 同步根目录 `AGENTS.md` / `TODO.md` 关键状态（版本、双机完成、正式脚本名）
+
+## v0.52.0（2026-08-18）
+
+- 学习资源：新增 docs/数据流与网关导读.md、scripts/analyze_trajectory.py
+  （真实轨迹分析）、README learning path；归档 dual_async 与 early samples 的
+  README；平台化表述统一
+
+## v0.51.0（2026-08-18）
+
+- 将改造后的 uni-agent/verl 源码提升为顶层 `vendor/uni-agent/`（自
+  `work/source_20260815` git mv），成为可 debug 的正式代码树；docs 同步更新
+
+## v0.50.0（2026-08-18）
+
+- 规范化 work/logs：解压归档全部压缩轨迹（白盒 baseline / 黑盒 full+smoke /
+  dual-async），归档早期 swebench 样本；README 工作区结构更新
+
+## v0.49.4（2026-08-15）
+
+- 仓库卫生：清除源码快照中 230 个被跟踪的 .pyc/__pycache__；README 补丁表述
+  明确（14 个补丁文件 + 幂等脚本 = 23 项源码修复）
+
 ## v0.49.3（2026-08-15）
 
 - **文档全面重写，平台化为主线**：

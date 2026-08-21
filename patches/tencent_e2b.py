@@ -140,6 +140,9 @@ class TencentE2BEnvironment:
                 full_cmd,
                 user=self.config.user,
                 timeout=effective_timeout,
+                # E2B 命令超时后 HTTP 请求仍可能无限挂（tmux 同款问题）；
+                # 显式 request_timeout 兜底，保证工具调用能返回（v0.30.6 修复）
+                request_timeout=effective_timeout + 60,
             )
             combined = result.stdout or ""
             if result.stderr:
