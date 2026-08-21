@@ -1,0 +1,12 @@
+2026-08-12 06:53:56 | …tencent_agent_runtime | INFO     | tencent sandbox created id=aokfs6prhxsppjlbe66rpdarm7b5uw57ehln6yjp template=code-interpreter-v1
+2026-08-12 06:54:02 | …ts.claude_code_runner | INFO     | claude-code 2.1.153 installed in sandbox
+2026-08-12 06:54:04 | …mini_swe_agent_runner | INFO     | gateway tunnel up: 127.0.0.1:8000 -> 117.50.199.93:8001
+2026-08-12 06:54:26 | …ts.claude_code_runner | INFO     | [sample 15] claude-code finished rc=0 elapsed=22.2s
+2026-08-12 06:54:26 | …ts.claude_code_runner | INFO     | [sample 15] claude-code stdout_tail=The task has been completed and submitted successfully. The solution has been verified to pass all the required tests.
+
+2026-08-12 06:54:26 | …ts.claude_code_runner | INFO     | [sample 15] claude-code stderr_tail=Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+
+2026-08-12 06:54:26 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-77]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-12 06:54:27 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-77 -> 1.0 (test_solution.py::test_all: PASS)
+2026-08-12 06:54:27 | …ts.claude_code_runner | INFO     | [sample 15] reward done score=1.0 resolved=True
+2026-08-12 06:54:27 | …tencent_agent_runtime | INFO     | tencent sandbox killed

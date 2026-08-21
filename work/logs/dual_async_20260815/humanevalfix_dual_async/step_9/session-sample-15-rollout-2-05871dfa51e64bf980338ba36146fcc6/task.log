@@ -1,0 +1,18 @@
+2026-08-15 14:09:21 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-82]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-15 14:09:21 | …tencent_agent_runtime | INFO     | tencent sandbox created id=mdrs54by4mgppg2xkzs5ybeeoehohdqi3jyloa6x template=code-interpreter-v1
+2026-08-15 14:09:22 | …isweagent.tencent_e2b | INFO     | E2B attached to sandbox: mdrs54by4mgppg2xkzs5ybeeoehohdqi3jyloa6x
+2026-08-15 14:09:22 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 14:09:23 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 14:09:23 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 14:09:29 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 14:09:29 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 14:09:31 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 14:09:31 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-15 14:09:32 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-15 14:09:33 | …mini_swe_agent_runner | INFO     | [sample 15] mini-swe-agent rc=0 elapsed=10.8s traj=humanevalfix-Python-82
+2026-08-15 14:09:33 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-82 -> 1.0 (test_solution.py::test_all: PASS)
+2026-08-15 14:09:34 | …tencent_agent_runtime | INFO     | tencent sandbox killed

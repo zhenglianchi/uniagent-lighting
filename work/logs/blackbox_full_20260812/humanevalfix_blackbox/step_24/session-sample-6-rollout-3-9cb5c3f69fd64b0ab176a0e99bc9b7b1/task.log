@@ -1,0 +1,77 @@
+2026-08-13 10:23:18 | …tencent_agent_runtime | INFO     | tencent sandbox created id=v5c2tjkuzpwqr6kuwsimuenjmusw5e2m727zhntw template=code-interpreter-v1
+2026-08-13 10:23:23 | …ts.claude_code_runner | INFO     | claude-code 2.1.153 installed in sandbox
+2026-08-13 10:23:26 | …mini_swe_agent_runner | INFO     | gateway tunnel up: 127.0.0.1:8000 -> 117.50.178.172:8001
+2026-08-13 10:29:32 | …ts.claude_code_runner | INFO     | [sample 6] claude-code finished rc=1 elapsed=366.3s
+2026-08-13 10:29:32 | …ts.claude_code_runner | INFO     | [sample 6] claude-code stdout_tail=Error: Reached max turns (60)
+2026-08-13 10:29:32 | …ts.claude_code_runner | INFO     | [sample 6] claude-code stderr_tail=Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+
+2026-08-13 10:29:32 | …ts.claude_code_runner | WARNING  | [sample 6] claude-code failed stdout_tail='Error: Reached max turns (60)' stderr_tail='Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.\n'
+2026-08-13 10:29:32 | …ts.claude_code_runner | INFO     | [sample 6] claude-debug tail:
+resent: false, has Authorization header: false
+2026-08-13T02:29:01.699Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-13T02:29:01.699Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-13T02:29:01.699Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:01.699Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-13T02:29:01.700Z [DEBUG] [API REQUEST] /sessions/session-sample-6-rollout-3-9cb5c3f69fd64b0ab176a0e99bc9b7b1/v1/messages source=sdk
+2026-08-13T02:29:07.736Z [DEBUG] Stream started - received first chunk
+2026-08-13T02:29:07.736Z [DEBUG] [API:timing] first byte after 6037ms
+2026-08-13T02:29:07.738Z [DEBUG] Edit tool validation error: String to replace not found in file.
+String: return "".join([chr(((ord(ch) - 5 - ord("a")) % 26) + ord(ch)) for ch in s])
+2026-08-13T02:29:07.739Z [DEBUG] Tool search disabled: ToolSearchTool is not available (may have been disallowed via disallowedTools).
+2026-08-13T02:29:07.740Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:07.740Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:07.740Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-08-13T02:29:07.740Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-13T02:29:07.740Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-13T02:29:07.740Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:07.741Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-13T02:29:07.741Z [DEBUG] [API REQUEST] /sessions/session-sample-6-rollout-3-9cb5c3f69fd64b0ab176a0e99bc9b7b1/v1/messages source=sdk
+2026-08-13T02:29:13.930Z [DEBUG] Stream started - received first chunk
+2026-08-13T02:29:13.930Z [DEBUG] [API:timing] first byte after 6189ms
+2026-08-13T02:29:13.931Z [DEBUG] Edit tool validation error: String to replace not found in file.
+String: return "".join([chr(((ord(ch) - 5 - ord("a")) % 26) + ord(ch)) for ch in s])
+2026-08-13T02:29:13.932Z [DEBUG] Tool search disabled: ToolSearchTool is not available (may have been disallowed via disallowedTools).
+2026-08-13T02:29:13.933Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:13.933Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:13.933Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-08-13T02:29:13.933Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-13T02:29:13.933Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-13T02:29:13.933Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:13.933Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-13T02:29:13.934Z [DEBUG] [API REQUEST] /sessions/session-sample-6-rollout-3-9cb5c3f69fd64b0ab176a0e99bc9b7b1/v1/messages source=sdk
+2026-08-13T02:29:19.961Z [DEBUG] Stream started - received first chunk
+2026-08-13T02:29:19.962Z [DEBUG] [API:timing] first byte after 6028ms
+2026-08-13T02:29:19.963Z [DEBUG] Edit tool validation error: String to replace not found in file.
+String: return "".join([chr(((ord(ch) - 5 - ord("a")) % 26) + ord(ch)) for ch in s])
+2026-08-13T02:29:19.964Z [DEBUG] Tool search disabled: ToolSearchTool is not available (may have been disallowed via disallowedTools).
+2026-08-13T02:29:19.965Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:19.965Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:19.965Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-08-13T02:29:19.965Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-13T02:29:19.965Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-13T02:29:19.966Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:19.966Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-13T02:29:19.966Z [DEBUG] [API REQUEST] /sessions/session-sample-6-rollout-3-9cb5c3f69fd64b0ab176a0e99bc9b7b1/v1/messages source=sdk
+2026-08-13T02:29:26.041Z [DEBUG] Stream started - received first chunk
+2026-08-13T02:29:26.041Z [DEBUG] [API:timing] first byte after 6075ms
+2026-08-13T02:29:26.042Z [DEBUG] Edit tool validation error: String to replace not found in file.
+String: return "".join([chr(((ord(ch) - 5 - ord("a")) % 26) + ord(ch)) for ch in s])
+2026-08-13T02:29:26.043Z [DEBUG] Tool search disabled: ToolSearchTool is not available (may have been disallowed via disallowedTools).
+2026-08-13T02:29:26.044Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:26.044Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:26.044Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-08-13T02:29:26.044Z [DEBUG] [API:auth] OAuth token check starting
+2026-08-13T02:29:26.044Z [DEBUG] [API:auth] OAuth token check complete
+2026-08-13T02:29:26.044Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-08-13T02:29:26.044Z [DEBUG] [API:timing] dispatching to firstParty model=Qwen3-8B
+2026-08-13T02:29:26.045Z [DEBUG] [API REQUEST] /sessions/session-sample-6-rollout-3-9cb5c3f69fd64b0ab176a0e99bc9b7b1/v1/messages source=sdk
+2026-08-13T02:29:32.248Z [DEBUG] Stream started - received first chunk
+2026-08-13T02:29:32.248Z [DEBUG] [API:timing] first byte after 6204ms
+2026-08-13T02:29:32.250Z [DEBUG] Edit tool validation error: String to replace not found in file.
+String: return "".join([chr(((ord(ch) - 5 - ord("a")) % 26) + ord(ch)) for ch in s])
+2026-08-13T02:29:32.251Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+
+2026-08-13 10:29:32 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-50]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-13 10:29:33 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-50 -> 1.0 (test_solution.py::test_all: PASS)
+2026-08-13 10:29:33 | …ts.claude_code_runner | INFO     | [sample 6] reward done score=1.0 resolved=True
+2026-08-13 10:29:34 | …tencent_agent_runtime | INFO     | tencent sandbox killed

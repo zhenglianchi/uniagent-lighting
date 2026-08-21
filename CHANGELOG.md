@@ -2,6 +2,17 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.53.2（2026-08-21）
+
+- **原始轨迹恢复保留（用户拍板：轨迹用于学习与网关处理，必须可读）**：
+  - 三套训练轨迹（白盒 baseline / 黑盒 full / 双机 dual-async）全部从 tgz
+    解压还原为原始逐会话目录（文件数与压缩前一致：12838 / 13456 / 1664）
+  - 删除全部轨迹压缩包（blackbox、humanevalfix、dual_async、
+    whitebox_logs、blackbox_smoke 共 5 个 tgz；smoke 与 whitebox_logs 内容
+    已有原始副本 / 压缩日志，无信息丢失）
+  - 大训练日志仍以 `.log.gz` 保留（非轨迹，压缩不损失可读性）
+  - README/docs 恢复「原始轨迹已解压可读」表述
+
 ## v0.53.1（2026-08-21）
 
 - **外层 config/work 并入仓库，仓库成为唯一真源**：

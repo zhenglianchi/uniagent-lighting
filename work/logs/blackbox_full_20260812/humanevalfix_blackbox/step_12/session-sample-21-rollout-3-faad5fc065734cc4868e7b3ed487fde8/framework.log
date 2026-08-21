@@ -1,0 +1,17 @@
+2026-08-12 18:26:42 | framework.framework    | INFO     | session session-sample-21-rollout-3-faad5fc065734cc4868e7b3ed487fde8 start: runner=claude_code sample_index=21 session_index=3 global_steps=12
+2026-08-12 18:46:44 | framework.framework    | ERROR    | session session-sample-21-rollout-3-faad5fc065734cc4868e7b3ed487fde8 failed (runner=claude_code); aborting session
+Traceback (most recent call last):
+  File "/home/ubuntu/uni-agent/uni_agent/framework/framework.py", line 688, in _run_session
+    await object_ref
+ray.exceptions.RayTaskError(RuntimeError): [36mray::_run_agent_runner_ray_task()[39m (pid=246268, ip=10.60.56.10)
+  File "/home/ubuntu/uni-agent/uni_agent/framework/framework.py", line 126, in _run_agent_runner_ray_task
+    asyncio.run(
+  File "/home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/home/ubuntu/uni_agent_ext/agents/claude_code_runner.py", line 296, in claude_code_runner
+    claude_base_url = await ensure_gateway_tunnel(sandbox, gateway_url)
+  File "/home/ubuntu/uni_agent_ext/agents/mini_swe_agent_runner.py", line 255, in ensure_gateway_tunnel
+    raise RuntimeError(f"gateway tunnel failed: {log.stdout[-2000:]}{log.stderr[-2000:]}")
+RuntimeError: gateway tunnel failed: kex_exchange_identification: read: Connection reset by peer
+Connection reset by 117.50.199.93 port 22

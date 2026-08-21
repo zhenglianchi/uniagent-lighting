@@ -212,7 +212,7 @@ uni_agent_ext/        # uni-agent 扩展包（腾讯沙箱后端 / 白盒/黑盒
 scripts/              # 数据构建 / 训练 / 评测 / 平台化 / 运维（含 bootstrap_ray_env）
 patches/              # verl / uni-agent / TQ 补丁 + 幂等部署脚本（对应 23 项源码修改，可复现重建）
 docs/                 # 架构 / 部署 / 训练评测分析 / 补丁汇总 / 简历亮点
-work/logs/            # 训练轨迹与日志归档（tgz 压缩保存，解压后可读）：
+work/logs/            # 训练轨迹与日志归档（原始轨迹已解压，可读）：
                       #   humanevalfix_full_20260809（白盒 baseline 25 步轨迹）
                       #   blackbox_full_20260812 / blackbox_smoke（黑盒轨迹）
                       #   dual_async_20260815（双机轨迹）、spec_run（统计/日志）

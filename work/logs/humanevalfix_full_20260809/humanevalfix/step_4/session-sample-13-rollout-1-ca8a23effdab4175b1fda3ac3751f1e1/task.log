@@ -1,0 +1,126 @@
+2026-08-08 20:51:59 | …mini_swe_agent_runner | INFO     | extract_task[humanevalfix-Python-127]: FAIL_TO_PASS raw type=list repr="['test_solution.py::test_all']" (parsed 1 items)
+2026-08-08 20:51:59 | …tencent_agent_runtime | INFO     | tencent sandbox created id=gdp2mjlaegv7o2kswwcxx3dhilv6rt7yu65ffc2a template=code-interpreter-v1
+2026-08-08 20:52:00 | …isweagent.tencent_e2b | INFO     | E2B attached to sandbox: gdp2mjlaegv7o2kswwcxx3dhilv6rt7yu65ffc2a
+2026-08-08 20:52:00 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:01 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:01 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:04 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:04 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:06 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:06 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:08 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:08 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:10 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:10 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:12 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:12 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:14 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:14 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:16 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:16 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:18 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:18 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:20 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:21 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:23 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:23 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:25 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:25 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:27 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:27 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:29 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:29 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:31 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:31 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:33 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:33 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:35 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:35 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:37 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:37 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:39 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:40 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:42 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:42 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:44 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:44 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:46 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:46 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:48 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:48 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:50 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:50 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:52 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:52 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:54 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:54 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:56 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:56 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:52:58 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:52:59 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:01 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:01 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:03 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:03 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:05 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:05 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:07 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:07 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:09 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:09 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:11 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:11 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:14 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:14 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:16 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:16 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:18 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:18 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:20 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:20 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:22 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:22 | LiteLLM                | INFO     | 
+LiteLLM completion() model= Qwen3-8B; provider = openai
+2026-08-08 20:53:24 | LiteLLM                | INFO     | Wrapper: Completed Call, calling success_handler
+2026-08-08 20:53:24 | …mini_swe_agent_runner | INFO     | [sample 13] mini-swe-agent rc=0 elapsed=84.1s traj=humanevalfix-Python-127
+2026-08-08 20:53:25 | …mini_swe_agent_runner | INFO     | evaluate_reward: humanevalfix-Python-127 -> 0.0 (test_solution.py::test_all: FAIL)
+2026-08-08 20:53:25 | …tencent_agent_runtime | INFO     | tencent sandbox killed
