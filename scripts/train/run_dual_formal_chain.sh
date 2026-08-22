@@ -33,7 +33,7 @@ for attempt in 1 2 3; do
   set +a
   "$ENV_PY" /home/ubuntu/swe-rl/tencent_stop_all_instances.py >> "$LOG" 2>&1
   sleep 10
-  MAX_CKPT_KEEP=3 MOONCAKE=0 bash run_grpo_dual_async_mooncake_ucloud.sh >> "$LOG" 2>&1
+  MAX_CKPT_KEEP=3 MOONCAKE=1 bash run_grpo_dual_async_mooncake_ucloud.sh >> "$LOG" 2>&1
   TRAIN_EXIT=$?
   echo "TRAIN_EXIT=$TRAIN_EXIT attempt=$attempt $(date)" >> "$LOG"
   if [ "$TRAIN_EXIT" -eq 0 ]; then

@@ -5,7 +5,7 @@
 #   - trainer.v1.trainer_mode=separate_async：trainer 占 node1 1 卡、
 #     独立 rollout 引擎占 node2 1 卡（dp=1/tp=1，生成与训练重叠）
 #   - transfer_queue backend=MooncakeStore（master 预启动 + auto_init=False；
-#     无 RDMA 走 tcp，双机小数据量收益有限，作为架构验证）
+#     无 RDMA 走 tcp，与 SimpleStorage 对照等效后定为正式后端）
 #   - 投机解码 EAGLE-3 开启（SPEC_ON=1）：独立引擎 dp=1 单节点，
 #     避开 vLLM 0.11.1 EAGLE+dp>1 死锁，恢复单机 spec 的吞吐收益（+41.7%）
 #   - 权重同步 checkpoint_engine.backend=nccl，
@@ -68,7 +68,7 @@ LOG_DIR=${LOG_DIR:-/home/ubuntu/swe-rl/logs/humanevalfix_dual_async}
 RAY_ADDRESS=${RAY_ADDRESS:-10.60.216.3:6379}
 MOONCAKE_MASTER=${MOONCAKE_MASTER:-10.60.216.3:50124}
 MOONCAKE_METADATA=${MOONCAKE_METADATA:-10.60.216.3:50123}
-MOONCAKE=${MOONCAKE:-0}   # 0=SimpleStorage（正式训练默认，稳定）；1=MooncakeStore（实验）
+MOONCAKE=${MOONCAKE:-1}   # 1=MooncakeStore（正式默认，与 2026-08-15 正式训练一致）；0=SimpleStorage（对照）
 SPEC_ON=${SPEC_ON:-1}
 SPEC_DRAFT=${SPEC_DRAFT:-/home/ubuntu/models/Qwen3-8B-speculator.eagle3}
 SPEC_TOKENS=${SPEC_TOKENS:-3}
