@@ -190,10 +190,11 @@ bash scripts/eval/eval_dual_async_final.sh          # 合并 LoRA + vLLM + 161 �
 | 全样本（白盒）* | `run_grpo_humanevalfix_ucloud.sh` | train161 / 5 epoch | batch32 / 并发64 |
 | 黑盒全样本 * | `run_grpo_humanevalfix_blackbox_ucloud.sh` | Claude Code harness | max_turns=60 |
 | 双机全异步 * | `run_grpo_dual_async_mooncake_ucloud.sh` | **separate_async + Mooncake + EAGLE-3（正式）** | 白盒 / batch32 / util 0.8 |
-| 平台化测试（对外主线） | `run_grpo_platform_test_ucloud.sh` | 用户侧 agent 单步闭环 | save_freq=-1 |
+| 外部 agent 形态 | `run_grpo_platform_test_ucloud.sh` | agent 本地运行（WSL）接云端 Gateway 单步闭环 | save_freq=-1 |
 
-\* 内部训练形态：runner 部署在训练机侧，链路与平台化形态一致（Gateway 轨迹
-物化 / TQ 数据平面 / verl 训练不变），成果计为平台化训练产出。
+\* 所有训练脚本均为同一条平台化链路（agent → 云端 Gateway → 轨迹 → reward →
+GRPO），差异仅在 harness 运行位置：训练机侧（白盒 / 黑盒）或本地 WSL
+（外部 agent 形态）。
 
 ## 评测
 

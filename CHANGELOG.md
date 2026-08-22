@@ -13,7 +13,8 @@
   - 同步更新 README / docs/deployment.md（冒烟改为 humanevalfix 小样本）/
     scripts/README.md / AGENTS.md / docs/修改与补丁汇总 / archive README
   - 保留链路冒烟（`run_grpo_smoke_ucloud.sh`、`run_grpo_single_lora_ucloud.sh`）
-    与平台化验证（`run_grpo_platform_test_ucloud.sh`）脚本
+    与外部 agent 形态训练脚本（`run_grpo_platform_test_ucloud.sh`，agent 本地
+    WSL 运行，链路与其余训练脚本一致）
 
 ## v0.56.0（2026-08-22）
 
