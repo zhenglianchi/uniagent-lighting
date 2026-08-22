@@ -13,12 +13,12 @@
 
 用法：
   # 一次性解析
-  python scripts/collect_grpo_stats.py \\
+  python scripts/eval/collect_grpo_stats.py \\
       --log /home/ubuntu/swe-rl/grpo_humanevalfix_train8.log \\
       --sessions /home/ubuntu/swe-rl/logs/humanevalfix \\
       --out /home/ubuntu/swe-rl/logs/grpo_stats_train8.jsonl
   # 常驻监听（训练过程中每 --interval 秒增量落盘一次，可 nohup 后台跑）
-  python scripts/collect_grpo_stats.py ... --watch --interval 30
+  python scripts/eval/collect_grpo_stats.py ... --watch --interval 30
 """
 
 from __future__ import annotations

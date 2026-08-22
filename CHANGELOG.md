@@ -2,6 +2,18 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.56.0（2026-08-22）
+
+- **scripts 按功能分子目录整理**：
+  - 43 个脚本 `git mv` 到 7 个功能子目录：`train/`（训练与编排）、`eval/`
+    （评测与分析）、`data/`（数据构建）、`sampling/`（采样流水线）、
+    `platform/`（平台化本地 agent）、`sandbox/`（腾讯沙箱）、`ops/`
+    （集群/部署/运维），新增 `scripts/README.md` 索引
+  - 全局同步脚本路径引用：脚本注释与用法、README、docs/deployment.md
+    （含裸机安装 raw URL）、AGENTS.md / TODO.md、uni_agent_ext 文档
+  - 服务器部署保持扁平目录约定（拷贝到 `/home/ubuntu/swe-rl`），
+    deployment.md §2.1 补充子目录拷贝示例
+
 ## v0.55.0（2026-08-21）
 
 - **docs/简历亮点.md 口径修正（用户拍板：本地补丁不算亮点）**：
@@ -66,14 +78,14 @@
     `run_grpo_humanevalfix_ucloud.sh` 默认 `TRAIN_FILE` 同步指向 train161
   - 补丁同步：`patches/tencent_e2b.py` 更新到与本地 mini-swe-agent 一致
     （补上 v0.30.6 `request_timeout` 兜底，此前新机器按补丁部署会漏掉）
-  - 工作区去重：外层 `scripts/ssh_ucloud.py`（≡ 仓内副本）与 `proxy.sh` 改为指向
+  - 工作区去重：外层 `scripts/ops/ssh_ucloud.py`（≡ 仓内副本）与 `proxy.sh` 改为指向
     仓库的软链；删除外层重复 `config/tencent_swebench_vllm.yaml`（≡ 仓内
     `work/config/config_qwen3_vllm.yaml`）与孤儿脚本 `work/scripts/ssh_cmd.py`
   - 同步根目录 `AGENTS.md` / `TODO.md` 关键状态（版本、双机完成、正式脚本名）
 
 ## v0.52.0（2026-08-18）
 
-- 学习资源：新增 docs/数据流与网关导读.md、scripts/analyze_trajectory.py
+- 学习资源：新增 docs/数据流与网关导读.md、scripts/eval/analyze_trajectory.py
   （真实轨迹分析）、README learning path；归档 dual_async 与 early samples 的
   README；平台化表述统一
 
@@ -111,7 +123,7 @@
 - **✅ 双机平台化正式训练完成（separate_async + Mooncake + EAGLE-3 + 白盒）**：
   25 步 7:11:40、0 硬错误、磁盘 ≤81%；**全量评估 83.23%（134/161）**，与白盒
   baseline 83.2% 持平，**计为平台化训练结果**（docs/训练评测分析.md §8）
-- **新增评估脚本** `scripts/eval_dual_async_final.sh`（合并 + vLLM serve + 161 条
+- **新增评估脚本** `scripts/eval/eval_dual_async_final.sh`（合并 + vLLM serve + 161 条
   全量评估）
 - **脚本修复**：`run_grpo_dual_async_mooncake_ucloud.sh` 传递
   `max_actor_ckpt_to_keep=1`（v0.48.6，checkpoint 滚动）+ 服务器守护进程兜底
@@ -193,11 +205,11 @@
   - `MC_STORE_MEMCPY=0`（mooncake 禁用 GPU memcpy，与 vLLM 同卡冲突）
   - TQ 0.1.9 MooncakeStore clear_data 与 verl kv_clear 不兼容补丁（双机）
   - verl `_compute_metrics` NestedTensor num_turns 兼容补丁（agent 框架轨迹）
-- **正式双机训练启动**：`scripts/run_grpo_dual_async_mooncake_ucloud.sh`
+- **正式双机训练启动**：`scripts/train/run_grpo_dual_async_mooncake_ucloud.sh`
   （黑盒 HumanEvalFix 161 条，separate_async + Mooncake + EAGLE-3，batch32 /
   mini16 / micro4 / pss2，并发 64 / 128 / 0.8，5 epoch）；train3 小样本全链路
   验证通过后启动，训练完成自动接全量评估；配套
-  `scripts/run_dual_formal_chain.sh`（训练失败自动 resume 重试 → 从 node2 收集
+  `scripts/train/run_dual_formal_chain.sh`（训练失败自动 resume 重试 → 从 node2 收集
   actor checkpoint → LoRA 合并 → vLLM 评估）
 - **验证阶段新增排障**：
   - verl `_compute_metrics` NestedTensor num_turns 补丁已实跑验证（step1 全
@@ -294,9 +306,9 @@
 ## v0.42.0（2026-08-12）
 
 - **黑盒平台化组件（Claude Code 本地编排 + MCP 工具转发云端沙箱）**：
-  - 新增 `scripts/sandbox_mcp_server.py`：MCP server 暴露 Bash/Read/Write/Edit/Glob，
+  - 新增 `scripts/platform/sandbox_mcp_server.py`：MCP server 暴露 Bash/Read/Write/Edit/Glob，
     工具经 E2B 在云端腾讯沙箱执行（agent 在用户侧、沙箱只执行）
-  - 新增 `scripts/platform_local_claude.py`（WSL 端）：读 task.json → 隧道 →
+  - 新增 `scripts/platform/platform_local_claude.py`（WSL 端）：读 task.json → 隧道 →
     MCP config（E2B_SANDBOX_ID=训练侧沙箱）→ 本地 `claude --bare`（禁用内置工具、
     走 MCP）→ ANTHROPIC_BASE_URL 指隧道后的 Gateway → 完成 touch done
   - 复用 `external_agent_runner`（训练侧建沙箱 + task.json + done + reward）
@@ -330,10 +342,10 @@
     建腾讯沙箱 + 注入任务文件 → 写 `<PLATFORM_TEST_DIR>/<session>.task.json`
     （base_url / instance_id / tools_kwargs）→ 轮询本地 agent 的 done 标记 →
     云侧 reward（pytest）→ POST reward_info
-  - 新增 `scripts/run_grpo_platform_test_ucloud.sh`：1 step 训练测试，
+  - 新增 `scripts/train/run_grpo_platform_test_ucloud.sh`：1 step 训练测试，
     `MODEL` 可切 baseline final / spec final，**save_freq=-1 不保存新权重**
     （红线：不覆盖 models/Qwen3-8B-final* 与 checkpoints/humanevalfix*）
-  - 新增 `scripts/platform_local_agent.py`（WSL 端）：paramiko 读 task.json +
+  - 新增 `scripts/platform/platform_local_agent.py`（WSL 端）：paramiko 读 task.json +
     direct-tcpip 隧道（本地 → 训练机内网 Gateway 8001）+ 跑 mini-swe-agent
     （Python API，attach 云端沙箱，工具仍在沙箱执行）+ 创建 done 标记
   - 新增 `work/data/platform_test_train.jsonl`（1 条：humanevalfix-Python-61）
@@ -357,7 +369,7 @@
 - **黑盒小样本归档 + 正式训练脚本**：
   - 归档 `work/logs/blackbox_smoke_20260812/`：12 条轨迹（tgz）+ 检查脚本 +
     README（结果 / 轨迹检查结论 / 5 轮排障链）
-  - 新增 `scripts/run_grpo_humanevalfix_blackbox_ucloud.sh`：黑盒正式训练
+  - 新增 `scripts/train/run_grpo_humanevalfix_blackbox_ucloud.sh`：黑盒正式训练
     （train161 / batch32 / mini16 / micro4 / 并发 64 / max_num_seqs 128 /
     util 0.8 / 5 epoch，与 baseline/投机同口径；max_turns 60；GATEWAY_PORT=8001
     隧道默认、direct-URL 可切）
@@ -549,7 +561,7 @@
 ## v0.33.2（2026-08-10）
 
 - **补归评测/沙箱运维脚本**（服务器在用但仓库缺失，sha256 与服务器逐一核对一致）：
-  `scripts/eval_spec_final.sh`（base vs final-spec 评测包装）、`run_eval_only.sh`
+  `scripts/eval/eval_spec_final.sh`（base vs final-spec 评测包装）、`run_eval_only.sh`
   （复用已就绪 vLLM 重跑）、`run_eval_final_spec.sh`（起 vLLM + 评测）、
   `kill_eval.sh`、`list_kill_sandboxes.py`、`tencent_stop_all_instances.py`
   （腾讯沙箱配额清理）、`start_stats_watch.sh` 更新版
@@ -640,7 +652,7 @@
 
 ## v0.29.0（2026-08-08）
 
-- 新增 `scripts/collect_grpo_stats.py`：**GRPO 训练逐步统计收集器**
+- 新增 `scripts/eval/collect_grpo_stats.py`：**GRPO 训练逐步统计收集器**
   （stdlib only）——解析 verl 主日志的 step 指标行 + AgentFrameworkWorker 的
   `generate_sequences summary` + 会话日志逐条 `evaluate_reward`，每个 batch 落一行
   JSONL，字段含：rollout 数量（sessions/outputs）、rollout 时长（`timing_s/gen`）、
@@ -730,10 +742,10 @@
 - 全样本 10 epoch 训练提前停止，**以 global_step_26（5 epoch + 1 步）为最终权重**，
   checkpoint 改名 `checkpoints/humanevalfix/final`（max_ckpt_to_keep=1 轮换掉了
   恰好 5 epoch 的 step 25，26 与 5 epoch 差异仅 1 步）
-- 新增 `scripts/convert_verl_lora_to_hf.py`：verl FSDP2+LoRA checkpoint（PEFT 风格
+- 新增 `scripts/eval/convert_verl_lora_to_hf.py`：verl FSDP2+LoRA checkpoint（PEFT 风格
   base_layer + lora_A/B）→ 合并为标准 HF 模型目录（safetensors + config/tokenizer 从
   基座复制），供 vLLM 直接 serve
-- 新增 `scripts/eval_humanevalfix.py`：**n=1 通过率评测**——并发沙箱（默认 16）、
+- 新增 `scripts/eval/eval_humanevalfix.py`：**n=1 通过率评测**——并发沙箱（默认 16）、
   mini-swe-agent harness + 腾讯沙箱 + 隐藏测试 reward（无测试泄露），输出 per-sample
   JSON + pass rate；用于"基座 vs final"对比（方案 A）
 - 训练实测（10 epoch 中断于 26/50）：epoch 平均 reward 0.378 → 0.539 → 0.590 →
@@ -824,11 +836,11 @@
 ## v0.2.0（2026-08-05）
 
 - 实测云端公网端口：仅 22 开放 → 新增 `docs/vllm_access.md`（SSH 隧道方案）+ `scripts/vllm_tunnel.sh`
-- 新增 `scripts/make_agentic_data.py`（7.2 任务数据：SWE-bench Lite → raw_prompt + tools_kwargs，schema 待上机对齐）
+- 新增 `scripts/data/make_agentic_data.py`（7.2 任务数据：SWE-bench Lite → raw_prompt + tools_kwargs，schema 待上机对齐）
 
 ## v0.3.0（2026-08-05）
 
-- 新增 `scripts/run_grpo_single_agentic_ucloud.sh`（7.3 agentic 训练配置）：
+- 新增 `scripts/train/run_grpo_single_agentic_ucloud.sh`（7.3 agentic 训练配置）：
   multi_turn.enable + AgentFrameworkRolloutAdapter + agent_framework.agent_runners
   （runner_fqn=uni_agent_ext.agents.mini_swe_agent_runner，dispatch=ray_task，
   concurrency 可控沙箱成本）；reward 走 naive manager（TQ rm_scores）；续训已启用
@@ -1073,7 +1085,7 @@
 
 ## v0.28.0（2026-08-06）
 
-- **HumanEvalFix 数据构造**：新增 `scripts/make_humanevalfix_data.py`（原 SWE-bench
+- **HumanEvalFix 数据构造**：新增 `scripts/data/make_humanevalfix_data.py`（原 SWE-bench
   `make_agentic_data.py` 保留不动）——humanevalpack python 子集 → `solution.py` +
   `test_solution.py`（check(candidate) 转 pytest 单测 `test_all`，`from solution import *`
   兼容测试引用同文件辅助函数）+ 本地 verify（buggy rc=1 / canonical rc=0，死循环超时跳过）
@@ -1081,5 +1093,5 @@
 - runner 新增 `humaneval_fix` 任务类型（swe_bench 原路径不变）：沙箱 /testbed git 仓库 +
   solution.py 注入（`git add -A` 保证 patch 可 diff）+ mini-swe-agent API 直连（绕开
   swebench-single 数据集硬编码）+ reward 阶段写隐藏测试（无测试泄露）
-- 新增 `scripts/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录与 agentic 区分）
+- 新增 `scripts/train/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录与 agentic 区分）
 - 待上机验证：8B 通过率与 GRPO reward 组内差异（node2 恢复后 git pull 即可跑）

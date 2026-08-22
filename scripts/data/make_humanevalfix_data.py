@@ -12,7 +12,7 @@ agent 修好后按 mini-swe 模板提交 git patch；隐藏测试 ``test_solutio
 
 用法：
   HF_ENDPOINT=https://hf-mirror.com HF_HUB_DISABLE_XET=1 \\
-  conda run -n swe-rl python scripts/make_humanevalfix_data.py --train-num 3 --val-num 2
+  conda run -n swe-rl python scripts/data/make_humanevalfix_data.py --train-num 3 --val-num 2
 """
 
 from __future__ import annotations

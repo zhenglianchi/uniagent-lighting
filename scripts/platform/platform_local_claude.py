@@ -11,7 +11,7 @@
 
 用法（WSL；训练先启动，等 task.json）：
   PYTHONPATH=$PWD/vendor/uni-agent:$PWD \
-  python scripts/platform_local_claude.py --wait --timeout 3600
+  python scripts/platform/platform_local_claude.py --wait --timeout 3600
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ from platform_local_agent import (
 
 ROOT = Path(__file__).resolve().parents[1]  # 仓库根（uniagent-lighting）
 CLAUDE_BIN = os.environ.get("CLAUDE_BIN", str(Path.home() / ".npm-global/bin/claude"))
-MCP_SERVER = str(ROOT / "scripts/sandbox_mcp_server.py")
+MCP_SERVER = str(ROOT / "scripts/platform/sandbox_mcp_server.py")
 PYTHON_BIN = os.environ.get("PLATFORM_PYTHON", "/home/zhenglianchi/miniconda3/envs/swe-rl/bin/python")
 
 

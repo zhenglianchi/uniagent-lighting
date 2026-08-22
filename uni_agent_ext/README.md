@@ -41,9 +41,9 @@ sandbox = build_sandbox(config)
 
 ## 验证
 
-- 最小连通：`python scripts/tencent_sandbox_demo.py`（创建 → run_code → kill）
-- uni-agent 官方 demo：`python scripts/run_tencent_sandbox_demo.py`（安装包→写文件→执行→状态保持，2026-08-04 全过）
-- 创建/查询沙箱工具：`python scripts/tencent_create_sandbox_tool.py` / `python scripts/tencent_list_sandbox_tools.py`
+- 最小连通：`python scripts/sandbox/tencent_sandbox_demo.py`（创建 → run_code → kill）
+- uni-agent 官方 demo：`python scripts/sandbox/run_tencent_sandbox_demo.py`（安装包→写文件→执行→状态保持，2026-08-04 全过）
+- 创建/查询沙箱工具：`python scripts/sandbox/tencent_create_sandbox_tool.py` / `python scripts/sandbox/tencent_list_sandbox_tools.py`
 
 ## TODO（后续）
 
@@ -56,6 +56,6 @@ sandbox = build_sandbox(config)
 ## 平台化组件
 
 - `agents/external_agent_runner.py`：外部 agent runner（建沙箱 → 暴露任务 →
-  等本地 agent → 云侧 reward），配合 `scripts/platform_local_agent.py`
-- `scripts/sandbox_mcp_server.py`：Claude Code 工具转发 MCP server（手写
+  等本地 agent → 云侧 reward），配合 `scripts/platform/platform_local_agent.py`
+- `scripts/platform/sandbox_mcp_server.py`：Claude Code 工具转发 MCP server（手写
   stdio JSON-RPC，Bash/Read/Write/Edit/Glob → 云端沙箱）

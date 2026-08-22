@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # cc-connect 启停脚本（飞书远程控制 Codex，2026-08-06）
 # 基于 systemd 用户服务（开机自启 + 崩溃自动重启）
-# 用法: scripts/cc_connect.sh {start|stop|status|log [N]}
+# 用法: scripts/ops/cc_connect.sh {start|stop|status|log [N]}
 set -euo pipefail
 
 case "${1:-}" in

@@ -48,8 +48,8 @@
   - 诊断：代理进程 `verge-mihomo` 在 Windows 上正常监听 `127.0.0.1:7890`，但**未监听局域网接口**（`172.18.48.1:7890` 不通）；WSL2 为 NAT 模式，与 Windows 不共享 loopback
   - 排除：Windows 10 22H2（10.0.19045）不支持 WSL mirrored 网络模式，localhost 直连方案不可行
   - 打通方式（已验证 ✅）：用户在 Clash Verge 开启**"允许局域网连接"**（永久生效，换网无需重配；防火墙一次性放行即可），WSL 通过宿主 IP `172.18.48.1:7890` 访问（宿主 IP 由脚本自动解析，当前即默认网关）
-  - 新增文件：`scripts/proxy.sh`（`proxy_on` / `proxy_off` / `proxy_test`）；根目录 `AGENTS.md`（长期记忆，含代理说明与备选方案）
-  - 使用：`source scripts/proxy.sh on`；验证：`proxy_test` 或 `timeout 3 bash -c "</dev/tcp/172.18.48.1/7890"`
+  - 新增文件：`scripts/ops/proxy.sh`（`proxy_on` / `proxy_off` / `proxy_test`）；根目录 `AGENTS.md`（长期记忆，含代理说明与备选方案）
+  - 使用：`source scripts/ops/proxy.sh on`；验证：`proxy_test` 或 `timeout 3 bash -c "</dev/tcp/172.18.48.1/7890"`
   - 验证结果：`172.18.48.1:7890` TCP OPEN；`curl -x http://172.18.48.1:7890 https://www.google.com` 与 `https://github.com` 均返回 `HTTP/1.1 200 Connection established`
   - 注意：`NO_PROXY` 已含本地网段与 `*.aliyuncs.com`（阿里云模型端点直连）
 
@@ -81,7 +81,7 @@
   - 本地 Docker 镜像策略（已被腾讯云沙箱取代，留档）：`docker run` 隐式拉镜像超 120s 会判超时，须先 `docker pull`；本地测试期曾"保留镜像、只删容器"，正式跑需跑完删镜像
 - [x] 采样器轨迹落盘（JSON，含 info / messages / trajectory_format）
 - [x] 批量轨迹上传器（本地轨迹 → JSONL 合并 + zstd 压缩 + 断点续传 → **UCloud SFTP 直传**）
-  - 脚本：`scripts/trajectory_uploader.py`；依赖：`zstandard`、`paramiko`
+  - 脚本：`scripts/sampling/trajectory_uploader.py`；依赖：`zstandard`、`paramiko`
   - 能力：扫描 `work/swebench/*.traj.json` → 按 `--batch-size` 合并 JSONL → zstd（实测压缩率 ~9.4%）→ manifest.json（含 instance_id）→ SFTP 直传 UCloud `/home/<user>/swe-rl/trajectories/`
   - 凭据：`work/ucloud.env`（`UCLOUD<N>_HOST/USER/PASS/PORT`）；`--node N` 选机器；断点续传状态 `work/uploader_state.json`
   - 实测（2026-08-03）：dry-run 打包 → 真实上传 1 条 → UCloud 落盘 zst + manifest ✅
@@ -94,13 +94,13 @@
   - 命令（HF 镜像 + 断点续传）：`HF_ENDPOINT=https://hf-mirror.com HF_HUB_DISABLE_XET=1` + `snapshot_download('Qwen/Qwen2.5-Coder-7B-Instruct', local_dir='work/models/...')`
   - 坑：新版 huggingface_hub 默认走 Xet(CAS) 协议，hf-mirror 不兼容报 `401 Unauthorized (cas-server.xethub.hf.co)`；必须 `HF_HUB_DISABLE_XET=1`
 - [x] 本地构造冒烟数据 `train.jsonl` / `val.jsonl`（从官方 SWE-bench Lite 抽取）
-  - 脚本：`scripts/make_smoke_data.py`；生成 `work/data/train.jsonl`（40 条）+ `val.jsonl`（10 条），字段含 instance_id/prompt/repo/base_commit/patch/test_patch/FAIL_TO_PASS/PASS_TO_PASS/environment_setup_commit
+  - 脚本：`scripts/data/make_smoke_data.py`；生成 `work/data/train.jsonl`（40 条）+ `val.jsonl`（10 条），字段含 instance_id/prompt/repo/base_commit/patch/test_patch/FAIL_TO_PASS/PASS_TO_PASS/environment_setup_commit
   - 参数化设计：`--train-num/--val-num/--seed/--repos/--min-tests/--split`，正式训练改参数即可
 - [x] 记录 WSL 公网出口 IP（后续安全组白名单用）
   - 直连出口 IP：`59.64.129.96`（`curl https://api.ipify.org`；SSH 直连 UCloud 等安全组放行这个）
   - 走代理出口 IP：`13.250.120.16`（仅云端访问也走 Clash 代理时才需要）
   - 注意：家庭宽带为动态 IP，正式配置安全组前重新确认
-- [x] 本地一键启动脚本 `scripts/start_sampling.sh`（读冒烟数据 instance_id → 预拉镜像 → `mini-extra swebench-single` 逐个采样 → 完成后自动调 `trajectory_uploader.py`）
+- [x] 本地一键启动脚本 `scripts/sampling/start_sampling.sh`（读冒烟数据 instance_id → 预拉镜像 → `mini-extra swebench-single` 逐个采样 → 完成后自动调 `trajectory_uploader.py`）
   - 参数：`--list/--limit/--step-limit/--instance/--config/--no-pull/--rm-image/--no-upload/--dry-run/--plan-only`
   - 注意：正式阶段切云端 vLLM 时改 `--config` 指向 OpenAI 兼容端点配置即可，脚本逻辑不变
 
@@ -111,20 +111,20 @@
 - [x] **1. 端点与 SDK 映射**（2026-08-04 打通，无需控制台操作）
   - **E2B 兼容接入**：`E2B_DOMAIN=ap-guangzhou.tencentags.com` + `E2B_API_KEY`（`e2b_*`，SDK 强制前缀）；SDK `e2b-code-interpreter 2.9.0` + `tencentcloud-sdk-python-ags 3.1.135`（Cloud API 控制面）
   - 沙箱工具 Cloud API 直接创建：`CreateSandboxTool`（域名 `ags.tencentcloudapi.com`，CAM 密钥 `TENCENT_SECRET_ID/SECRET_KEY` 已存 `work/tencent_sandbox.env`）；已建 `code-interpreter-v1`（sdt-fhjsjs5j）+ `swebench-v1`（sdt-2nbtp6th）
-  - E2B 最小 demo 全通：创建沙箱 0.4s → run_code → kill（`scripts/tencent_sandbox_demo.py`）
-  - 脚本：`scripts/tencent_create_sandbox_tool.py` / `tencent_list_sandbox_tools.py` / `tencent_sandbox_demo.py`
+  - E2B 最小 demo 全通：创建沙箱 0.4s → run_code → kill（`scripts/sandbox/tencent_sandbox_demo.py`）
+  - 脚本：`scripts/sandbox/tencent_create_sandbox_tool.py` / `tencent_list_sandbox_tools.py` / `tencent_sandbox_demo.py`
 - [x] **2. `tencent_agent_runtime` 后端**（`platform/uni_agent_ext/sandbox/tencent_agent_runtime.py`，E2B 直连实现）
   - v0.2 弃用 swerex 隧道方案：控制面 `Sandbox.create/kill`；执行 `sandbox.commands.run(user="root")`（原生命令通道，含退出码）；文件 `sandbox.files.read/write`；template 默认 `code-interpreter-v1`，可 `TENCENT_SANDBOX_TEMPLATE` 覆盖
-  - 验证：`python scripts/run_tencent_sandbox_demo.py`（uni-agent 官方 demo 全过：tmux 会话保持 cwd → pip install numpy → 文件读写 → 执行 → 状态保持）
+  - 验证：`python scripts/sandbox/run_tencent_sandbox_demo.py`（uni-agent 官方 demo 全过：tmux 会话保持 cwd → pip install numpy → 文件读写 → 执行 → 状态保持）
 - [x] **3. SWE-bench 场景验证**（核心可行性质疑点已消除）
   - 官方托管 `swebench` 工具类型：swerex runtime 挂载 /nix、8000 端口跑 swerex server、envd 49983、4C8G、默认镜像 `swebench/dummy:latest`（占位）
   - **系统镜像仓库内置 SWE-bench 实例镜像**：`StartSandboxInstance` + `CustomConfiguration.Image="swebench/sweb.eval.x86_64.<org>_1776_<repo>-<pr>:latest"`（`ImageRegistryType=system`）→ 实例秒起、/testbed 即题目仓库、Python testbed 环境 ✅（实测 django_1776_django-13447、marshmallow-code_1776_marshmallow-1359）
   - 意义：一个样本一个实例（镜像覆盖），跑完销毁，**本地磁盘零占用**（镜像在云上）
-  - 脚本：`scripts/tencent_start_swebench.py <镜像> [--kill <InstanceId>]`
+  - 脚本：`scripts/sandbox/tencent_start_swebench.py <镜像> [--kill <InstanceId>]`
 - [x] **4. 打通采样链路（mini-swe-agent + 腾讯云沙箱）**
   - 新增 mini-swe-agent 环境类 `tencent_e2b`（`mini-swe-agent/src/minisweagent/environments/extra/tencent_e2b.py`）：Cloud API `StartSandboxInstance` 镜像覆盖（自动去 docker.io/ 前缀、`__`→`_1776_`）→ E2B `Sandbox.connect` → `commands.run(user=root)` → kill + `StopSandboxInstance` 双保险清理；已注册进 `environments/__init__.py` 和 `run/benchmarks/swebench.py` 的 image 注入列表
   - **采样配置定稿（2026-08-04）**：模型 **qwen3.7-plus**、**step_limit=60（以后都 60）**、Lite 子集（`--subset lite --split dev`）、wrapper 必须带 `--exit-immediately`（否则提交时弹交互确认、非 TTY 直接 Aborted 且轨迹不落盘）；**不要测试泄露**（不注入 test_patch，agent 只看题目，test_patch 仅评估阶段用）
-  - 运行：`bash scripts/run_tencent_swebench_single.sh <instance_id>`（配置 `config/tencent_swebench.yaml`，轨迹 `work/swebench/tencent_<id>.traj.json`，注意 CLI 的 `-o` 覆盖 config 里的 output_path）
+  - 运行：`bash scripts/sandbox/run_tencent_swebench_single.sh <instance_id>`（配置 `config/tencent_swebench.yaml`，轨迹 `work/swebench/tencent_<id>.traj.json`，注意 CLI 的 `-o` 覆盖 config 里的 output_path）
   - 实测轨迹：
     - django__django-13447（full/test，step_limit=20 到顶未提交，44 条消息/20 次 API）——首条验证
     - **marshmallow-code__marshmallow-1359（Lite/dev，27 步提交 ✅，57 条消息/27 次 API）**——轨迹 `work/swebench/tencent_marshmallow-code__marshmallow-1359.traj.json`
@@ -141,7 +141,7 @@
 
 - [x] **0. 多机连通性验证（✅ 2026-08-04 node1+node2 实测通过）**
   - 下单要点：两台**同地域同可用区 + 同 VPC/子网**（内网互通前提）；卡型 CC≥8.0（A800/A100/4090）；系统盘 ≥100GB
-  - ✅ **NCCL 双机测试通过**：`scripts/nccl_multinode_test.py`（MASTER_ADDR=10.60.104.186，`GLOO/NCCL_SOCKET_IFNAME=eth0`）RANK0+1 全过，实测带宽 **3.08 GB/s**（≈25Gbps，普通款内网 10~25G 预期内，无 RDMA 也够 7B 两机跑）
+  - ✅ **NCCL 双机测试通过**：`scripts/ops/nccl_multinode_test.py`（MASTER_ADDR=10.60.104.186，`GLOO/NCCL_SOCKET_IFNAME=eth0`）RANK0+1 全过，实测带宽 **3.08 GB/s**（≈25Gbps，普通款内网 10~25G 预期内，无 RDMA 也够 7B 两机跑）
   - ✅ **SSH 免密 + hosts 互指已配**：两台各生成新 ed25519 key + `authorized_keys` 双向互信；`sudo ssh-keygen -A` 重新生成 host key（避免同镜像同名 host key 冲突）
   - ✅ **排坑**：`/etc/hosts` 里 `127.0.1.1 <旧hostname>` 回环映射会导致 Gloo `connectFullMesh failed / Connection reset by peer` → 已删除，现为 `10.60.104.186 node1` + `10.60.215.136 node2`
   - ⚠️ node2 重装（克隆 node1 镜像）后 SSH 密钥/hosts 需按上述重做
@@ -151,7 +151,7 @@
 - [x] **3. SSH 免密 + hosts（✅ 已配，node2 重装后需重做）**：`ssh-keygen` + `authorized_keys` 双向互信；`/etc/hosts` 互指内网 IP（详见条目 0 排坑）
 - [ ] **4. 环境搭建（`scripts/setup_ucloud_uniagent.sh`，两台复用）**
   - 版本链（实测可用）：torch 2.7.1+cu126（PyPI，vllm 0.10.1 强制，勿升 2.8）/ vllm 0.10.1（verl 0.9 传 `logprobs_mode`，仅 vllm≥0.10 支持）/ transformers 4.57.6 / verl 0.9.0.dev（uni-agent 捆绑）/ ray 2.56.1 / TransferQueue==0.1.9
-  - ✅ **node1 版本链升级（2026-08-04）**：torch 2.9.0+cu128 / vllm 0.11.1（多机硬性要求 vllm≥0.11.1，见 6.3 要点 1）；升级脚本 `scripts/upgrade_vllm_0111.sh`（node1 实测：vLLM 引擎 7B tp=2 冒烟通过、NCCL 双机 3.08 GB/s）；**node2 不单独装环境，直接克隆 node1 镜像**
+  - ✅ **node1 版本链升级（2026-08-04）**：torch 2.9.0+cu128 / vllm 0.11.1（多机硬性要求 vllm≥0.11.1，见 6.3 要点 1）；升级脚本 `scripts/ops/upgrade_vllm_0111.sh`（node1 实测：vLLM 引擎 7B tp=2 冒烟通过、NCCL 双机 3.08 GB/s）；**node2 不单独装环境，直接克隆 node1 镜像**
   - ⚠️ verl 补丁（已内嵌 setup 脚本，幂等）：① py3.10 StrEnum 兼容；② 单卡 fsdp2 跳过冗余 `module.state_dict()` 拷贝+回灌
   - 模型：`$HOME/models/Qwen2.5-Coder-7B-Instruct`（hf-mirror 下载）
   - ✅ node1（117.50.183.168，RTX 4090 24G / 32G 内存）已装完（2026-08-03）：全套环境 + 24GB swap（fstab）+ vm.swappiness=10；清华 pip 源 + HF 镜像已永久配置；重建脚本已上传 `/home/ubuntu/`
@@ -181,12 +181,12 @@
       - **对策（已定，下次重跑必做）**：① 两台加 16-24GB swapfile（峰值缓冲，防 OOM——实测 60G 峰值无 swap 必挂）；② `checkpoint_engine.update_weights_bucket_megabytes` 2048→512（已改脚本）；③ Ray 启动带 `RAY_memory_monitor_refresh_ms=0`（已做）；④ 若仍卡死，控制台抓 `top`/`dmesg` 判断"极端慢 vs 死锁"
       - **第四次尝试（补丁版，2026-08-05 17:32）**：
         - ✅ swap 20G 生效：峰值 61G 内存 + 15G swap 成功兜住，全程 SSH 在线、无 OOM
-        - ✅ **IndexError 根因定位并修复**：bucket 512 时 embedding(~1.09GB) > bucket 触发 `_direct_send_large_weight`，对 CPU 张量 reduce_tensor 句柄不足 7 项 → `rebuild_ipc list_args[6]` 越界；修复 = bucket 改回 2048 + 补丁 `scripts/patch_verl_ipc_cpu.py`（发送前 CPU→CUDA，两台已打）
+        - ✅ **IndexError 根因定位并修复**：bucket 512 时 embedding(~1.09GB) > bucket 触发 `_direct_send_large_weight`，对 CPU 张量 reduce_tensor 句柄不足 7 项 → `rebuild_ipc list_args[6]` 越界；修复 = bucket 改回 2048 + 补丁 `scripts/ops/patch_verl_ipc_cpu.py`（发送前 CPU→CUDA，两台已打）
         - ❌ 但 vLLM 引擎 init 又崩（EngineCore_DP1 初始化失败，WorkerProc 异常）——内存压力下双引擎并发初始化的偶发
       - **结论：62GB RAM 是硬瓶颈，升级内存（128GB）是最直接解法**（显存 24G/卡一直够，峰值 13G；瓶颈纯粹是 RAM）；升级后配置基本不用改，重跑即可
   - ✅ **单机 LoRA GRPO 跑通（2026-08-05，node2：1×RTX 4090 48GB / 94GB RAM，IP 117.50.197.46 / 10.60.46.121）**
     - 机器 = 镜像恢复成功（torch 2.9.0+cu128 / vllm 0.11.1 / verl 0.9.0.dev / IPC 补丁全在）
-    - 脚本 `scripts/run_grpo_single_lora_ucloud.sh`（nnodes=1 / tp=1 / LoRA rank=32 / AdamW fp32 / offload 关 / batch=2 / n=2 / lr=1e-5 / **fused kernels 关**）
+    - 脚本 `scripts/train/run_grpo_single_lora_ucloud.sh`（nnodes=1 / tp=1 / LoRA rank=32 / AdamW fp32 / offload 关 / batch=2 / n=2 / lr=1e-5 / **fused kernels 关**）
     - **里程碑：Training Progress 100% 1/1**，一步 58.4s（gen 45.3s / old_log_prob 6.3s / update_actor 4.5s / **update_weights 2.1s = adapter 热插生效**）；critic/score/mean=1.0；训练显存峰值 18.9G、内存峰值 65G（94G 无 swap 兜住）
     - **排坑：`use_fused_kernels=True` 与 LoRA(PEFT) 冲突** → training 步 `aten.mm: mixed torch.Tensor and DTensor`（fused monkey patch 替换 linear 层后 LoRA 张量混算）；**LoRA 下必须 fused kernels=False**（多机脚本已同步改）
     - 收尾瑕疵：step 完成后最终验证阶段 DataLoader worker 被 Killed（dmesg 无 OOM，疑似 Ray teardown 清理），`Final validation metrics: None`——不影响训练步本身，后续可查
@@ -205,7 +205,7 @@
   - SWE-bench Lite 样本 → `raw_prompt` + `tools_kwargs.task`（序列化 Task Config）；冒烟先用 2 条，逐步扩
   - sandbox = 腾讯云 Agent Runtime（swebench 工具类型，`platform/uni_agent_ext/sandbox/tencent_agent_runtime.py` 已打通）
 - [~] **7.3 Agentic 训练配置**
-  - ✅ **脚本已写（v0.3.0，对齐官方 quickstart 接线）**：`uniagent-lighting/scripts/run_grpo_single_agentic_ucloud.sh`——`multi_turn.enable=True` + `agent_loop_manager_class=uni_agent.framework.entry.AgentFrameworkRolloutAdapter` + `custom.agent_framework`（gateway_count=1 / agent_runners.mini_swe_agent.runner_fqn=uni_agent_ext.agents.mini_swe_agent_runner.mini_swe_agent_runner / dispatch=ray_task / max_concurrent_sessions=2 控沙箱成本 / mask_unfinished_episode=False / use_reward_loop_worker=False）+ `reward.reward_manager.name=naive`（TQ rm_scores）+ 续训启用
+  - ✅ **脚本已写（v0.3.0，对齐官方 quickstart 接线）**：`uniagent-lighting/scripts/train/run_grpo_single_agentic_ucloud.sh`——`multi_turn.enable=True` + `agent_loop_manager_class=uni_agent.framework.entry.AgentFrameworkRolloutAdapter` + `custom.agent_framework`（gateway_count=1 / agent_runners.mini_swe_agent.runner_fqn=uni_agent_ext.agents.mini_swe_agent_runner.mini_swe_agent_runner / dispatch=ray_task / max_concurrent_sessions=2 控沙箱成本 / mask_unfinished_episode=False / use_reward_loop_worker=False）+ `reward.reward_manager.name=naive`（TQ rm_scores）+ 续训启用
   - 训练侧沿用定稿：LoRA rank=32 / AdamW fp32 / offload 关 / **fused kernels 关** / 梯度检查点 / batch=2 / n=2 / lr=1e-5
   - 待上机验证：TOOL_PARSER（hermes vs qwen3_coder，需匹配 Qwen2.5-Coder chat template）、agentic 数据 schema、Gateway/隧道、uni_agent_ext 部署
   - ✅ **2026-08-06 深夜实测进度（改造仓 uniagent-lighting 已同步，v0.12~v0.14）**：
@@ -281,7 +281,7 @@ simple-bench 极简实验已回滚）；**用户拍板：agent 不改（保持 m
     - 配置只改 `nnodes=2` + Ray 集群 + hosts，训练参数不变（见 7.6）
 - **成本**：单条远小于 SWE-bench（prompt 短、轮数少），腾讯沙箱按秒计费更低
 - **已完成（2026-08-06，v0.28.x，本地可做部分全部落地）**：
-  - `scripts/make_humanevalfix_data.py`（**新增**，原 `make_agentic_data.py` 保留不动）：
+  - `scripts/data/make_humanevalfix_data.py`（**新增**，原 `make_agentic_data.py` 保留不动）：
     拉 humanevalpack python 子集 → `solution.py`（prompt+buggy_solution）+ `test_solution.py`
     （check(candidate) 转 pytest 单测 `test_all`；`from solution import *` 兼容测试引用
     同文件辅助函数）+ 本地 verify（buggy 必须 rc=1、canonical 必须 rc=0；死循环任务
@@ -290,7 +290,7 @@ simple-bench 极简实验已回滚）；**用户拍板：agent 不改（保持 m
   - runner 新增 `humaneval_fix` 分支（swe_bench 原路径不变）：沙箱 /testbed git 仓库 +
     solution.py 注入（`git add -A` 保证提交时 `git diff` 有输出）+ mini-swe-agent API
     直连（绕开 swebench-single 数据集硬编码）+ reward 阶段写隐藏测试（无测试泄露）
-  - `scripts/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录与 agentic 区分）
+  - `scripts/train/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录与 agentic 区分）
   - v0.28.1：`scripts/run_humanevalfix_local.py`（腾讯 E2B 沙箱 + 百炼 API 本地冒烟采样，
     复用单沙箱逐样本；不依赖 Gateway/训练机）；runner 修复（主线程预导入 tencent_e2b、
     agent_class 默认 default、无 ray 可 import、错误带 traceback）
@@ -443,8 +443,8 @@ simple-bench 极简实验已回滚）；**用户拍板：agent 不改（保持 m
 - **评测结果（方案 A，n=1、温度 0.8、161 条、并发 24、vLLM 参数与训练一致）**：
   - **基座 Qwen3-8B：123/161 = 76.4%**；**final：134/161 = 83.2%**（+6.8pp；
     26 条失败→通过、15 条通过→失败，净 +11；per_test 全为真实 pytest PASS）
-  - 工具链：`scripts/convert_verl_lora_to_hf.py`（verl FSDP2+LoRA → 合并 HF 模型，
-    注意 DTensor 需 `to_local()`、保留 bf16）、`scripts/eval_humanevalfix.py`
+  - 工具链：`scripts/eval/convert_verl_lora_to_hf.py`（verl FSDP2+LoRA → 合并 HF 模型，
+    注意 DTensor 需 `to_local()`、保留 bf16）、`scripts/eval/eval_humanevalfix.py`
     （并发沙箱 n=1 通过率评测；v0.31.4 起真并发 asyncio.gather + return_exceptions）
   - **腾讯沙箱配额**：实测同时存活上限 ~25（50 核 / 每沙箱 2 核），评测并发取 24；
     一次性 gather 建 64 个会触发 `LimitExceeded.CPU`（训练渐进派发所以没触发）
@@ -517,13 +517,13 @@ trainer.save_freq=-1  trainer.test_freq=-1  trainer.total_epochs=1
 | 2 | verl 单卡 fsdp2 加载峰值补丁 | verl `transformer_impl.py`（`work/patch_fsdp2_singlerank.py`，已内嵌 setup 脚本） | 单卡跳过 `module.state_dict()` 拷贝+回灌：加载峰值 28GB→~16GB；多卡分支保留广播逻辑 |
 | 3 | vllm 显存利用率 0.6→0.8 | `run_grpo_smoke_ucloud.sh` | 7B bf16 权重 14.3GB > 0.6×24GB，KV cache 分不到报错 |
 | 4 | 关 Ray OOM 监控 + swap 兜底 | `run_grpo_smoke_ucloud.sh` + 24GB swap（fstab）+ `vm.swappiness=10`（sysctl.conf） | Ray 95% 阈值提前杀进程，swap 根本用不上 |
-| 5 | 数据 schema 补齐 | `scripts/make_smoke_data.py` + `work/data/smoke_*.jsonl` | verl agentic RL 需 `data_source` + `prompt`（消息列表）+ `reward_model.ground_truth`（gold patch）+ `ability` |
+| 5 | 数据 schema 补齐 | `scripts/data/make_smoke_data.py` + `work/data/smoke_*.jsonl` | verl agentic RL 需 `data_source` + `prompt`（消息列表）+ `reward_model.ground_truth`（gold patch）+ `ability` |
 | 6 | 版本链修正 | `setup_ucloud_uniagent.sh` | torch 2.7.1+cu126 / vllm 0.10.1 / transformers 4.57.6；`TransferQueue==0.1.9`；StrEnum+fsdp2 补丁内嵌 |
 
 ### 6.3 关键要点（经验）
 
 1. **版本链**：verl 0.9 传 `logprobs_mode`，只有 vllm≥0.10 支持（0.9.2 报 unrecognized arguments）；vllm 0.10.1 强制 `torch==2.7.1`（PyPI 默认 cu126），不要升 torch 2.8
-   - **多机分支（2026-08-04 定稿）**：多机 GRPO 必须 **torch 2.9.0+cu128 / vllm 0.11.1**（0.10.1 下 tp=4 报 `AssertionError: multi-node MP 需 dp>1 或 vllm≥0.11.1`，dp=2/tp=2 又不认 `--master-addr/--node-rank/--nnodes` → exit 2）；升级脚本 `scripts/upgrade_vllm_0111.sh`；**verl 保持 0.9.0.dev 不降级**
+   - **多机分支（2026-08-04 定稿）**：多机 GRPO 必须 **torch 2.9.0+cu128 / vllm 0.11.1**（0.10.1 下 tp=4 报 `AssertionError: multi-node MP 需 dp>1 或 vllm≥0.11.1`，dp=2/tp=2 又不认 `--master-addr/--node-rank/--nnodes` → exit 2）；升级脚本 `scripts/ops/upgrade_vllm_0111.sh`；**verl 保持 0.9.0.dev 不降级**
 2. **24GB 显存错峰设计成立**：rollout 时 FSDP2 权重在 CPU、vllm 用 0.8×24GB；训练时 vllm `sleep(level=2)` 连权重释放、FSDP2 参数上 GPU（14GB）——两者永不共存
 3. **32GB 内存是瓶颈**：fsdp2 加载峰值修掉后 ~16GB 可加载，但训练步整体（WorkerDict RSS ~28GB + vllm + ray）仍超 32GB → **必须 ≥64GB 内存**；换新机后不再需要 swap
 4. **数据格式**：verl agentic RL 输入 = `data_source` / 消息列表 `prompt` / `reward_model.ground_truth`；漏字段会分别在 agent loop 和 reward 阶段报 `KeyError`
@@ -627,8 +627,8 @@ trainer.save_freq=-1  trainer.test_freq=-1  trainer.total_epochs=1
     Mooncake + 投机不损失质量；**计为平台化训练结果**
   - 产物：models/Qwen3-8B-final-dual-async（合并权重）、
     logs/eval_dual_async_final{,.json,_dir}、25 步轨迹
-  - 脚本：scripts/run_grpo_dual_async_mooncake_ucloud.sh（正式训练）、
-    scripts/eval_dual_async_final.sh（评估）
+  - 脚本：scripts/train/run_grpo_dual_async_mooncake_ucloud.sh（正式训练）、
+    scripts/eval/eval_dual_async_final.sh（评估）
 - **全异步 + TQ/mooncake 调研结论（✅ 2026-08-11，基于本地 verl 78bba31 源码 +
   uni-agent 官方 recipe + TransferQueue 0.1.8 wheel）**：
   - **TQ 已在用**：verl v1 数据流全程走 TQ（trainer_base 无条件 kv_batch_put/get：
@@ -731,7 +731,7 @@ as-adapter LoRA 训练要跑投机必须改 `lora.merge=True`（每步全量合�
   - 加速估算（spec run 25 步实测）：每步 1970s（gen 1064 + update 619 + save 47 +
     杂项 ~240）；colocate_async 重叠后理想 ≈ 1100-1200s → **1.6-1.7x**；
     双机 separate_async + 投机解码预计 1.8-2.2x（官方 8×A100 partial rollout 2.1x）
-  - 脚本已备：`uniagent-lighting/scripts/run_grpo_multinode_async_ucloud.sh`
+  - 脚本已备：`uniagent-lighting/scripts/train/run_grpo_multinode_async_ucloud.sh`
     （v0.35.0），待双机 VPC 网络就绪后上机验证（见上方"双机全异步 GRPO"条目）
 
 - [x] **腾讯沙箱配额提升（✅ 2026-08-11 用户已在控制台提升）**：50 核 → 同时 ~25 沙箱；
@@ -749,7 +749,7 @@ as-adapter LoRA 训练要跑投机必须改 `lora.merge=True`（每步全量合�
 - [ ] **双机全异步 GRPO（2026-08-11 用户定稿：双机网络就绪后第一优先；PD 分离已彻底放弃）**
   - 目标：双机（node1+node2）开启 verl v1 全异步——Trainer 与 rollout 重叠，
     摊平单机 step 内 gen（53%）与 update（33%）的串行瓶颈（理论上限 ~1.8x）
-  - 脚本已备：`uniagent-lighting/scripts/run_grpo_multinode_async_ucloud.sh`（v0.35.0）——
+  - 脚本已备：`uniagent-lighting/scripts/train/run_grpo_multinode_async_ucloud.sh`（v0.35.0）——
     `trainer.v1.trainer_mode=colocate_async`（rollout+trainer 同机重叠，官方 recipe 模式，
     默认）先行；`separate_async`（训练机独立，需非 naive checkpoint engine 权重同步）
     实验性后测；TQ 已全程承载 verl v1 数据流（SimpleStorage 默认）
@@ -855,7 +855,7 @@ as-adapter LoRA 训练要跑投机必须改 `lora.merge=True`（每步全量合�
 > 轨迹 → 云侧 reward → GRPO 1 step，**baseline final 与 spec final 两个权重各测
 > 一遍均通过**（reward 1.0、num_success_sessions=1、save_freq=-1 不保存新权重、
 > models 权重 md5 未变）。组件：`external_agent_runner.py` +
-> `scripts/run_grpo_platform_test_ucloud.sh` + `scripts/platform_local_agent.py`
+> `scripts/train/run_grpo_platform_test_ucloud.sh` + `scripts/platform/platform_local_agent.py`
 > + `work/data/platform_test_train.jsonl`。黑盒正式训练暂停于 5/25（可续训）。
 >
 > **✅ 2026-08-12 平台化定稿（用户拍板）**：平台化脚本**完整化**（v0.40.x 组件即
@@ -869,8 +869,8 @@ as-adapter LoRA 训练要跑投机必须改 `lora.merge=True`（每步全量合�
 > 模型调用（Anthropic）→ 隧道 → 云端 Gateway → token-truth 轨迹（工具调用
 > mcp__sandbox__* mask=1 ↔ 工具结果 mask=0 交替，结构正确）→ 云侧 reward
 > （pytest PASS，reward 1.0）→ GRPO step；权重未动。组件：
-> `scripts/sandbox_mcp_server.py`（手写 JSON-RPC，mcp 2.0 拆包 FastMCP 的坑已绕开）
-> + `scripts/platform_local_claude.py`。
+> `scripts/platform/sandbox_mcp_server.py`（手写 JSON-RPC，mcp 2.0 拆包 FastMCP 的坑已绕开）
+> + `scripts/platform/platform_local_claude.py`。
 >
 > **2026-08-12 黑盒续训决定（用户拍板）**：黑盒正式训练用**沙箱内形态**续跑
 > （2026-08-12 10:39 重启，resume 从 global_step_6 继续 6/25 → 25/25，后台运行），
@@ -926,7 +926,7 @@ as-adapter LoRA 训练要跑投机必须改 `lora.merge=True`（每步全量合�
 
 - 工具：**cc-connect v1.4.1**（开源 Go 桥接，`npm install -g cc-connect`；GitHub: chenhg5/cc-connect）。Agent=Codex（底层 `codex exec --json`，cc-connect 已带 `--skip-git-repo-check`），Platform=飞书（**WebSocket 长连接，无需公网 IP/域名**）。
 - 配置：`~/.cc-connect/config.toml`（chmod 600；app_secret 不落 TODO）：project `swe-rl`、agent codex（work_dir=`/home/zhenglianchi/swe-rl-local`、mode=auto-edit）、platform feishu（`enable_feishu_card=false` 纯文本回复）。
-- 常驻：systemd 用户服务 `cc-connect.service`（`~/.config/systemd/user/`，开机自启 + 崩溃自动重启；PATH 需含 `~/.npm-global/bin`）。启停：`scripts/cc_connect.sh {start|stop|status|log}`；日志：`journalctl --user -u cc-connect`。
+- 常驻：systemd 用户服务 `cc-connect.service`（`~/.config/systemd/user/`，开机自启 + 崩溃自动重启；PATH 需含 `~/.npm-global/bin`）。启停：`scripts/ops/cc_connect.sh {start|stop|status|log}`；日志：`journalctl --user -u cc-connect`。
 - 验证（✅）：bot 识别 open_id=`ou_64f087f9458b178ed9fb02a42ba6a9d1`；`wss://msg-frontier.feishu.cn` 长连接建立；`codex exec` 实测返回 OK（约 13k token）。系统提示：飞书里搜机器人名字即可私聊使用。
 - 安全：`allow_from` 默认 `*`（任何能搜到 bot 的人都能使唤），建议飞书里发 `/whoami` 后把 `allow_from` 限定为自己的 open_id；`admin_from` 未设 → `/shell` 等特权命令默认禁用（需要时再开）；codex exec 无审批 IPC，auto-edit = 工作区可写 + 永不审批，yolo 更危险勿用。
 - 待办：如需交互卡片（按钮审批/进度卡片），飞书开放平台补订阅 `card.action.trigger` 回调并把 `enable_feishu_card` 改回 true；升级用 `cc-connect update`。

@@ -17,7 +17,7 @@
 
 ```bash
 cd ~ && curl -fsSL -o install_ucloud_from_scratch.sh \
-  https://raw.githubusercontent.com/zhenglianchi/uniagent-lighting/main/scripts/install_ucloud_from_scratch.sh
+  https://raw.githubusercontent.com/zhenglianchi/uniagent-lighting/main/scripts/ops/install_ucloud_from_scratch.sh
 bash install_ucloud_from_scratch.sh
 ```
 
@@ -39,9 +39,14 @@ clone uni-agent（含 verl 子模块）、verl 补丁（见 §3）、模型下�
 # ========== 第 1 步：环境与代码就绪 ==========
 git clone https://github.com/zhenglianchi/uniagent-lighting.git
 cd ~/uniagent-lighting
-# 把 scripts/ 部署到训练工作目录（/home/ubuntu/swe-rl）并应用补丁：
-#   - fix_strenum_ucloud.sh（py3.10 兼容）
-#   - patch_verl_ipc_cpu.py（IPC 大权重）
+# 把 scripts/ 各子目录脚本拷贝到训练工作目录 /home/ubuntu/swe-rl（保持扁平：
+# 脚本之间按扁平相对路径互调；子目录说明见 scripts/README.md）：
+cp scripts/train/*.sh scripts/eval/*.sh scripts/data/*.py scripts/sampling/*.sh \
+   scripts/platform/*.py scripts/sandbox/*.py scripts/sandbox/*.sh \
+   scripts/ops/*.sh scripts/ops/*.py /home/ubuntu/swe-rl/
+# 然后应用补丁：
+#   - scripts/ops/fix_strenum_ucloud.sh（py3.10 兼容）
+#   - scripts/ops/patch_verl_ipc_cpu.py（IPC 大权重）
 #   - patches/*.patch（verl/uni-agent/TQ 全部补丁，见 §3）
 # 确认版本链：torch 2.9.0+cu128 / vllm 0.11.1 / verl 0.9.0.dev /
 #   ray 2.56.1 / TransferQueue 0.1.9 / mooncake-transfer-engine 0.3.12.post1
@@ -51,7 +56,7 @@ cd ~/uniagent-lighting
 #   TENCENT_SANDBOX_TOKEN（ark_*）、TENCENT_SANDBOX_E2B_TOKEN（e2b_*）、
 #   TENCENT_SECRET_ID / TENCENT_SECRET_KEY
 # 并用 Cloud API 创建沙箱工具（code-interpreter-v1 / swebench-v1），
-# 或确认控制台已有（脚本 scripts/tencent_create_sandbox_tool.py）
+# 或确认控制台已有（脚本 scripts/sandbox/tencent_create_sandbox_tool.py）
 
 # ========== 第 3 步：冒烟验证（单机） ==========
 cd /home/ubuntu/swe-rl
@@ -65,7 +70,7 @@ bash run_grpo_humanevalfix_ucloud.sh          # 白盒 baseline（train161 / 5 e
 
 # ========== 第 5 步：双机全异步 + Mooncake（推荐正式形态） ==========
 # node1：Ray head + Mooncake master；node2：ray join（见 §4 启动顺序 + §5.5）
-source ~/uniagent-lighting/scripts/bootstrap_ray_env.sh   # 必须 ray start 前
+source ~/uniagent-lighting/scripts/ops/bootstrap_ray_env.sh   # 必须 ray start 前
 bash run_grpo_dual_async_mooncake_ucloud.sh    # separate_async + Mooncake + EAGLE-3
 
 # ========== 第 6 步：评估 ==========
@@ -78,7 +83,7 @@ bash eval_dual_async_final.sh                  # 合并 LoRA → vLLM → 161 �
 | 步骤 | 通过标志 |
 |---|---|
 | 1 环境 | `vllm 0.11.1`、`ray 2.56.1`、`mooncake-transfer-engine 0.3.12.post1` 可 import |
-| 2 沙箱 | `scripts/run_tencent_sandbox_demo.py` 最小连通（E2B attach 成功） |
+| 2 沙箱 | `scripts/sandbox/run_tencent_sandbox_demo.py` 最小连通（E2B attach 成功） |
 | 3 冒烟 | 会话轨迹落盘 + trainer step 完成 + `num_success_sessions>0` |
 | 4 单机 | 25-26 步完成、checkpoint 保存、评估 80%+ |
 | 5 双机 | 双节点 Ray `ray status` 2 GPU、25 步 0 硬错误、磁盘 ≤85% |
@@ -115,7 +120,7 @@ bash eval_dual_async_final.sh                  # 合并 LoRA → vLLM → 161 �
 
 ```bash
 # 1) 沙箱/腾讯云凭据（必须在 ray start 前，Ray worker 需要）
-source /home/ubuntu/uniagent-lighting/scripts/bootstrap_ray_env.sh
+source /home/ubuntu/uniagent-lighting/scripts/ops/bootstrap_ray_env.sh
 
 # 2) Ray（带 GPU 资源；如需跨节点先配好 hosts/SSH 互信）
 /home/ubuntu/miniforge3/envs/swe-rl/bin/ray stop --force
@@ -123,7 +128,7 @@ source /home/ubuntu/uniagent-lighting/scripts/bootstrap_ray_env.sh
 # 双机：node2 用 --address=node1内网IP:6379 加入
 
 # 3) Mooncake master（node1，独立进程，不受 ray stop 影响）
-# 见 scripts/run_grpo_dual_async_mooncake_ucloud.sh 内 MOONCAKE_AUTO_INIT 逻辑
+# 见 scripts/train/run_grpo_dual_async_mooncake_ucloud.sh 内 MOONCAKE_AUTO_INIT 逻辑
 
 # 4) 跑训练脚本（脚本内的 export 仅训练进程可见）
 cd /home/ubuntu/swe-rl && bash run_grpo_xxx.sh
@@ -216,14 +221,14 @@ Gateway → 轨迹 → TQ/Mooncake → 云端训练（node1 trainer + node2 独�
 **前置**（两台均执行）：
 ```bash
 # hosts / SSH 互信（新 IP 需先改 fix_multinode_hosts.sh 内 NODE1_IP/NODE2_IP）
-source /home/ubuntu/uniagent-lighting/scripts/bootstrap_ray_env.sh
-bash /home/ubuntu/uniagent-lighting/scripts/fix_multinode_hosts.sh
+source /home/ubuntu/uniagent-lighting/scripts/ops/bootstrap_ray_env.sh
+bash /home/ubuntu/uniagent-lighting/scripts/ops/fix_multinode_hosts.sh
 
 # node1：Ray head + Mooncake master
 /home/ubuntu/miniforge3/envs/swe-rl/bin/ray stop --force
 /home/ubuntu/miniforge3/envs/swe-rl/bin/ray start --head --port=6379 --num-gpus=1
 # node2 加入：ray start --address=<node1内网>:6379 --num-gpus=1
-# Mooncake master（node1，独立进程）见 scripts/run_grpo_dual_async_mooncake_ucloud.sh 注释
+# Mooncake master（node1，独立进程）见 scripts/train/run_grpo_dual_async_mooncake_ucloud.sh 注释
 ```
 
 **正式训练**（node1 后台）：
@@ -358,7 +363,7 @@ MODEL=/home/ubuntu/models/Qwen3-8B-final \
   setsid nohup bash run_grpo_platform_test_ucloud.sh > grpo_platform.log 2>&1 < /dev/null &
 
 # 本地（WSL）——读任务、起隧道、跑 agent、回传完成标记
-PYTHONPATH=... python uniagent-lighting/scripts/platform_local_agent.py --wait
+PYTHONPATH=... python uniagent-lighting/scripts/platform/platform_local_agent.py --wait
 ```
 
 ## 6. 评估
@@ -440,8 +445,8 @@ python eval_humanevalfix.py \
 
 ### 9.3 复现要点
 
-- 正式训练：`scripts/run_grpo_dual_async_mooncake_ucloud.sh`（双机
+- 正式训练：`scripts/train/run_grpo_dual_async_mooncake_ucloud.sh`（双机
   separate_async + Mooncake + EAGLE-3 + 白盒，配置见训练评测分析 §8）
-- 评估：`scripts/eval_dual_async_final.sh`（合并 + vLLM serve + 161 条全量）
-- 双机环境：`scripts/bootstrap_ray_env.sh`（ray start 前环境变量）+
-  `scripts/fix_multinode_hosts.sh`（内网映射，新 IP 需先改脚本）
+- 评估：`scripts/eval/eval_dual_async_final.sh`（合并 + vLLM serve + 161 条全量）
+- 双机环境：`scripts/ops/bootstrap_ray_env.sh`（ray start 前环境变量）+
+  `scripts/ops/fix_multinode_hosts.sh`（内网映射，新 IP 需先改脚本）

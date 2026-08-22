@@ -9,7 +9,7 @@
   vllm serve /home/ubuntu/models/Qwen3-8B \\
       --served-model-name qwen3-8b-base --port 8001 \\
       --enable-auto-tool-choice --tool-call-parser hermes --gpu-memory-utilization 0.75
-  python scripts/eval_humanevalfix.py \\
+  python scripts/eval/eval_humanevalfix.py \\
       --base-url http://127.0.0.1:8001/v1 --model qwen3-8b-base \\
       --data work/data/humanevalfix_train161.jsonl --concurrency 16 \\
       --out work/eval/base.json

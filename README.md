@@ -144,25 +144,25 @@ git clone https://github.com/zhenglianchi/uniagent-lighting.git
 cd uniagent-lighting
 
 # 2. 部署到训练机（见 docs/deployment.md，含裸机/镜像恢复两种路径）
-bash scripts/install_ucloud_from_scratch.sh   # 或恢复镜像后执行补丁
+bash scripts/ops/install_ucloud_from_scratch.sh   # 或恢复镜像后执行补丁
 
 # 3. 冒烟验证（单机，2 样本 × n2）
-bash scripts/run_grpo_single_agentic_ucloud.sh
+bash scripts/train/run_grpo_single_agentic_ucloud.sh
 
 # 4. 正式训练（单机白盒，train161 / 5 epoch）
-bash scripts/run_grpo_humanevalfix_ucloud.sh
+bash scripts/train/run_grpo_humanevalfix_ucloud.sh
 
 # 5. 双机全异步 + Mooncake（trainer node1 + rollout node2）
-source scripts/bootstrap_ray_env.sh           # ray start 前加载环境变量
-bash scripts/run_grpo_dual_async_mooncake_ucloud.sh
+source scripts/ops/bootstrap_ray_env.sh           # ray start 前加载环境变量
+bash scripts/train/run_grpo_dual_async_mooncake_ucloud.sh
 
 # 6. 评估
-bash scripts/eval_dual_async_final.sh          # 合并 LoRA + vLLM + 161 条全量
+bash scripts/eval/eval_dual_async_final.sh          # 合并 LoRA + vLLM + 161 条全量
 ```
 
 > ⚠️ **环境变量陷阱**：Ray worker 的环境变量在 `ray start` 时固定，不继承训练
 > 脚本内的 export。`E2B_API_KEY` / `E2B_DOMAIN` / `GATEWAY_PORT` 必须在
-> `ray start` **之前** export（`scripts/bootstrap_ray_env.sh` 一键完成），否则
+> `ray start` **之前** export（`scripts/ops/bootstrap_ray_env.sh` 一键完成），否则
 > agent 起沙箱报 `AuthenticationException`。
 
 ## 安装（从裸机）
@@ -199,8 +199,8 @@ bash scripts/eval_dual_async_final.sh          # 合并 LoRA + vLLM + 161 条全
 
 ## 评测
 
-- `scripts/eval_humanevalfix.py`：161 条全量 agent 评测（真实 pytest reward）
-- `scripts/eval_spec_final.sh` / `scripts/eval_dual_async_final.sh`：
+- `scripts/eval/eval_humanevalfix.py`：161 条全量 agent 评测（真实 pytest reward）
+- `scripts/eval/eval_spec_final.sh` / `scripts/eval/eval_dual_async_final.sh`：
   合并 LoRA → vLLM serve → 全量评估 + 对比输出
 - 评估口径统一为 n=1 / temp 0.8，与训练同批次数据
 
@@ -215,7 +215,8 @@ config/               # 采样与本地模型配置（mini_aliyun / tencent_sweb
 vendor/uni-agent/     # 侵入式修改过的官方 uni-agent（b139419）+ verl（fc6b33c）源码，可直接 debug
 mini-swe-agent/       # 采样 harness（vendored，含 tencent_e2b 扩展，对应 patches/tencent_e2b.py）
 uni_agent_ext/        # uni-agent 扩展包（腾讯沙箱后端 / 白盒/黑盒/外部三套 runner）
-scripts/              # 数据构建 / 训练 / 评测 / 平台化 / 运维（含 bootstrap_ray_env）
+scripts/              # 按功能分子目录：train / eval / data / sampling / platform /
+                      #   sandbox / ops / archive（索引见 scripts/README.md）
 patches/              # verl / uni-agent / TQ 补丁 + 幂等部署脚本（对应 23 项源码修改，可复现重建）
 docs/                 # 架构 / 部署 / 训练评测分析 / 补丁汇总 / 简历亮点
 work/logs/            # 训练轨迹与日志归档（原始轨迹已解压，可读）：
@@ -250,7 +251,7 @@ work/data/            # 数据集与脚本
    `_trajectory_to_tq_field_and_tag`（轨迹如何变成 verl 训练样本）
 4. `vendor/uni-agent/verl/verl/trainer/ppo/v1/trainer_base.py` +
    `padding_utils.py`（verl 如何消费轨迹）
-5. 实战：`python scripts/analyze_trajectory.py <会话目录>` 分析一条真实轨迹
+5. 实战：`python scripts/eval/analyze_trajectory.py <会话目录>` 分析一条真实轨迹
    （轨迹位置见「仓库结构」work/logs/）
 
 ## 已知问题与修复

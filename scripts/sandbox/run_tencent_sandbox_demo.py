@@ -2,7 +2,7 @@
 """用 uni-agent 官方 sandbox demo 验证腾讯云沙箱后端。
 
 用法（swe-rl 环境）：
-    python scripts/run_tencent_sandbox_demo.py [--template code-interpreter-v1]
+    python scripts/sandbox/run_tencent_sandbox_demo.py [--template code-interpreter-v1]
 
 作用：
 1. 从 work/tencent_sandbox.env 加载 E2B_DOMAIN / E2B_API_KEY

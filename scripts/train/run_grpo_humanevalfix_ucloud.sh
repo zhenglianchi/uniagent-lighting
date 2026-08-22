@@ -3,7 +3,7 @@
 # 保留在 run_grpo_single_agentic_ucloud.sh，本脚本只改数据/实验名/checkpoint 目录）。
 #
 # 前置：
-#   1) 数据：scripts/make_humanevalfix_data.py 生成的 humanevalfix_train/val.jsonl
+#   1) 数据：scripts/data/make_humanevalfix_data.py 生成的 humanevalfix_train/val.jsonl
 #      （沙箱预置 /testbed/solution.py，隐藏测试只在 reward 阶段注入，无测试泄露）
 #   2) uni_agent_ext 包已放到训练机 PYTHONPATH（runner 已支持 humaneval_fix 任务类型）
 #   3) 腾讯沙箱凭据环境变量（work/tencent_sandbox.env）

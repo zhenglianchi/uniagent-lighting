@@ -10,7 +10,7 @@
 
 用法（WSL，swe-rl 环境；训练先启动，等 runner 写好 task.json）：
   PYTHONPATH=$PWD/vendor/uni-agent:$PWD \
-  python scripts/platform_local_agent.py --wait --timeout 1800
+  python scripts/platform/platform_local_agent.py --wait --timeout 1800
 """
 
 from __future__ import annotations

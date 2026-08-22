@@ -7,7 +7,7 @@
 # `AuthenticationException: API key is required`，全部会话失败。
 #
 # 用法（node1 / node2 相同，必须在 ray start 之前）：
-#   source scripts/bootstrap_ray_env.sh
+#   source scripts/ops/bootstrap_ray_env.sh
 #   ray stop --force
 #   ray start --head --port=6379 --num-gpus=1        # node1
 #   ray start --address=node1内网IP:6379 --num-gpus=1  # node2 加入

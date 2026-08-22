@@ -12,8 +12,8 @@
 上机前需用真实训练配置实测对齐。
 
 用法：
-  conda run -n swe-rl python scripts/make_agentic_data.py          # 默认 2 条 train + 1 条 val
-  conda run -n swe-rl python scripts/make_agentic_data.py --train-num 40 --val-num 10
+  conda run -n swe-rl python scripts/data/make_agentic_data.py          # 默认 2 条 train + 1 条 val
+  conda run -n swe-rl python scripts/data/make_agentic_data.py --train-num 40 --val-num 10
 """
 
 from __future__ import annotations

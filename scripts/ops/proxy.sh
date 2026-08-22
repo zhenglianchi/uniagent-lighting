@@ -4,8 +4,8 @@
 # 前提：Clash Verge 已开启"允许局域网连接"，
 #       否则 Windows 只监听 127.0.0.1，WSL2(NAT) 无法访问。
 # 用法：
-#   source scripts/proxy.sh      # 只定义函数，不自动开启
-#   source scripts/proxy.sh on   # 定义并立即开启
+#   source scripts/ops/proxy.sh      # 只定义函数，不自动开启
+#   source scripts/ops/proxy.sh on   # 定义并立即开启
 #   proxy_on                     # 开启（自动解析宿主 IP）
 #   proxy_docker                 # 给 docker daemon 配代理并重启（需 sudo）
 #   proxy_off                    # 关闭

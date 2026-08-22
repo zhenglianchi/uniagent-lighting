@@ -3,14 +3,14 @@
 #
 # 用法：
 #   # 测试期：只跑 train.jsonl 里前 1 个实例，step_limit=30，打包但不实际上传
-#   conda run -n swe-rl bash scripts/start_sampling.sh --limit 1 --dry-run
+#   conda run -n swe-rl bash scripts/sampling/start_sampling.sh --limit 1 --dry-run
 #
 #   # 正式批量：跑前 40 个实例，step_limit=40，跑完删镜像，真实上传
-#   conda run -n swe-rl bash scripts/start_sampling.sh --limit 40 \
+#   conda run -n swe-rl bash scripts/sampling/start_sampling.sh --limit 40 \
 #       --step-limit 40 --rm-image
 #
 #   # 单实例指定 ID，跳过预拉（镜像已在本地）
-#   conda run -n swe-rl bash scripts/start_sampling.sh \
+#   conda run -n swe-rl bash scripts/sampling/start_sampling.sh \
 #       --instance sympy__sympy-13043 --no-pull --dry-run
 #
 # 关键参数：
@@ -152,10 +152,10 @@ echo "==== 全部采样完成 ===="
 if [[ $UPLOAD -eq 1 ]]; then
   echo "调用上传器（--input-dir $INSTANCE_DIR）..."
   if [[ $DRY_RUN -eq 1 ]]; then
-    conda run -n swe-rl python "$ROOT/scripts/trajectory_uploader.py" \
+    conda run -n swe-rl python "$ROOT/scripts/sampling/trajectory_uploader.py" \
       --input-dir "$INSTANCE_DIR" --dry-run
   else
-    conda run -n swe-rl python "$ROOT/scripts/trajectory_uploader.py" \
+    conda run -n swe-rl python "$ROOT/scripts/sampling/trajectory_uploader.py" \
       --input-dir "$INSTANCE_DIR"
   fi
 else

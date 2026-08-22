@@ -4,7 +4,7 @@
 # 新权重**（绝不覆盖 models/Qwen3-8B-final* 与 checkpoints/humanevalfix*，红线）。
 #
 # 形态：runner = external_agent_runner（建沙箱 + 暴露任务 + 等本地 agent done 标记 +
-# 云侧 reward）；本地侧 scripts/platform_local_agent.py（paramiko 隧道 + 跑
+# 云侧 reward）；本地侧 scripts/platform/platform_local_agent.py（paramiko 隧道 + 跑
 # mini-swe-agent + touch done）。
 #
 # 用法（训练机 node1，后台）：
@@ -15,7 +15,7 @@
 #   # spec final 权重（MODEL 换 final-spec + 独立目录）
 #
 # 本地（WSL，训练起后等 task.json 出现）：
-#   python scripts/platform_local_agent.py --wait --timeout 1800
+#   python scripts/platform/platform_local_agent.py --wait --timeout 1800
 set -xeuo pipefail
 
 export CUDA_DEVICE_MAX_CONNECTIONS=1

@@ -6,9 +6,9 @@
   UCLOUD2_HOST ...
 
 用法：
-  conda run -n swe-rl python scripts/ssh_ucloud.py 'nvidia-smi'
-  conda run -n swe-rl python scripts/ssh_ucloud.py --node 2 'hostname'
-  conda run -n swe-rl python scripts/ssh_ucloud.py --sftp-local f /root/
+  conda run -n swe-rl python scripts/ops/ssh_ucloud.py 'nvidia-smi'
+  conda run -n swe-rl python scripts/ops/ssh_ucloud.py --node 2 'hostname'
+  conda run -n swe-rl python scripts/ops/ssh_ucloud.py --sftp-local f /root/
 """
 
 import argparse

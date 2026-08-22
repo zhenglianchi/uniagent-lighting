@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 在腾讯云沙箱上跑一条真实 SWE-bench 轨迹（mini-swe-agent + tencent_e2b 环境）
 #
-# 用法：bash scripts/run_tencent_swebench_single.sh [instance_id]
+# 用法：bash scripts/sandbox/run_tencent_swebench_single.sh [instance_id]
 #   默认 instance_id=django__django-13447（SWE-Bench full/test）
 set -euo pipefail
 

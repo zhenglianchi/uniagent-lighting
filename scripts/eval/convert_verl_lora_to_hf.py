@@ -10,7 +10,7 @@ verl 保存的 ``model_world_size_1_rank_0.pt`` 是 PEFT 风格 state dict：
 （config + tokenizer 从基座模型目录复制，权重转 safetensors）。
 
 用法：
-  python scripts/convert_verl_lora_to_hf.py \\
+  python scripts/eval/convert_verl_lora_to_hf.py \\
       --ckpt /home/ubuntu/swe-rl/checkpoints/humanevalfix/final/actor/model_world_size_1_rank_0.pt \\
       --base /home/ubuntu/models/Qwen3-8B \\
       --out /home/ubuntu/models/Qwen3-8B-final

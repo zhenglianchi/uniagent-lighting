@@ -9,14 +9,14 @@ train.jsonl / val.jsonl（冒烟数据）。
 
 用法示例：
   # 默认：train 40 条 + val 10 条，随机种子 42
-  conda run -n swe-rl python scripts/make_smoke_data.py
+  conda run -n swe-rl python scripts/data/make_smoke_data.py
 
   # 正式训练：用 Lite 全量或更大子集
-  conda run -n swe-rl python scripts/make_smoke_data.py \
+  conda run -n swe-rl python scripts/data/make_smoke_data.py \
       --train-num 200 --val-num 50 --seed 42
 
   # 只抽 sympy / astropy 仓库、且测试量 >= 2 的样本
-  conda run -n swe-rl python scripts/make_smoke_data.py \
+  conda run -n swe-rl python scripts/data/make_smoke_data.py \
       --repos sympy astropy --min-tests 2
 """
 

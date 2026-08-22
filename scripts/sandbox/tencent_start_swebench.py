@@ -2,7 +2,7 @@
 """启动腾讯云 SWE-bench 沙箱实例（系统镜像仓库，无需推 TCR）。
 
 用法（swe-rl 环境）：
-    python scripts/tencent_start_swebench.py swebench/sweb.eval.x86_64.django_1776_django-13447:latest
+    python scripts/sandbox/tencent_start_swebench.py swebench/sweb.eval.x86_64.django_1776_django-13447:latest
 
 流程：
 1. StartSandboxInstance + CustomConfiguration.Image=<镜像>（ImageRegistryType=system，

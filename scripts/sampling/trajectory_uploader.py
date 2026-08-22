@@ -8,18 +8,18 @@
   - 扫描采样产物目录（*.traj.json），按批次合并为 JSONL 并用 zstd 压缩；
   - 断点续传：状态文件记录已成功上传的轨迹（按文件路径+mtime 指纹），
     失败批次不会标记，下次重跑自动补齐；
-  - SFTP 直传：凭据读取 work/ucloud.env（与 scripts/ssh_ucloud.py 同源）；
+  - SFTP 直传：凭据读取 work/ucloud.env（与 scripts/ops/ssh_ucloud.py 同源）；
     --dry-run 时只打包不上传。
 
 用法：
   # 只打包，预览将上传哪些批次（推荐先跑这个）
-  conda run -n swe-rl python scripts/trajectory_uploader.py --dry-run
+  conda run -n swe-rl python scripts/sampling/trajectory_uploader.py --dry-run
 
   # 打包并上传所有未上传轨迹到 UCloud node1
-  conda run -n swe-rl python scripts/trajectory_uploader.py
+  conda run -n swe-rl python scripts/sampling/trajectory_uploader.py
 
   # 指定轨迹目录 / 批大小 / 目标机器
-  conda run -n swe-rl python scripts/trajectory_uploader.py \
+  conda run -n swe-rl python scripts/sampling/trajectory_uploader.py \
       --input-dir work/swebench --batch-size 8 --node 1
 """
 

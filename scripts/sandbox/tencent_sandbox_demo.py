@@ -2,7 +2,7 @@
 """腾讯云 Agent Runtime（Agent Sandbox）最小连通验证脚本。
 
 用法（在 swe-rl conda 环境中）：
-    python scripts/tencent_sandbox_demo.py [template_name]
+    python scripts/sandbox/tencent_sandbox_demo.py [template_name]
 
 - 默认 template = code-interpreter-v1（须先在腾讯云控制台创建同名"沙箱工具"）
 - 凭据从 work/tencent_sandbox.env 加载（E2B 兼容路径：e2b_* Key）

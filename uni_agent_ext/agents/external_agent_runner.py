@@ -10,7 +10,7 @@ agent 跑在**用户侧/本地**，云端只提供：Gateway（模型端点 + to
 4. 检测到 done → 云侧 reward（沙箱 pytest）→ POST reward_info
 5. 清理沙箱与标记文件
 
-本地侧配套：``scripts/platform_local_agent.py``（WSL：paramiko 隧道 + 读 task.json +
+本地侧配套：``scripts/platform/platform_local_agent.py``（WSL：paramiko 隧道 + 读 task.json +
 跑 mini-swe-agent + 创建 done 标记）。
 """
 

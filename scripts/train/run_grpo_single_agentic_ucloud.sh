@@ -9,7 +9,7 @@
 #   runner 换成我们自己的 uni_agent_ext.agents.mini_swe_agent_runner。
 #
 # 前置：
-#   1) 数据：scripts/make_agentic_data.py 生成的 agentic_train/val.jsonl（含 tools_kwargs）
+#   1) 数据：scripts/data/make_agentic_data.py 生成的 agentic_train/val.jsonl（含 tools_kwargs）
 #   2) uni_agent_ext 包已放到训练机 PYTHONPATH（部署步骤）
 #   3) 沙箱/本地 agent 访问 Gateway：SSH 隧道或公网放行（docs/vllm_access.md）
 #   4) 腾讯沙箱凭据环境变量（work/tencent_sandbox.env）
