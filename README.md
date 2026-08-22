@@ -146,8 +146,9 @@ cd uniagent-lighting
 # 2. 部署到训练机（见 docs/deployment.md，含裸机/镜像恢复两种路径）
 bash scripts/ops/install_ucloud_from_scratch.sh   # 或恢复镜像后执行补丁
 
-# 3. 冒烟验证（单机，2 样本 × n2）
-bash scripts/train/run_grpo_single_agentic_ucloud.sh
+# 3. 冒烟验证（单机，小样本：agent→Gateway→沙箱→训练全链路）
+TRAIN_FILE=work/data/humanevalfix_train3.jsonl TRAIN_BATCH_SIZE=3 PPO_MINI_BATCH=3 \
+  PPO_MICRO_BATCH=1 bash scripts/train/run_grpo_humanevalfix_ucloud.sh
 
 # 4. 正式训练（单机白盒，train161 / 5 epoch）
 bash scripts/train/run_grpo_humanevalfix_ucloud.sh
@@ -186,12 +187,9 @@ bash scripts/eval/eval_dual_async_final.sh          # 合并 LoRA + vLLM + 161 �
 |---|---|---|---|
 | 冒烟（纯 verl） | `run_grpo_smoke_ucloud.sh` | 链路验证 | batch2 / n=2 |
 | 单机 LoRA | `run_grpo_single_lora_ucloud.sh` | LoRA + vLLM 共存 | rank=32 |
-| agentic 单机 | `run_grpo_single_agentic_ucloud.sh` | 完整 agent 链路 | step_limit=60 |
 | 全样本（白盒）* | `run_grpo_humanevalfix_ucloud.sh` | train161 / 5 epoch | batch32 / 并发64 |
-| 投机解码 * | `spec_train_run.sh` | EAGLE-3 + LoRA merge | `LORA_MERGE=1` `SPEC_ON=1` |
 | 黑盒全样本 * | `run_grpo_humanevalfix_blackbox_ucloud.sh` | Claude Code harness | max_turns=60 |
 | 双机全异步 * | `run_grpo_dual_async_mooncake_ucloud.sh` | **separate_async + Mooncake + EAGLE-3（正式）** | 白盒 / batch32 / util 0.8 |
-| 双机 colocate * | `run_grpo_multinode_async_ucloud.sh` | 对照实验 | colocate_async |
 | 平台化测试（对外主线） | `run_grpo_platform_test_ucloud.sh` | 用户侧 agent 单步闭环 | save_freq=-1 |
 
 \* 内部训练形态：runner 部署在训练机侧，链路与平台化形态一致（Gateway 轨迹

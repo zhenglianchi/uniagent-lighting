@@ -2,6 +2,19 @@
 
 本项目约定：**每完成一项任务 commit 一次**，按语义化版本递增。
 
+## v0.56.1（2026-08-22）
+
+- **删除弃用训练脚本（不用于正式训练）**：
+  - `scripts/train/run_grpo_single_agentic_ucloud.sh`（SWE-bench 初版，被
+    `run_grpo_humanevalfix_ucloud.sh` 取代）
+  - `scripts/train/run_grpo_multinode_async_ucloud.sh`（colocate_async 对照，
+    不稳定，不作为正式架构）
+  - `scripts/train/spec_train_run.sh`（一次性投机 run，投机已并入双机正式脚本）
+  - 同步更新 README / docs/deployment.md（冒烟改为 humanevalfix 小样本）/
+    scripts/README.md / AGENTS.md / docs/修改与补丁汇总 / archive README
+  - 保留链路冒烟（`run_grpo_smoke_ucloud.sh`、`run_grpo_single_lora_ucloud.sh`）
+    与平台化验证（`run_grpo_platform_test_ucloud.sh`）脚本
+
 ## v0.56.0（2026-08-22）
 
 - **scripts 按功能分子目录整理**：

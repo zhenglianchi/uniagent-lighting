@@ -4,7 +4,7 @@
 
 | 子目录 | 用途 | 脚本 |
 |---|---|---|
-| `train/` | 训练启动与编排 | `run_grpo_*_ucloud.sh`、`run_dual_formal_chain.sh`、`spec_train_run.sh` |
+| `train/` | 训练启动与编排 | `run_grpo_*_ucloud.sh`、`run_dual_formal_chain.sh`（正式） |
 | `eval/` | 评测与产物分析 | `eval_*.sh`、`eval_humanevalfix.py`、`convert_verl_lora_to_hf.py`、`collect_grpo_stats.py`、`analyze_trajectory.py`、`reward_smoke.py` |
 | `data/` | 数据集构建 | `make_*_data.py` |
 | `sampling/` | 采样流水线 | `start_sampling.sh`、`trajectory_uploader.py` |

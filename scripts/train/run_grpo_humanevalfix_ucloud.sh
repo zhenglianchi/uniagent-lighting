@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 单机 agentic GRPO 训练：**HumanEvalFix 数据集**（2026-08-06 新增，原始 SWE-bench 方案
-# 保留在 run_grpo_single_agentic_ucloud.sh，本脚本只改数据/实验名/checkpoint 目录）。
+# 单机 agentic GRPO 训练：**HumanEvalFix 数据集**（2026-08-06 新增；原始 SWE-bench
+# 方案脚本已删除 2026-08-22，被本脚本取代）。
 #
 # 前置：
 #   1) 数据：scripts/data/make_humanevalfix_data.py 生成的 humanevalfix_train/val.jsonl

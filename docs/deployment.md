@@ -60,12 +60,12 @@ cp scripts/train/*.sh scripts/eval/*.sh scripts/data/*.py scripts/sampling/*.sh 
 
 # ========== 第 3 步：冒烟验证（单机） ==========
 cd /home/ubuntu/swe-rl
-bash run_grpo_single_agentic_ucloud.sh        # 1 个样本 × n2，验证 agent→Gateway→沙箱→训练全链路
+TRAIN_FILE=/home/ubuntu/swe-rl/data/humanevalfix_train3.jsonl TRAIN_BATCH_SIZE=3 \
+  PPO_MINI_BATCH=3 PPO_MICRO_BATCH=1 bash run_grpo_humanevalfix_ucloud.sh  # 小样本 agent 链路冒烟
 # 检查：轨迹目录生成、reward 正确、checkpoint 保存、无异常退出
 
 # ========== 第 4 步：单机正式训练（白盒 / 黑盒 / 投机） ==========
 bash run_grpo_humanevalfix_ucloud.sh          # 白盒 baseline（train161 / 5 epoch / 26 步）
-# spec_train_run.sh                            # 白盒 + EAGLE-3（25 步）
 # run_grpo_humanevalfix_blackbox_ucloud.sh     # 黑盒 Claude Code（25 步）
 
 # ========== 第 5 步：双机全异步 + Mooncake（推荐正式形态） ==========
@@ -194,9 +194,9 @@ bash /home/ubuntu/swe-rl/run_grpo_smoke_ucloud.sh 2>&1 | tee grpo_smoke.log
 > 平台化主线形态（用户侧 agent）见 §5.4 / §5.5。
 
 ```bash
-# 白盒 baseline / spec（环境变量可覆盖）
+# 白盒 baseline（环境变量可覆盖）
 bash /home/ubuntu/swe-rl/run_grpo_humanevalfix_ucloud.sh 2>&1 | tee grpo_humanevalfix.log
-SPEC_ON=1 LORA_MERGE=1 bash /home/ubuntu/swe-rl/spec_train_run.sh 2>&1 | tee grpo_spec.log
+# 投机解码已并入双机正式脚本（run_grpo_dual_async_mooncake_ucloud.sh，SPEC_ON=1）
 
 # 黑盒（Claude Code，经 Gateway + MCP 工具转发接入）——后台运行
 CLAUDE_GATEWAY_TUNNEL=1 MSA_GATEWAY_SSH_HOST=<公网IP> \
