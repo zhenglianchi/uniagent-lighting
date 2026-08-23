@@ -1,16 +1,12 @@
 """mini-swe-agent 训练 runner（uni-agent ``AgentRunner`` 协议）。
 
-在腾讯云 Agent Runtime 沙箱（provider=``tencent_agent_runtime``）内**黑盒**运行
+在腾讯云 Agent Runtime 沙箱（provider=``tencent_agent_runtime``）内运行
 mini-swe-agent，模型端点指向训练 Gateway（``session.base_url``），完成后在同一沙箱内
-按 SWE-bench ``FAIL_TO_PASS`` 评估 reward 并上报 ``reward_info``。
+按 ``FAIL_TO_PASS`` 评估 reward 并上报 ``reward_info``。
 
-支持两种任务口径（按 ``tools_kwargs.task.name`` 区分，互不影响）：
-
-- ``swe_bench``（原始方案，保留）：SWE-bench Lite 实例镜像沙箱 + ``swebench-single``
-  数据集路径 + test_patch 评估；
-- ``humaneval_fix``（2026-08-06 新增）：python:3.12 E2B 沙箱 + 任务文件注入
-  （``tools_kwargs.env.files``，仅 solution.py，无测试泄露）+ mini-swe-agent API 直连
-  绕开 swebench-single 的数据集硬编码 + 隐藏测试（``metadata.hidden_files``）评估。
+任务口径（``humaneval_fix``，2026-08-06 起）：python:3.12 E2B 沙箱 + 任务文件注入
+（``tools_kwargs.env.files``，仅 solution.py，无测试泄露）+ mini-swe-agent API 直连
+（绕开 CLI 的数据集硬编码）+ 隐藏测试（``metadata.hidden_files``）评估。
 
 与 ``examples/blackbox_recipes/claude_code/claude_code_runner.py`` 同构，职责划分：
 
@@ -78,7 +74,7 @@ GATEWAY_SSH_HOST = os.getenv("MSA_GATEWAY_SSH_HOST", "")
 GATEWAY_LOCAL_PORT = int(os.getenv("MSA_GATEWAY_LOCAL_PORT", "8000"))
 GATEWAY_TUNNEL_WAIT = int(os.getenv("MSA_GATEWAY_TUNNEL_WAIT", "60"))
 
-# Reward 评估（真实 SWE-bench 口径）
+# Reward 评估（真实 reward 口径）
 REWARD_TEST_TIMEOUT = int(os.getenv("MSA_REWARD_TEST_TIMEOUT", "300"))
 REWARD_INCLUDE_P2P = os.getenv("MSA_REWARD_INCLUDE_P2P", "0") == "1"
 REWARD_P2P_SAMPLE = int(os.getenv("MSA_REWARD_P2P_SAMPLE", "20"))
@@ -91,7 +87,7 @@ REWARD_PYTHON = os.getenv("MSA_REWARD_PYTHON", "python")
 def _as_list(value: Any) -> list[str]:
     """把 list/tuple / JSON 字符串 / 换行或逗号分隔字符串统一成 list[str]。
 
-    SWE-bench 数据集字段经 verl tensordict 序列化后可能变成字符串，
+    数据集字段经 verl tensordict 序列化后可能变成字符串，
     这里做多种格式的容错解析（单个测试名也可能含逗号，优先按换行拆）。
     """
     if not value:
@@ -121,7 +117,7 @@ def _as_list(value: Any) -> list[str]:
 
 
 def _extract_issue_text(task: str) -> str:
-    """从 SWE-bench prompt 里抠出 issue 正文（兼容 <issue_description> 与裸文本）。"""
+    """从任务 prompt 里抠出 issue 正文（兼容 <issue_description> 与裸文本）。"""
     start = task.find("<issue_description>")
     end = task.find("</issue_description>")
     if start >= 0 and end > start:
@@ -135,7 +131,7 @@ def _extract_issue_text(task: str) -> str:
 def extract_task(raw_prompt: Any, tools_kwargs: dict[str, Any] | None) -> dict[str, Any]:
     """解析任务元数据 -> dict(instance_id, issue, fail_to_pass[], test_patch)。
 
-    ``tools_kwargs["reward"]["metadata"]`` 为 SWE-bench 样本的标准字段：
+    ``tools_kwargs["reward"]["metadata"]`` 为数据集样本的标准字段：
     problem_statement / FAIL_TO_PASS / PASS_TO_PASS / test_patch / instance_id。
     """
     tools_kwargs = tools_kwargs or {}
@@ -184,8 +180,8 @@ def create_task_sandbox(
 ) -> Sandbox:
     """创建任务沙箱（默认腾讯云 Agent Runtime）。
 
-    ``image`` 为 SWE-bench 实例镜像（``sweb.eval.x86_64.<org>_1776_<repo>-<pr>:latest``），
-    由 tencent 后端映射为沙箱工具；``sandbox_kwargs`` 可传 ``template/startup_timeout`` 等。
+    ``image`` 为沙箱镜像（如 ``python:3.12``），由 tencent 后端映射为沙箱工具；
+    ``sandbox_kwargs`` 可传 ``template/startup_timeout`` 等。
     Gateway 需从沙箱可达——公网不通时在此改写 URL 或建立内网隧道。
     """
     config = SandboxConfig(
@@ -290,59 +286,13 @@ def build_mini_swe_config(
         cfg["model"]["model_kwargs"]["temperature"] = float(temperature)
     return yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False)
 
-
-async def run_mini_swe_agent(
-    *,
-    task: dict[str, Any],
-    config_path: str = "/tmp/mini_swe_config.yaml",
-    traj_path: str = "/tmp/traj.json",
-    run_timeout: int = DEFAULT_AGENT_RUN_TIMEOUT,
-) -> tuple[int, str]:
-    """在训练机本地驱动 mini-swe-agent（harness 在外、沙箱当环境）。
-
-    返回 ``(exit_code, log_tail)``；模型调用走配置里的 ``api_base``（隧道后的 Gateway），
-    轨迹由 Gateway session 记录，同时落盘 traj.json 备用。
-    """
-    import sys
-
-    args = [
-        sys.executable,
-        "-m",
-        "minisweagent.run.utilities.mini_extra",
-        "swebench-single",
-        "-c",
-        config_path,
-        "-o",
-        traj_path,
-        "-i",
-        task["instance_id"],
-        "--exit-immediately",
-        "-y",
-    ]
-    logger.info("[sample %s] run mini-swe-agent locally: %s", task["instance_id"], shlex.join(args))
-    os.environ.setdefault("OPENAI_API_KEY", "EMPTY")  # LiteLLM 兜底，防 Missing credentials
-    proc = await asyncio.create_subprocess_exec(
-        *args,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.STDOUT,
-    )
-    try:
-        out, _ = await asyncio.wait_for(proc.communicate(), timeout=run_timeout)
-    except asyncio.TimeoutError:
-        proc.kill()
-        await proc.communicate()
-        return -1, f"mini-swe-agent timeout after {run_timeout}s"
-    log = out.decode(errors="replace")
-    return proc.returncode or 0, log[-4000:]
-
-
 async def run_mini_swe_agent_api(
     *,
     task: dict[str, Any],
     config_path: str,
     run_timeout: int = DEFAULT_AGENT_RUN_TIMEOUT,
 ) -> tuple[int, str]:
-    """自定义任务（humaneval_fix）：绕开 swebench-single 的数据集加载，直接调
+    """自定义任务（humaneval_fix）：绕开 CLI 的数据集加载，直接调
     mini-swe-agent Python API（``get_sb_environment`` + ``get_agent``）。
 
     runner 已把任务文件注入沙箱（``tools_kwargs.env.files``），这里用
@@ -427,7 +377,7 @@ async def evaluate_reward(
     p2p_sample: int = REWARD_P2P_SAMPLE,
     test_python: str = REWARD_PYTHON,
 ) -> tuple[float, dict[str, Any]]:
-    """真实 SWE-bench reward：写入 test_patch，批量跑 FAIL_TO_PASS + 抽样 PASS_TO_PASS。
+    """真实 reward：写入隐藏测试，批量跑 FAIL_TO_PASS + 抽样 PASS_TO_PASS。
 
     返回 ``(score, details)``，score = 通过测试数 / 总测试数（0.0~1.0，连续）；
     ``resolved`` 表示 FAIL_TO_PASS 全过（且启用 P2P 时抽样回归也全过）。
@@ -462,16 +412,6 @@ async def evaluate_reward(
         # make_humanevalfix_data.py 生成（test_solution.py::test_all）
         for rel_path, content in (task.get("hidden_files") or {}).items():
             await env.write_file(f"/testbed/{rel_path}", content)
-    elif task["test_patch"]:
-        await env.write_file("/testbed/test_patch.diff", task["test_patch"])
-        apply = await env.exec_shell("cd /testbed && git apply --3way test_patch.diff", timeout=120)
-        if apply.exit_code != 0:
-            apply = await env.exec_shell("cd /testbed && patch -p1 < test_patch.diff", timeout=120)
-        details["apply_status"] = "ok" if apply.exit_code == 0 else (
-            "failed: " + (apply.stderr or apply.stdout or "")[-300:]
-        )
-        if apply.exit_code != 0:
-            logger.warning("evaluate_reward: test_patch apply failed (%s)", details["apply_status"])
 
     passed_map = await _run_tests_batch(env, test_names, timeout=timeout, test_python=test_python)
     details["log"] = passed_map.pop("_log_tail", "")
@@ -622,15 +562,11 @@ async def mini_swe_agent_runner(
             encoding="utf-8",
         )
         started = time.perf_counter()
-        if env_files:
-            # 自定义任务：不走 swebench-single（数据集硬编码 SWE-bench），直接 API 跑
-            rc, log_tail = await run_mini_swe_agent_api(
-                task=task, config_path=config_path, run_timeout=run_timeout
-            )
-        else:
-            rc, log_tail = await run_mini_swe_agent(
-                task=task, config_path=config_path, traj_path=traj_path, run_timeout=run_timeout
-            )
+        if not env_files:
+            raise ValueError(f"tools_kwargs.env.files required for humaneval_fix task {task['instance_id']}")
+        rc, log_tail = await run_mini_swe_agent_api(
+            task=task, config_path=config_path, run_timeout=run_timeout
+        )
         logger.info(
             "[sample %d] mini-swe-agent rc=%s elapsed=%.1fs traj=%s",
             sample_index, rc, time.perf_counter() - started, task["instance_id"],

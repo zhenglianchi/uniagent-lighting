@@ -4,7 +4,7 @@
 # 前置：Ubuntu 24.04 + NVIDIA 驱动（570+，CUDA 12.8）
 # 包含：miniforge + swe-rl env、清华 pip/HF 镜像、uni-agent、verl 三处补丁
 #       （StrEnum + fsdp2 单卡 + IPC CPU 大权重）、uni-agent codec 补丁（vllm 0.11.1
-#       hermes 工具解析）、mini-swe-agent 2.4.6 + tencent_e2b/swebench 补丁、
+#       hermes 工具解析）、mini-swe-agent 2.4.6 + tencent_e2b 补丁、
 #       模型下载（Qwen3-8B，hf-mirror 15G）
 # 用法：
 #   bash install_ucloud_from_scratch.sh
@@ -65,7 +65,7 @@ fi
 cd "$HOME/uni-agent"
 "$PIP" install --no-deps -e ./verl
 "$PIP" install -e .
-"$PIP" install swe-rex swebench "ray[default]" loguru pydantic pydantic_settings aiohttp \
+"$PIP" install "ray[default]" loguru pydantic pydantic_settings aiohttp \
   tensordict torchdata wandb omegaconf pylatexenc tensorboard pybind11 peft hydra-core codetiming
 "$PIP" install "TransferQueue==0.1.9"
 "$PIP" install "tensordict>=0.8.0,<=0.10.0,!=0.9.0"
@@ -137,7 +137,7 @@ if [ ! -f "$HOME/models/Qwen3-8B/config.json" ]; then
     "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen3-8B', local_dir='$HOME/models/Qwen3-8B')"
 fi
 
-echo "== 9/9 mini-swe-agent + 补丁（v0.26.0：tencent_e2b / swebench 镜像注入 / codec 路径）=="
+echo "== 9/9 mini-swe-agent + 补丁（v0.26.0：tencent_e2b / codec 路径）=="
 "$PIP" install "mini-swe-agent==2.4.6"
 SP="$ENV/lib/python3.10/site-packages"
 REPO_RAW=https://raw.githubusercontent.com/zhenglianchi/uniagent-lighting/main
@@ -145,10 +145,6 @@ for i in 1 2 3; do
   curl -fsSL --max-time 60 -o /tmp/tencent_e2b.py "$REPO_RAW/patches/tencent_e2b.py" && break || { echo "retry $i"; sleep 3; }
 done
 cp /tmp/tencent_e2b.py "$SP/minisweagent/environments/extra/tencent_e2b.py"
-for i in 1 2 3; do
-  curl -fsSL --max-time 60 -o /tmp/miniswe_swebench.py "$REPO_RAW/patches/miniswe_swebench.py" && break || { echo "retry $i"; sleep 3; }
-done
-cp /tmp/miniswe_swebench.py "$SP/minisweagent/run/benchmarks/swebench.py"
 # uni-agent gateway codec：vllm 0.11.1 的 ChatCompletionToolsParam 路径修复（hermes 工具解析）
 for i in 1 2 3; do
   curl -fsSL --max-time 60 -o /tmp/uni_agent_vllm0111.patch "$REPO_RAW/patches/uni_agent_vllm0111_toolparsers.patch" && break || { echo "retry $i"; sleep 3; }

@@ -3,12 +3,12 @@
 
 任务口径：单函数 bug 修复。沙箱预置 ``/testbed/solution.py``（buggy 代码，git 已跟踪），
 agent 修好后按 mini-swe 模板提交 git patch；隐藏测试 ``test_solution.py`` **只在 reward
-阶段注入**（无测试泄露，与 SWE-bench 约定一致）。
+阶段注入**（无测试泄露）。
 
-与 ``make_agentic_data.py``（SWE-bench 原始方案，保留不动）的 schema 对齐：
+schema（与 verl agentic RL 一致）：
 ``data_source / prompt / extra_info.tools_kwargs{task, env, reward} / reward_model.ground_truth``。
 默认输出 ``humanevalfix_train{--train-num}.jsonl``（如 161 → ``humanevalfix_train161.jsonl``）
-/ ``humanevalfix_val.jsonl``（不覆盖 SWE-bench 数据）。
+/ ``humanevalfix_val.jsonl``。
 
 用法：
   HF_ENDPOINT=https://hf-mirror.com HF_HUB_DISABLE_XET=1 \\

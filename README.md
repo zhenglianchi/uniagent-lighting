@@ -63,7 +63,7 @@ on-policy 的保证来自 Gateway 云侧记录的 token-truth 轨迹，而非 ag
   以及通用 `external_agent_runner`（任意 OpenAI 兼容 agent，改 `base_url` 即可）
 - **云端 Gateway**：会话路由、OpenAI/Anthropic 协议适配、token 级轨迹物化、
   多链（chain）分片支持超长多轮会话（上限 = max_prompt+max_response）
-- **沙箱执行**：腾讯云 Agent Runtime（E2B 兼容端点）、SWE-bench 托管镜像、
+- **沙箱执行**：腾讯云 Agent Runtime（E2B 兼容端点）、
   实例级隔离；黑盒工具调用经自研 MCP 转发层（`sandbox_mcp_server.py`，
   手写 stdio JSON-RPC）落到远端沙箱
 - **云端训练**：verl GRPO + LoRA（rank=32）+ FSDP2 + CPU offload +
@@ -210,7 +210,7 @@ clone 后即可用，所有相对路径以仓库根为基准：
 
 ```
 AGENTS.md / TODO.md / 思路.md # 项目长期记忆 / 进度 / 思路记录
-config/               # 采样与本地模型配置（mini_aliyun / tencent_swebench）
+config/               # 采样与本地模型配置（mini_aliyun）
 vendor/uni-agent/     # 侵入式修改过的官方 uni-agent（b139419）+ verl（fc6b33c）源码，可直接 debug
 mini-swe-agent/       # 采样 harness（vendored，含 tencent_e2b 扩展，对应 patches/tencent_e2b.py）
 uni_agent_ext/        # uni-agent 扩展包（腾讯沙箱后端 / 白盒/黑盒/外部三套 runner）
@@ -222,7 +222,6 @@ work/logs/            # 训练轨迹与日志归档（原始轨迹已解压，�
                       #   humanevalfix_full_20260809（白盒 baseline 25 步轨迹）
                       #   blackbox_full_20260812 / blackbox_smoke（黑盒轨迹）
                       #   dual_async_20260815（双机轨迹）、spec_run（统计/日志）
-                      #   swebench_early_20260804（早期单样本轨迹）
 work/data/            # 数据集与脚本
 ```
 

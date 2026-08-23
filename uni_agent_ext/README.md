@@ -4,9 +4,9 @@
 
 - `sandbox/tencent_agent_runtime.py`：腾讯云 Agent Runtime（云沙箱）后端（**E2B 兼容实现，已通过官方 demo 验证**）
 - `agents/mini_swe_agent_runner.py`：白盒训练 runner（mini-swe-agent + 腾讯沙箱 +
-  Gateway session + 真实 reward，HumanEvalFix/SWE-bench 任务类型）
+  Gateway session + 真实 reward，HumanEvalFix 任务类型）
 - `agents/claude_code_runner.py`：黑盒训练 runner（Claude Code `-p` + 腾讯沙箱
-  direct-URL 直连 Gateway + SWE-bench reward；v0.35.1，待上机验证）
+  direct-URL 直连 Gateway + 真实 reward；v0.35.1）
 
 ## 接入 uni-agent
 
@@ -47,10 +47,6 @@ sandbox = build_sandbox(config)
 
 ## TODO（后续）
 
-- [x] SWE-bench 场景可行性（2026-08-04 已验证）：官方托管 `swebench` 工具类型 + 系统镜像仓库内置实例镜像，实例级覆盖镜像即可，无需推 TCR
-- [x] uni-agent 后端 SWE-bench 适配（2026-08-04 已实现）：`start()` 检测
-  `sweb.eval.` 开头镜像 → Cloud API `StartSandboxInstance`（镜像覆盖）→ E2B
-  `Sandbox.connect` 而非 `Sandbox.create`
 - [ ] `startup_timeout` 与 uni-agent `SANDBOX_STARTUP_TIMEOUT`/`SANDBOX_STARTUP_CONCURRENCY` 联动
 
 ## 平台化组件

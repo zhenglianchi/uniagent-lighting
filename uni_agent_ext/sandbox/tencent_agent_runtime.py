@@ -13,8 +13,7 @@ Provider 名：``tencent_agent_runtime``
 - 环境变量：``E2B_DOMAIN``（ap-guangzhou.tencentags.com）、``E2B_API_KEY``
   （``e2b_`` 兼容 Key，见 ``work/tencent_sandbox.env``）
 - template：默认 ``code-interpreter-v1``（须已在腾讯云创建同名沙箱工具）；
-  可用 sandbox_kwargs 的 ``template`` 或环境变量 ``TENCENT_SANDBOX_TEMPLATE`` 覆盖；
-  SWE-bench 镜像（``sweb.eval.x86_64.*``）→ 工具名的映射在步骤 4 接入。
+  可用 sandbox_kwargs 的 ``template`` 或环境变量 ``TENCENT_SANDBOX_TEMPLATE`` 覆盖。
 """
 
 from __future__ import annotations
@@ -36,8 +35,7 @@ logger = logging.getLogger(__name__)
 def _to_tencent_template(image: str) -> str:
     """把 uni-agent 通用镜像名映射为腾讯云沙箱工具名。
 
-    E2B 兼容路径里 template 就是腾讯云“沙箱工具”名称。目前只做常见占位名映射，
-    SWE-bench 场景（``sweb.eval.*``）在步骤 4 接入官方 ``swebench`` 工具类型。
+    E2B 兼容路径里 template 就是腾讯云“沙箱工具”名称。目前只做常见占位名映射。
     """
     if image in ("python:3.12", "python:3.11", "python:3.10"):
         return "code-interpreter-v1"
@@ -80,7 +78,6 @@ class TencentAgentRuntimeSandbox(Sandbox):
         self.runtime_timeout = runtime_timeout
         self.startup_timeout = startup_timeout
         self._sbx: Any = None  # e2b_code_interpreter.Sandbox（阻塞 SDK，经 to_thread 调用）
-        self._cloud_instance_id: str = ""  # SWE-bench 实例（Cloud API）的 InstanceId
 
     @classmethod
     def from_config(cls, config: SandboxConfig) -> TencentAgentRuntimeSandbox:
@@ -97,19 +94,15 @@ class TencentAgentRuntimeSandbox(Sandbox):
 
         from e2b_code_interpreter import Sandbox
 
-        if self._is_swebench_image(self.image):
-            await self._start_swebench_instance(Sandbox)
-        else:
-            self._sbx = await asyncio.to_thread(
-                Sandbox.create, template=self.template, timeout=int(self.runtime_timeout)
-            )
-            logger.info("tencent sandbox created id=%s template=%s", self._sbx.sandbox_id, self.template)
+        self._sbx = await asyncio.to_thread(
+            Sandbox.create, template=self.template, timeout=int(self.runtime_timeout)
+        )
+        logger.info("tencent sandbox created id=%s template=%s", self._sbx.sandbox_id, self.template)
 
-        # uni-agent shell 工具在无原生 shell 时用 tmux；sweb 镜像直接跑黑盒 agent，跳过。
         # mini-swe-agent harness 自带 pexpect shell，不需要沙箱内 tmux ——
         # 该 apt-get 安装经常等到 E2B 180s 请求超时，白耗每会话 3 分钟。
         # TENCENT_SANDBOX_SKIP_TMUX=1 时跳过（训练脚本默认开启）。
-        if not self._is_swebench_image(self.image) and not os.getenv("TENCENT_SANDBOX_SKIP_TMUX") == "1":
+        if not os.getenv("TENCENT_SANDBOX_SKIP_TMUX") == "1":
             result = await self.exec_shell(
                 "which tmux >/dev/null 2>&1 || (DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
                 "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq tmux)",
@@ -126,70 +119,6 @@ class TencentAgentRuntimeSandbox(Sandbox):
                 logger.info("tencent sandbox killed")
             except Exception:
                 logger.debug("tencent sandbox kill failed", exc_info=True)
-        if self._cloud_instance_id:
-            try:
-                await asyncio.to_thread(self._stop_cloud_instance, self._cloud_instance_id)
-                logger.info("tencent swebench instance stopped: %s", self._cloud_instance_id)
-            except Exception:
-                logger.debug("StopSandboxInstance failed", exc_info=True)
-            self._cloud_instance_id = ""
-
-    # ----- SWE-bench 实例（Cloud API StartSandboxInstance + E2B connect）-----
-    @staticmethod
-    def _is_swebench_image(image: str) -> bool:
-        return image.startswith("sweb.") or image.startswith("swebench/") or "sweb.eval" in image
-
-    @staticmethod
-    def _normalize_swebench_image(image: str) -> str:
-        """StartSandboxInstance 需要系统仓库前缀 ``swebench/``。"""
-        image = image.replace("docker.io/", "").replace("__", "_1776_")
-        return image if image.startswith("swebench/") else f"swebench/{image}"
-
-    def _ags_client(self, region: str):
-        from tencentcloud.common import credential
-        from tencentcloud.common.profile.client_profile import ClientProfile
-        from tencentcloud.common.profile.http_profile import HttpProfile
-        from tencentcloud.ags.v20250920 import ags_client
-
-        cred = credential.Credential(
-            os.environ["TENCENT_SECRET_ID"], os.environ["TENCENT_SECRET_KEY"]
-        )
-        http_profile = HttpProfile(endpoint="ags.tencentcloudapi.com")
-        return ags_client.AgsClient(cred, region, ClientProfile(httpProfile=http_profile))
-
-    async def _start_swebench_instance(self, sandbox_cls) -> None:
-        from tencentcloud.ags.v20250920 import models
-
-        region = os.getenv("TENCENT_SANDBOX_REGION", "ap-guangzhou")
-        tool_name = os.getenv("TENCENT_SANDBOX_SWEBENCH_TOOL", "swebench-v1")
-        image = self._normalize_swebench_image(self.image)
-        client = await asyncio.to_thread(self._ags_client, region)
-
-        def _start() -> str:
-            req = models.StartSandboxInstanceRequest()
-            req.ToolName = tool_name
-            req.Timeout = os.getenv("TENCENT_SANDBOX_TIMEOUT", "10m")
-            req.CustomConfiguration = models.CustomConfiguration()
-            req.CustomConfiguration.Image = image
-            req.CustomConfiguration.ImageRegistryType = "system"
-            resp = client.StartSandboxInstance(req)
-            return resp.Instance.InstanceId
-
-        instance_id = await asyncio.to_thread(_start)
-        self._cloud_instance_id = instance_id
-        self._sbx = await asyncio.to_thread(
-            sandbox_cls.connect, sandbox_id=instance_id, api_key=os.environ.get("E2B_API_KEY")
-        )
-        logger.info("tencent swebench instance connected id=%s image=%s", instance_id, image)
-
-    def _stop_cloud_instance(self, instance_id: str) -> None:
-        from tencentcloud.ags.v20250920 import models
-
-        region = os.getenv("TENCENT_SANDBOX_REGION", "ap-guangzhou")
-        client = self._ags_client(region)
-        req = models.StopSandboxInstanceRequest()
-        req.InstanceId = instance_id
-        client.StopSandboxInstance(req)
 
     def _require_sandbox(self) -> Any:
         if self._sbx is None:
@@ -198,8 +127,8 @@ class TencentAgentRuntimeSandbox(Sandbox):
 
     @property
     def instance_id(self) -> str:
-        """底层实例 id（sweb 走 Cloud API InstanceId；其它走 E2B sandbox_id）。"""
-        return self._cloud_instance_id or getattr(self._sbx, "sandbox_id", "")
+        """底层实例 id（E2B sandbox_id）。"""
+        return getattr(self._sbx, "sandbox_id", "")
 
     # ----- 数据面 -----
     async def is_alive(self) -> bool:

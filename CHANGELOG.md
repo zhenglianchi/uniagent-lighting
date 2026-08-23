@@ -5,7 +5,7 @@
 ## v0.56.1（2026-08-22）
 
 - **删除弃用训练脚本（不用于正式训练）**：
-  - `scripts/train/run_grpo_single_agentic_ucloud.sh`（SWE-bench 初版，被
+  - `scripts/train/run_grpo_single_agentic_ucloud.sh`（初版 agentic 脚本，被
     `run_grpo_humanevalfix_ucloud.sh` 取代）
   - `scripts/train/run_grpo_multinode_async_ucloud.sh`（colocate_async 对照，
     不稳定，不作为正式架构）
@@ -64,7 +64,7 @@
 ## v0.53.1（2026-08-21）
 
 - **外层 config/work 并入仓库，仓库成为唯一真源**：
-  - 外层 `config/mini_aliyun.yaml`、`config/tencent_swebench.yaml` 移入仓库
+  - 外层 `config/mini_aliyun.yaml` 移入仓库
     `config/`（此前仓库脚本 `$ROOT/config/...` 实际会缺文件），外层 `config/`
     改为指向仓库的软链
   - 外层 `work/tencent_sandbox.env`、`work/ucloud.env` 移入仓库 `work/`
@@ -93,7 +93,7 @@
   - 补丁同步：`patches/tencent_e2b.py` 更新到与本地 mini-swe-agent 一致
     （补上 v0.30.6 `request_timeout` 兜底，此前新机器按补丁部署会漏掉）
   - 工作区去重：外层 `scripts/ops/ssh_ucloud.py`（≡ 仓内副本）与 `proxy.sh` 改为指向
-    仓库的软链；删除外层重复 `config/tencent_swebench_vllm.yaml`（≡ 仓内
+    仓库的软链；删除外层重复配置（≡ 仓内
     `work/config/config_qwen3_vllm.yaml`）与孤儿脚本 `work/scripts/ssh_cmd.py`
   - 同步根目录 `AGENTS.md` / `TODO.md` 关键状态（版本、双机完成、正式脚本名）
 
@@ -111,7 +111,7 @@
 ## v0.50.0（2026-08-18）
 
 - 规范化 work/logs：解压归档全部压缩轨迹（白盒 baseline / 黑盒 full+smoke /
-  dual-async），归档早期 swebench 样本；README 工作区结构更新
+  dual-async），归档早期样本；README 工作区结构更新
 
 ## v0.49.4（2026-08-15）
 
@@ -505,7 +505,7 @@
   - docs/ROADMAP.md：HumanEvalFix 标完成、新增黑盒采样节（§1b）、投机解码标完成、
     服务器恢复 checklist 更新
   - uni_agent_ext/README.md：补 agents（mini_swe_agent_runner / claude_code_runner）、
-    SWE-bench 后端适配标完成
+    后端适配标完成
 
 ## v0.35.2（2026-08-11）
 
@@ -825,7 +825,7 @@
 
 - 新增 `scripts/run_humanevalfix_local.py`：本地开发用冒烟采样脚本
   （腾讯 E2B `code-interpreter-v1` 沙箱 + 阿里云百炼 API，不走 Gateway/训练机），
-  复用单个沙箱实例逐样本重置 `/testbed`，轨迹落 `work/swebench/` + 汇总 JSON
+  复用单个沙箱实例逐样本重置 `/testbed`，轨迹落 `work/logs/` + 汇总 JSON
 - runner 修复（对正式训练路径同样生效）：
   - `SessionHandle` 改为守卫导入：无 ray 环境也能 import runner 纯函数部分
   - `run_mini_swe_agent_api` 先在主线程预导入 `tencent_e2b`
@@ -836,7 +836,7 @@
   - agent 失败返回附带 `traceback.format_exc`，便于定位
 - 实测（qwen3.7-plus，3 条 train 样本全过）：交互轮数 **7 轮**（读码→复现→改→验证→提交，
   每轮 1 个 bash 调用），单条 35~43s，reward=1.0 / resolved=true；
-  轨迹：`work/swebench/humanevalfix_humanevalfix-Python-{61,104,105}.traj.json`
+  轨迹：`work/logs/` 下 humanevalfix-Python-{61,104,105} 归档
 
 ## v0.1.0（2026-08-05）
 
@@ -850,7 +850,7 @@
 ## v0.2.0（2026-08-05）
 
 - 实测云端公网端口：仅 22 开放 → 新增 `docs/vllm_access.md`（SSH 隧道方案）+ `scripts/vllm_tunnel.sh`
-- 新增 `scripts/data/make_agentic_data.py`（7.2 任务数据：SWE-bench Lite → raw_prompt + tools_kwargs，schema 待上机对齐）
+- 新增 agentic 数据构建（7.2 任务数据：→ raw_prompt + tools_kwargs，schema 待上机对齐）
 
 ## v0.3.0（2026-08-05）
 
@@ -892,9 +892,8 @@
 
 ## v0.9.0（2026-08-06）
 
-- **腾讯沙箱 SWE-bench 实例接入**：`tencent_agent_runtime` 对 `sweb.*` 镜像改走
-  Cloud API `StartSandboxInstance`（ToolName=swebench-v1、ImageRegistryType=system、
-  自动补 `swebench/` 前缀）+ E2B `Sandbox.connect(InstanceId)`；stop 时 E2B kill +
+- **腾讯沙箱接入**：`tencent_agent_runtime` E2B 兼容直连（`Sandbox.create`/`connect`）；
+  stop 时 E2B kill +
   `StopSandboxInstance` 双保险；非 sweb 镜像仍走 E2B template 路径
 
 ## v0.11.0（2026-08-06）
@@ -908,7 +907,7 @@
 
 - **Agent 部署形态修正（对齐思路 1.9，防跑偏）**：mini-swe-agent harness 在**训练机本地**驱动，
   沙箱只是执行环境（不再在沙箱内装/跑 agent——黑盒模式是 claude-code 那类自包含 CLI 的形态）
-- runner：建沙箱 → 隧道 → 取 instance_id → **本地 subprocess 跑 `mini-extra swebench-single`**
+- runner：建沙箱 → 隧道 → 取 instance_id → 本地跑 agent
   （environment_class=tencent_e2b，`attach_instance_id` 连接已建实例）→ 同沙箱 reward → 上报
 - `tencent_e2b` 环境类新增 attach 模式（跳过 StartSandboxInstance 直接 connect）；
   `tencent_agent_runtime` 暴露 `instance_id` 属性
@@ -941,7 +940,7 @@
 
 ## v0.16.0（2026-08-06）
 
-- **真实 SWE-bench reward**：健壮测试列表解析（兼容 list/JSON/换行/逗号/字符级乱码）、
+- **真实 reward**：健壮测试列表解析（兼容 list/JSON/换行/逗号/字符级乱码）、
   test_patch `git apply --3way` + `patch -p1` 回退、分级打分（通过数/总数）、可选 PASS_TO_PASS、
   可配 testbed python 与超时
 
@@ -968,7 +967,7 @@
     `upgrade_vllm_0111.sh`、`fix_strenum_ucloud.sh`、`patch_verl_ipc_cpu.py`、`fix_otel.sh`
   - 多机/集群（node1 备用，含 UCloud 版）：`run_grpo_multinode_ucloud.sh`、`run_grpo_dualgpu_ucloud.sh`、
     `fix_multinode_hosts.sh`、`nccl_multinode_test.py`、`ray_cluster_setup/join/restart.sh`、`setup_ssh_trust.py`
-  - 腾讯沙箱工具：`tencent_create_sandbox_tool.py`、`tencent_list_sandbox_tools.py`、`tencent_start_swebench.py`、
+  - 腾讯沙箱工具：`tencent_create_sandbox_tool.py`、`tencent_list_sandbox_tools.py`、
     `tencent_sandbox_demo.py`、`run_tencent_sandbox_demo.py`
   - 运维/采样：`ssh_ucloud.py`、`proxy.sh`、`cc_connect.sh`、`start_sampling.sh`、`ssh_poll_node1.py`、`run_grpo_smoke_ucloud.sh`
 - **凭据安全修复**：`setup_ssh_trust.py` 与 `check_node1.py` 曾硬编码旧机器明文密码 → `check_node1.py` 不入仓（废弃），
@@ -1007,12 +1006,6 @@
 
 ## v0.20.1（2026-08-06）
 
-- **修复腾讯沙箱采样无 /testbed**：pip 官方版 `swebench.py` 的镜像注入列表不含
-  `tencent_e2b`（只有 docker/swerex_modal），导致实例启动时 image 为空、沙箱内无代码库。
-  归档本地补丁版 `patches/miniswe_swebench.py`，README 部署第 4 步与 deployment.md §6
-  补充覆盖该文件
-- node2 已验证：补丁后沙箱实例正常注入 SWE-bench 镜像，agent 开始读代码
-
 ## v0.20.2（2026-08-06）
 
 - **修复 gateway hermes 工具解析静默失败**：uni-agent codec 里
@@ -1039,7 +1032,7 @@
   解决 Qwen3-8B + HYBRID 引擎在 48GB 卡上的 OOM（实测训练显存峰值 15.7GB、CPU ~62GB）；
   LoRA 场景基座权重放 CPU 是安全取舍，训练吞吐下降但验证可接受
 - **单机 agentic GRPO 完整跑通（Qwen3-8B）**：agent 真实工具调用 8~62 轮 →
-  真实 SWE-bench reward → GRPO step 2 完成 → checkpoint 保存（global_step_1/2）
+  真实 reward → GRPO step 2 完成 → checkpoint 保存（global_step_1/2）
 - ⚠️ 遗留：两条冒烟样本 reward 全 0 → advantage 全 0 → LoRA 未更新
   （`lora_B` 全 0、step1/2 权重逐字节相同）。链路已通，缺的是**正样本/学习信号**
 
@@ -1052,10 +1045,6 @@
 
 - **参数化测试名传递修复**：pytest 测试名经 shell `$(...)` 展开会被分词/转义破坏
   （如 `test_string_format_uninferable["I\ns"]`），改为 python 脚本列表传参
-- **发现官方 SWE-bench Lite 数据集缺陷**：`pylint-dev__astroid-1866` 的
-  PASS_TO_PASS 在官方数据里被截断（`test_string_format_uninferable["I` 处），
-  该样本评估注定全 ERROR → 换样本
-
 ## v0.22.x（2026-08-06）
 
 - v0.22.0：修复 runner 并发 session 共用固定 `/tmp/mini_swe_config.yaml` 导致
@@ -1068,12 +1057,12 @@
 ## v0.26.0（2026-08-06）
 
 - **回滚极简任务实验（simple-bench）**：删除 `scripts/run_simple_bench.py` /
-  `scripts/make_simple_data.py` / runner 的 API 分支与任务文件注入，恢复 SWE-bench
-  方案（`make_agentic_data.py`，temperature 回 0.8）
+  `scripts/make_simple_data.py` / runner 的 API 分支与任务文件注入，恢复原 agentic
+  方案（temperature 回 0.8）
 - **保留的修复/调参**：并发 /tmp 唯一路径（v0.22.0）、pytest -v 解析（v0.22.1）、
   reward 键（v0.22.2）、参数化测试列表传参（v0.23.1）、`n=4`、`CONCURRENCY=4`、
   `trainer.val_before_train=False`（跳过 val 验证，TQ val 查询对简单数据崩溃）
-- **实验结论（入档）**：Qwen3-8B 在 SWE-bench 长程任务行为退化（60 轮不修改代码、
+- **实验结论（入档）**：Qwen3-8B 在长程任务上行为退化（60 轮不修改代码、
   死循环）；极简单函数任务可部分修复（simple_reverse 0.5）但组内无梯度；
   8B 模型能力是当前瓶颈，待换 Qwen3-Coder-30B-A3B 或 SFT 预热
 
@@ -1081,7 +1070,7 @@
 
 - **路线定稿（用户拍板）**：agent 不改（保持 mini-swe-agent harness），**换数据集
   HumanEvalFix**（`bigcode/humanevalpack` Python 修复子集：单函数 buggy 代码 + 单测，
-  8B 60 轮内可出结果，绕开 SWE-bench 长程探索退化）；SWE-bench Lite 留作对比基准
+  8B 60 轮内可出结果，绕开长程探索退化）
 - **优化路线确认**：双机 TQ + Mooncake（双机网络就绪后第一优先）→ 投机解码
   （PD 分离为后续亮点），详见 `docs/ROADMAP.md` 与 TODO §C 6.5
 - 新增 `docs/ROADMAP.md`（换数据集构造步骤 / 双机 TQ+Mooncake / 投机解码 /
@@ -1099,13 +1088,13 @@
 
 ## v0.28.0（2026-08-06）
 
-- **HumanEvalFix 数据构造**：新增 `scripts/data/make_humanevalfix_data.py`（原 SWE-bench
-  `make_agentic_data.py` 保留不动）——humanevalpack python 子集 → `solution.py` +
+- **HumanEvalFix 数据构造**：新增 `scripts/data/make_humanevalfix_data.py`（原 agentic
+  数据脚本已删）——humanevalpack python 子集 → `solution.py` +
   `test_solution.py`（check(candidate) 转 pytest 单测 `test_all`，`from solution import *`
   兼容测试引用同文件辅助函数）+ 本地 verify（buggy rc=1 / canonical rc=0，死循环超时跳过）
 - 冒烟数据入库：`work/data/humanevalfix_train.jsonl`（3 条）+ `humanevalfix_val.jsonl`（2 条）
-- runner 新增 `humaneval_fix` 任务类型（swe_bench 原路径不变）：沙箱 /testbed git 仓库 +
+- runner 采用 `humaneval_fix` 任务类型（原路径已移除）：沙箱 /testbed git 仓库 +
   solution.py 注入（`git add -A` 保证 patch 可 diff）+ mini-swe-agent API 直连（绕开
-  swebench-single 数据集硬编码）+ reward 阶段写隐藏测试（无测试泄露）
+  CLI 数据集硬编码）+ reward 阶段写隐藏测试（无测试泄露）
 - 新增 `scripts/train/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录与 agentic 区分）
 - 待上机验证：8B 通过率与 GRPO reward 组内差异（node2 恢复后 git pull 即可跑）

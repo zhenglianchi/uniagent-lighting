@@ -181,8 +181,7 @@ Gateway 通过 `llm_client`（verl 的 LLMServerClient）调 vLLM 引擎——�
 | `base.py` | `Task(ABC)`（run/build_sandbox/build_agent）、`TaskConfig`、`TaskResult` |
 | `config.py` | `TaskConfigResolver`：yaml 任务配置加载与深度合并 |
 | `registry.py` | 任务注册表 |
-| `swe_bench/` | SWE-bench 预处理（`preprocess.py`）与 reward（`reward.py`，FAIL_TO_PASS） |
-| `swe_rebench/` | SWE-Rebench 版（preprocess/reward/task） |
+| `swe_bench/`、`swe_rebench/` | 上游任务示例（本项目训练链路不走 tasks/，reward 思路见 uni_agent_ext runner） |
 
 理解要点：`tasks/` 是**独立运行（非训练）**的入口：定义任务 → 建沙箱 → 建 agent →
 跑 → 评 reward。训练链路不用它（训练用 framework + runner），但 reward 思路

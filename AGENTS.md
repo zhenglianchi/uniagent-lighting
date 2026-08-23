@@ -23,19 +23,15 @@
 - **HuggingFace 永久走国内镜像**：`HF_ENDPOINT=https://hf-mirror.com`（已写入 swe-rl conda 环境变量、`~/.bashrc`、`~/.profile`），不要改回官方源。
 - **从 hf-mirror 下载模型/数据集时，必须加 `HF_HUB_DISABLE_XET=1`**：新版 huggingface_hub 默认走 Xet(CAS) 协议，hf-mirror 不兼容，会报 `401 Unauthorized (cas-server.xethub.hf.co)`。加该环境变量后走普通 HTTP，支持断点续传。
 - 训练基座模型（当前）：**`Qwen/Qwen3-8B`**（2026-08-06 起，Qwen2.5-Coder-7B 不支持标准 function calling 已弃为基座；BF16 ≈ 16GB，本地 `work/models/` + UCloud `/home/ubuntu/models/` 各一份；Qwen2.5-Coder-7B-Instruct 保留为本地备份）。**腾讯云已弃用：不再上传 COS**，模型/数据/checkpoint 改走 UCloud 机器本地或直传。注意官方**没有** `Qwen3-Coder-8B` 或 `Qwen3-Coder-Next-7B`（Coder 系列为 MoE：30B-A3B / 480B-A35B / Next；8B 密集只有通用 `Qwen3-8B`）。
-- **token 预算参考（重要）**：阿里云百炼 API 仅 100 万 token，**只用于当前测试/调试期**（实测一次 SWE-bench 单实例 step_limit=40 ≈ 55.6 万 token，只够约 1.8 次，测试务必只跑单实例）。**正式训练阶段不用 API**：模型推理（采样 + GRPO rollout）走云端 vLLM（UCloud 机器上部署的 Qwen3-8B），不消耗 API 额度。
+- **token 预算参考（重要）**：阿里云百炼 API 仅 100 万 token，**只用于当前测试/调试期**（实测一次单实例长任务 step_limit=40 ≈ 55.6 万 token，只够约 1.8 次，测试务必只跑单实例）。**正式训练阶段不用 API**：模型推理（采样 + GRPO rollout）走云端 vLLM（UCloud 机器上部署的 Qwen3-8B），不消耗 API 额度。
 - **腾讯云边界（2026-08-03 用户确认）**：腾讯云**只用于云沙箱 Agent Runtime**（agent 执行环境）；HAI、COS 已全部弃用，COS 凭据 `work/cos.env` 已删除。模型/数据/checkpoint 不再走 COS，改放 UCloud 机器本地或直传。
 - **腾讯云沙箱（Agent Runtime，2026-08-04 已打通）**：凭据在 `work/tencent_sandbox.env`（chmod 600）：`TENCENT_SANDBOX_E2B_TOKEN`（e2b_*，E2B 兼容端点用，SDK 强制 e2b_ 前缀）、`TENCENT_SECRET_ID/SECRET_KEY`（Cloud API 控制面，创建沙箱工具等）、`TENCENT_SANDBOX_TOKEN`（ark_* 主 Key，隧道/实例鉴权）。
   - E2B 兼容接入：`E2B_DOMAIN=ap-guangzhou.tencentags.com` + `E2B_API_KEY`（e2b_*）；SDK `e2b-code-interpreter`（swe-rl 已装 2.9.0，无 `.process`，执行走 `run_code`、文件走 `sandbox.files`）。
-  - 沙箱工具可用 Cloud API 创建，无需控制台：`python scripts/sandbox/tencent_create_sandbox_tool.py`（CreateSandboxTool，域名 `ags.tencentcloudapi.com`，已建 `code-interpreter-v1` = sdt-fhjsjs5j）；ToolType 枚举含 `swebench`（步骤 4 用）。
+- 沙箱工具可用 Cloud API 创建，无需控制台：`python scripts/sandbox/tencent_create_sandbox_tool.py`（CreateSandboxTool，域名 `ags.tencentcloudapi.com`，已建 `code-interpreter-v1` = sdt-fhjsjs5j）。
   - 后端实现 `uni_agent_ext/sandbox/tencent_agent_runtime.py`（E2B 直连，不走 swerex 隧道）；验证：`python scripts/sandbox/run_tencent_sandbox_demo.py`（uni-agent 官方 demo 已通过）；最小连通：`python scripts/sandbox/tencent_sandbox_demo.py`。
-  - **SWE-bench 已打通（2026-08-04）**：官方托管 `swebench` 工具类型（已建 `swebench-v1` = sdt-2nbtp6th），系统仓库内置实例镜像，`StartSandboxInstance` + `CustomConfiguration.Image="swebench/sweb.eval.x86_64.<org>_<repo>-<pr>:latest"`（ImageRegistryType=system）即可；实例内 /testbed 是题目仓库、swerex server 跑在 8000 端口、envd 49983；E2B `Sandbox.connect(sandbox_id=InstanceId)` 连接。脚本 `scripts/sandbox/tencent_start_swebench.py`。**无需推 TCR 镜像。**
-  - **首条真实轨迹已跑通（2026-08-04）**：mini-swe-agent 新增环境类 `tencent_e2b`（`mini-swe-agent/src/minisweagent/environments/extra/tencent_e2b.py`，已注册），跑 `bash scripts/sandbox/run_tencent_swebench_single.sh django__django-13447`（配置 `config/tencent_swebench.yaml`，模型 deepseek-v4-flash-0731，轨迹输出 `work/swebench/tencent_<id>.traj.json`，用 -o 传，config 里的 output_path 会被 CLI 覆盖）。django 任务实测 20 步不够（step_limit=20 到顶未提交）。
-  - **采样配置（2026-08-04 定稿）**：模型 **qwen3.7-plus**（阿里云百炼，deepseek-v4-flash-0731 已换掉）、**step_limit=60（以后都 60）**、Lite 子集（`--subset lite --split dev`）；wrapper 必须带 `--exit-immediately`（否则提交时弹交互确认、非 TTY 直接 Aborted 且轨迹不落盘）。**不要测试泄露（用户决定）**：不注入 test_patch，agent 只看题目，test_patch 仅评估阶段使用。marshmallow-1359 轨迹已提交（`work/logs/swebench_early_20260804/tencent_marshmallow-code__marshmallow-1359.traj.json`），但补丁没过隐藏测试（修了崩溃、没继承 root schema format，'iso' vs 'iso8601'）。
-- **Docker 默认镜像源**：`dockerproxy.net` + `docker.1ms.run`（`/etc/docker/daemon.json`，DaoCloud 对 swebench 镜像不在白名单）。SWE-bench 实例镜像命名 `sweb.eval.x86_64.<org>_1776_<repo>-<pr>`，压缩 ~1.1GB / 解压 ~3.8GB。
+- **Docker 默认镜像源**：`dockerproxy.net` + `docker.1ms.run`（`/etc/docker/daemon.json`）。
   - 镜像策略（最新）：**"保留镜像、只删容器 + 预拉镜像"仅是测试/调试期的临时选项**（省重拉 ~1GB 基础层）。正式批量跑时必须删除：一个样本 GRPO 4 条响应全部跑完后 `docker rmi` 删对应镜像，磁盘只保留当前在跑的。
   - 排坑：`docker run` 隐式拉镜像超 120 秒会被 mini-swe-agent 判超时，先 `docker pull` 再跑实例。
-- SWE-bench Lite（300 条）已缓存本地 `~/.cache/huggingface/datasets/princeton-nlp___swe-bench_lite`，离线可加载；注意 Lite 里没有 `sympy__sympy-15599`。
 - **2026-08-11 关键决策与状态（文档同步基准）**：
   - 训练主力 node1 = 117.50.189.37（1×4090 48G / 94G，2026-08-08 新建，镜像恢复；
     全样本 baseline 26 步 + 投机 run 25 步均在此完成）；node2 = 117.50.197.46
@@ -50,7 +46,7 @@
   - **腾讯沙箱配额已提升（用户控制台操作）**，但后续所有 run 并发保持 baseline 口径
     （并发 64 / vllm max_num_seqs 128 / util 0.8），配额只作余量不作加速手段。
   - **黑盒采样重启（2026-08-12 小样本验证通过）**：v0.35.1 腾讯 E2B 版
-    `claude_code_runner`（沙箱内 npm 装 claude-code 2.1.153 + SWE-bench reward），
+    `claude_code_runner`（沙箱内 npm 装 claude-code 2.1.153 + 真实 reward），
     排障链 v0.37.3→v0.38.5（sandbox.start / 隧道远端目标 / GATEWAY_PORT 固定端口 /
     max_tokens 截断 8192 / --bare / max_turns 60 对齐白盒）；小样本 3 步
     12/12 会话 reward 1.0；**正式训练

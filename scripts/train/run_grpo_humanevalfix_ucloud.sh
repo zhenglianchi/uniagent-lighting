@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# 单机 agentic GRPO 训练：**HumanEvalFix 数据集**（2026-08-06 新增；原始 SWE-bench
-# 方案脚本已删除 2026-08-22，被本脚本取代）。
+# 单机 agentic GRPO 训练：**HumanEvalFix 数据集**（2026-08-06 起）。
 #
 # 前置：
 #   1) 数据：scripts/data/make_humanevalfix_data.py 生成的 humanevalfix_train/val.jsonl

@@ -1,4 +1,4 @@
-"""冒烟奖励函数：回答非空给 1 分（用于验证训练链路，非真实 SWE-bench 奖励）。"""
+"""冒烟奖励函数：回答非空给 1 分（用于验证训练链路，非真实奖励）。"""
 
 
 def smoke_reward(data_source, solution_str, ground_truth, extra_info=None):

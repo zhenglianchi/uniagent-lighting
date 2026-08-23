@@ -12,7 +12,7 @@
    （pin < 2.1.154，避开 vLLM 0.11.1 严格 role 校验的 system/ctx/msg 问题；用 npmmirror
    加速国内安装）。
 
-reward 评估复用 uni-agent 的 SWE-bench reward（``uni_agent.tasks.swe_bench.reward``），
+reward 评估复用 uni-agent 的任务 reward（pytest FAIL_TO_PASS），
 与 mini-swe-agent runner 同口径。
 
 配置（训练 yaml 的 agent_runners）：
@@ -58,7 +58,7 @@ DEFAULT_AGENT_RUN_TIMEOUT = 7200
 
 
 def extract_image(env_config: dict) -> str:
-    """从 tools_kwargs.env 提取 SWE-bench 实例镜像（flat/nested 均支持）。"""
+    """从 tools_kwargs.env 提取沙箱镜像（flat/nested 均支持）。"""
     image = env_config.get("image")
     if image:
         return image

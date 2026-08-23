@@ -184,7 +184,7 @@ environment:
   timeout: 60
   user: root
   environment_class: tencent_e2b
-  template: swebench-v1
+  template: code-interpreter-v1
   sandbox_timeout: 1800
   image: '{image}'
   attach_instance_id: '{instance_id}'

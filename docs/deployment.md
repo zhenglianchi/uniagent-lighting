@@ -55,7 +55,7 @@ cp scripts/train/*.sh scripts/eval/*.sh scripts/data/*.py scripts/sampling/*.sh 
 # 准备 /home/ubuntu/swe-rl/tencent_sandbox.env：
 #   TENCENT_SANDBOX_TOKEN（ark_*）、TENCENT_SANDBOX_E2B_TOKEN（e2b_*）、
 #   TENCENT_SECRET_ID / TENCENT_SECRET_KEY
-# 并用 Cloud API 创建沙箱工具（code-interpreter-v1 / swebench-v1），
+# 并用 Cloud API 创建沙箱工具（code-interpreter-v1），
 # 或确认控制台已有（脚本 scripts/sandbox/tencent_create_sandbox_tool.py）
 
 # ========== 第 3 步：冒烟验证（单机） ==========
@@ -175,8 +175,6 @@ mini-swe-agent 补丁（白盒/评测需要）：
 /home/ubuntu/miniforge3/envs/swe-rl/bin/pip install "mini-swe-agent==2.4.6"
 cp patches/tencent_e2b.py \
   /home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/minisweagent/environments/extra/tencent_e2b.py
-cp patches/miniswe_swebench.py \
-  /home/ubuntu/miniforge3/envs/swe-rl/lib/python3.10/site-packages/minisweagent/run/benchmarks/swebench.py
 ```
 
 ## 5. 训练

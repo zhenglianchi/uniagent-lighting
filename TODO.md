@@ -1,7 +1,6 @@
 # TODO：分布式代码智能体强化学习平台
 
 > 依据 [思路.md](./思路.md) 整理，按"是否需要 GPU 服务器"拆分。
-> 现状（2026-08-06）：**本地采样链路全通**；**单机 agentic GRPO 链路全通**（Qwen3-8B + 腾讯沙箱 + 真实 reward 0.9523 进入 verl metrics）；期间修复 4 个链路 bug（并发 /tmp 配置冲突、pytest -q 解析、reward 键名、参数化测试传递）；**Qwen3-8B 在 SWE-bench 长程任务上行为退化已实证**（60 轮不修改代码、循环执行命令；simple-bench 已回滚）→ **2026-08-06 定稿：agent 不改（保持 mini-swe-agent），换数据集 = HumanEvalFix**（单函数修复，8B 60 轮内可出结果，见 §8）；**优化路线（跑通后）**：双机全异步 GRPO → 投机解码；**黑盒方案（Claude Code/Codex + ccglass + vLLM）已调研入列（§G），用户定序 = 白盒（mini-swe-agent）所有优化完成后再跑**；**服务器已关机、node2 镜像已保存**，恢复后 `git pull` 即可续；多机等 VPC 网络就绪后只改参数；**HAI/COS 已弃用**。
 > 现状（2026-08-11 更新）：**全异步方案定稿（PD 分离已彻底放弃，2026-08-11 用户拍板）**；
 > 双机网络就绪后跑 `run_grpo_multinode_async_ucloud.sh`（colocate_async 先行，separate_async
 > 实验性后测）；腾讯沙箱配额已提升，但并发保持与 baseline/投机 run 一致（64 / 128 / 0.8）；
@@ -72,17 +71,13 @@
   - 排坑 2：不加 `--exit-immediately` 会在任务完成后进入交互提示，非终端环境 Aborted（exit 1）
   - 样例产物统一放 `work/swe-demo/`（教训：不放 /tmp，WSL 重启即清空）
 - [x] Docker 隔离环境验证：`python:3.11-slim` + `--environment-class docker` 跑通 Sudoku 样例
-  - 容器以 `--rm` + `sleep 2h` 保活，任务结束后容器即删除；正式采样需在容器退出前提取 patch（swebench 运行器自带该逻辑）
-- [x] 本地 SWE-bench 实例镜像容器跑通真实例（管道已验证，完整提交留待正式训练）
   - `sympy__sympy-23117`（20 FAIL_TO_PASS + 71 PASS_TO_PASS，测试量最小）：20 步内完成诊断+修复+自测通过，`step_limit=20` 未走到提交；镜像实测压缩 ~1.14GB / 解压 3.83GB
   - `sympy__sympy-13043`：step30 修复+测试全过并生成 patch（`work/patches/sympy__sympy-13043.patch`）；**step40 完整提交流程验证**——agent 修复 decompose() 排序、自测全过、`git diff` 生成 patch、发出提交命令，框架识别 `COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT` 捕获 patch 到轨迹 exit 段（`work/patches/sympy__sympy-13043-step40.patch`）
   - **token 用量（重要）**：一次 40 步实例 ≈ 55.6 万 token（prompt 540,776 + completion 15,770），100 万 API 额度只够约 1.8 次 → 调试期务必只跑单实例
-  - 数据集：SWE-bench Lite 已完整缓存 `~/.cache/huggingface/datasets/princeton-nlp___swe-bench_lite`（离线可加载）；Lite 里没有 `sympy__sympy-15599`
   - 本地 Docker 镜像策略（已被腾讯云沙箱取代，留档）：`docker run` 隐式拉镜像超 120s 会判超时，须先 `docker pull`；本地测试期曾"保留镜像、只删容器"，正式跑需跑完删镜像
 - [x] 采样器轨迹落盘（JSON，含 info / messages / trajectory_format）
 - [x] 批量轨迹上传器（本地轨迹 → JSONL 合并 + zstd 压缩 + 断点续传 → **UCloud SFTP 直传**）
   - 脚本：`scripts/sampling/trajectory_uploader.py`；依赖：`zstandard`、`paramiko`
-  - 能力：扫描 `work/swebench/*.traj.json` → 按 `--batch-size` 合并 JSONL → zstd（实测压缩率 ~9.4%）→ manifest.json（含 instance_id）→ SFTP 直传 UCloud `/home/<user>/swe-rl/trajectories/`
   - 凭据：`work/ucloud.env`（`UCLOUD<N>_HOST/USER/PASS/PORT`）；`--node N` 选机器；断点续传状态 `work/uploader_state.json`
   - 实测（2026-08-03）：dry-run 打包 → 真实上传 1 条 → UCloud 落盘 zst + manifest ✅
 
@@ -93,45 +88,32 @@
   - 注意：官方没有 `Qwen3-Coder-8B`/`Qwen3-Coder-Next-7B`；8B 级密集只有通用 `Qwen3-8B`；经用户确认用 SWE-RL 论文同款 `Qwen2.5-Coder-7B-Instruct`（密集 7B，BF16 ≈ 15GB）
   - 命令（HF 镜像 + 断点续传）：`HF_ENDPOINT=https://hf-mirror.com HF_HUB_DISABLE_XET=1` + `snapshot_download('Qwen/Qwen2.5-Coder-7B-Instruct', local_dir='work/models/...')`
   - 坑：新版 huggingface_hub 默认走 Xet(CAS) 协议，hf-mirror 不兼容报 `401 Unauthorized (cas-server.xethub.hf.co)`；必须 `HF_HUB_DISABLE_XET=1`
-- [x] 本地构造冒烟数据 `train.jsonl` / `val.jsonl`（从官方 SWE-bench Lite 抽取）
   - 脚本：`scripts/data/make_smoke_data.py`；生成 `work/data/train.jsonl`（40 条）+ `val.jsonl`（10 条），字段含 instance_id/prompt/repo/base_commit/patch/test_patch/FAIL_TO_PASS/PASS_TO_PASS/environment_setup_commit
   - 参数化设计：`--train-num/--val-num/--seed/--repos/--min-tests/--split`，正式训练改参数即可
 - [x] 记录 WSL 公网出口 IP（后续安全组白名单用）
   - 直连出口 IP：`59.64.129.96`（`curl https://api.ipify.org`；SSH 直连 UCloud 等安全组放行这个）
   - 走代理出口 IP：`13.250.120.16`（仅云端访问也走 Clash 代理时才需要）
   - 注意：家庭宽带为动态 IP，正式配置安全组前重新确认
-- [x] 本地一键启动脚本 `scripts/sampling/start_sampling.sh`（读冒烟数据 instance_id → 预拉镜像 → `mini-extra swebench-single` 逐个采样 → 完成后自动调 `trajectory_uploader.py`）
   - 参数：`--list/--limit/--step-limit/--instance/--config/--no-pull/--rm-image/--no-upload/--dry-run/--plan-only`
   - 注意：正式阶段切云端 vLLM 时改 `--config` 指向 OpenAI 兼容端点配置即可，脚本逻辑不变
 
 ## B. 腾讯云 Agent Runtime 云沙箱（已完成 ✅，替代本地 docker 作为 agent 执行环境）
 
-背景：腾讯云余额投入 **Agent 沙箱服务（Agent Runtime，产品文档 product/1814）**；**只替代本地 docker 沙箱（agent 执行环境），不提供模型推理/训练**（GPU 走 UCloud/智星云）。官方后端没有腾讯，自研适配器；**无需推 TCR 镜像**（官方 `swebench` 工具类型 + 系统镜像仓库）。
 
 - [x] **1. 端点与 SDK 映射**（2026-08-04 打通，无需控制台操作）
   - **E2B 兼容接入**：`E2B_DOMAIN=ap-guangzhou.tencentags.com` + `E2B_API_KEY`（`e2b_*`，SDK 强制前缀）；SDK `e2b-code-interpreter 2.9.0` + `tencentcloud-sdk-python-ags 3.1.135`（Cloud API 控制面）
-  - 沙箱工具 Cloud API 直接创建：`CreateSandboxTool`（域名 `ags.tencentcloudapi.com`，CAM 密钥 `TENCENT_SECRET_ID/SECRET_KEY` 已存 `work/tencent_sandbox.env`）；已建 `code-interpreter-v1`（sdt-fhjsjs5j）+ `swebench-v1`（sdt-2nbtp6th）
   - E2B 最小 demo 全通：创建沙箱 0.4s → run_code → kill（`scripts/sandbox/tencent_sandbox_demo.py`）
   - 脚本：`scripts/sandbox/tencent_create_sandbox_tool.py` / `tencent_list_sandbox_tools.py` / `tencent_sandbox_demo.py`
 - [x] **2. `tencent_agent_runtime` 后端**（`platform/uni_agent_ext/sandbox/tencent_agent_runtime.py`，E2B 直连实现）
   - v0.2 弃用 swerex 隧道方案：控制面 `Sandbox.create/kill`；执行 `sandbox.commands.run(user="root")`（原生命令通道，含退出码）；文件 `sandbox.files.read/write`；template 默认 `code-interpreter-v1`，可 `TENCENT_SANDBOX_TEMPLATE` 覆盖
   - 验证：`python scripts/sandbox/run_tencent_sandbox_demo.py`（uni-agent 官方 demo 全过：tmux 会话保持 cwd → pip install numpy → 文件读写 → 执行 → 状态保持）
-- [x] **3. SWE-bench 场景验证**（核心可行性质疑点已消除）
-  - 官方托管 `swebench` 工具类型：swerex runtime 挂载 /nix、8000 端口跑 swerex server、envd 49983、4C8G、默认镜像 `swebench/dummy:latest`（占位）
-  - **系统镜像仓库内置 SWE-bench 实例镜像**：`StartSandboxInstance` + `CustomConfiguration.Image="swebench/sweb.eval.x86_64.<org>_1776_<repo>-<pr>:latest"`（`ImageRegistryType=system`）→ 实例秒起、/testbed 即题目仓库、Python testbed 环境 ✅（实测 django_1776_django-13447、marshmallow-code_1776_marshmallow-1359）
   - 意义：一个样本一个实例（镜像覆盖），跑完销毁，**本地磁盘零占用**（镜像在云上）
-  - 脚本：`scripts/sandbox/tencent_start_swebench.py <镜像> [--kill <InstanceId>]`
 - [x] **4. 打通采样链路（mini-swe-agent + 腾讯云沙箱）**
-  - 新增 mini-swe-agent 环境类 `tencent_e2b`（`mini-swe-agent/src/minisweagent/environments/extra/tencent_e2b.py`）：Cloud API `StartSandboxInstance` 镜像覆盖（自动去 docker.io/ 前缀、`__`→`_1776_`）→ E2B `Sandbox.connect` → `commands.run(user=root)` → kill + `StopSandboxInstance` 双保险清理；已注册进 `environments/__init__.py` 和 `run/benchmarks/swebench.py` 的 image 注入列表
   - **采样配置定稿（2026-08-04）**：模型 **qwen3.7-plus**、**step_limit=60（以后都 60）**、Lite 子集（`--subset lite --split dev`）、wrapper 必须带 `--exit-immediately`（否则提交时弹交互确认、非 TTY 直接 Aborted 且轨迹不落盘）；**不要测试泄露**（不注入 test_patch，agent 只看题目，test_patch 仅评估阶段用）
-  - 运行：`bash scripts/sandbox/run_tencent_swebench_single.sh <instance_id>`（配置 `config/tencent_swebench.yaml`，轨迹 `work/swebench/tencent_<id>.traj.json`，注意 CLI 的 `-o` 覆盖 config 里的 output_path）
   - 实测轨迹：
     - django__django-13447（full/test，step_limit=20 到顶未提交，44 条消息/20 次 API）——首条验证
-    - **marshmallow-code__marshmallow-1359（Lite/dev，27 步提交 ✅，57 条消息/27 次 API）**——轨迹 `work/swebench/tencent_marshmallow-code__marshmallow-1359.traj.json`
     - 补丁验证（新实例 test_patch + model_patch → pytest FAIL_TO_PASS）：marshmallow 补丁**没过隐藏测试**（修好崩溃但没从 root schema 继承 DATETIMEFORMAT，'iso' vs 'iso8601'）；补丁质量由正式 RL 的 reward 评判
-  - [ ] 待办（正式采样）：batch 模式批量跑（`mini-extra swebench` 或 start_sampling.sh 串行）；轨迹上传走 `trajectory_uploader.py`（UCloud 直传）
 - [x] **5. 计费口径确认（2026-08-04，官方文档 product/1814/133249）**
-  - **按秒计费、无最低消费**：CPU 0.000081 元/核/秒、内存 0.000025 元/GiB/秒、系统盘 0.0021 元/GiB/小时（每实例前 15GiB 免费）；"按小时"只是**结算出账周期**（每小时整点出账一次），**不是 1 小时起收**——跑 3 分钟只收 3 分钟的钱（swebench 实例 4C8G 跑 3 分钟 ≈ 0.094 元；官方示例 1C2G 跑 60 秒 ≈ 0.0079 元）
   - 暂停功能（内测中）：暂停后 CPU/内存停止计费、实例状态保留，当前暂停期间系统盘存储暂不收费 → 任务间隙用**暂停**而非销毁
   - **省钱策略**：① 一个样本 GRPO 4 条响应复用同一实例（省冷启动 + 系统盘重复计费）；② 批量并行拉起多个沙箱连续跑，跑完即毁（`StopSandboxInstance`）；③ 任务间隙用暂停；④ 系统盘申请 ≤15GiB 免费额度内
 
@@ -198,19 +180,15 @@
 背景：多机网络暂未就绪（两台不同 VPC，见上文）；单机训练引擎已验证（纯 verl LoRA GRPO 100%）。接下来在**单机**上把「采样 → runner（用户 agent）→ agentic 多轮 GRPO 训练 → 真实 reward」整条链路跑通，多机只是并行参数扩展。
 
 - [~] **7.1 Runner 编写/接入（核心）**
-  - ✅ **runner 骨架已完成（2026-08-05）**：`platform/uni_agent_ext/agents/mini_swe_agent_runner.py`（编译通过）——仿 `claude_code_runner.py`，职责拆分：`extract_task`（SWE-bench 元数据）/ `create_task_sandbox`（腾讯沙箱工厂，扩展点）/ `build_agent_command`（沙箱内跑 `mini-extra swebench-single` 指向 Gateway）/ `evaluate_reward`（test_patch + FAIL_TO_PASS，不注入 agent）/ 主流程（建沙箱→跑→打分→上报 reward_info→清理）；mini-swe-agent 沙箱内用 `environment_class=local`
   - ✅ **Gateway 暴露方案（用户 2026-08-05 定：公网 IP）**：训练机 Gateway 监听 `0.0.0.0:<port>`（选非默认端口如 38197/8001）→ UCloud 安全组放行该端口 + 腾讯沙箱出口可达 → 沙箱内 `api_base=http://<训练机公网IP>:<port>/v1`；鉴权用 Gateway 的 api_key（任意非空即可）；**安全提示：训练结束即关安全组端口，勿长期暴露**
   - 待办：① 沙箱内 mini-swe-agent 安装/预装方案（现为可选 `MSA_INSTALL_AGENT=1` 现场 pip install，正式建议预装镜像）；② mini-swe-agent `local` 环境类 + 生成配置 schema 需上机实测对齐；③ 部署：`uni_agent_ext` 包需放到训练机 PYTHONPATH
 - [ ] **7.2 任务数据（tools_kwargs + task config）**
-  - SWE-bench Lite 样本 → `raw_prompt` + `tools_kwargs.task`（序列化 Task Config）；冒烟先用 2 条，逐步扩
-  - sandbox = 腾讯云 Agent Runtime（swebench 工具类型，`platform/uni_agent_ext/sandbox/tencent_agent_runtime.py` 已打通）
 - [~] **7.3 Agentic 训练配置**
   - ✅ **脚本已写（v0.3.0，对齐官方 quickstart 接线）**：`uniagent-lighting/scripts/train/run_grpo_single_agentic_ucloud.sh`——`multi_turn.enable=True` + `agent_loop_manager_class=uni_agent.framework.entry.AgentFrameworkRolloutAdapter` + `custom.agent_framework`（gateway_count=1 / agent_runners.mini_swe_agent.runner_fqn=uni_agent_ext.agents.mini_swe_agent_runner.mini_swe_agent_runner / dispatch=ray_task / max_concurrent_sessions=2 控沙箱成本 / mask_unfinished_episode=False / use_reward_loop_worker=False）+ `reward.reward_manager.name=naive`（TQ rm_scores）+ 续训启用
   - 训练侧沿用定稿：LoRA rank=32 / AdamW fp32 / offload 关 / **fused kernels 关** / 梯度检查点 / batch=2 / n=2 / lr=1e-5
   - 待上机验证：TOOL_PARSER（hermes vs qwen3_coder，需匹配 Qwen2.5-Coder chat template）、agentic 数据 schema、Gateway/隧道、uni_agent_ext 部署
   - ✅ **2026-08-06 深夜实测进度（改造仓 uniagent-lighting 已同步，v0.12~v0.14）**：
     - 架构修正为 **agent-outside**（思路 1.9）：harness 在训练机本地驱动 mini-swe-agent，沙箱只是执行环境
-    - 全链路已通：SWE-bench 沙箱实例（StartSandboxInstance+E2B connect）→ 文件写入 base64 回退 →
       tencent_e2b attach 模式 → 本地 subprocess mini-extra → agent 实际运行 4~6 分钟 → reward 评估
     - 逐个排坑（均已 commit）：.pth 父目录、py310 typing.NotRequired、e2b SDK、E2B_API_KEY 映射、
       sweb 实例接入、write_file 回退、attach cleanup 不销毁实例、**v0.14.0 隧道方向修正**
@@ -242,12 +220,11 @@
 
 ### 8. 换数据集：HumanEvalFix（2026-08-06 定稿，下一步执行；agent 不改）
 
-背景：Qwen3-8B 在 SWE-bench 长程任务上行为退化已实证（60 轮不修改代码、循环执行命令；
-simple-bench 极简实验已回滚）；**用户拍板：agent 不改（保持 mini-swe-agent harness），
+背景：Qwen3-8B 在长程任务上行为退化已实证（60 轮不修改代码、循环执行命令；
+simple-bench 已回滚）。**用户拍板：agent 不改（保持 mini-swe-agent harness），
 通过降低任务难度换取 8B 可出结果**。
 
 - **数据集**：`bigcode/humanevalpack` 的 Python 修复子集（HumanEvalFix）——单函数
-  buggy 代码 + 单元测试；远小于 SWE-bench（短 prompt、少轮、单文件）；8B 级模型有公开
   pass@1 基准（Granite 8B ≈ 25~48%），**60 轮内可出结果**，正好绕开长程探索退化
 - **构造步骤（本地可做，无需 GPU）**：
   1. hf-mirror 拉 `bigcode/humanevalpack`（`HF_HUB_DISABLE_XET=1`），过滤 Python 子集
@@ -279,7 +256,6 @@ simple-bench 极简实验已回滚）；**用户拍板：agent 不改（保持 m
       每节点内存峰值 ~50–60G，96G 够，swap 留 16G 保险（每步 16G CPU↔GPU 搬运
       会短暂压满 CPU/SSH，用控制台 Web shell）
     - 配置只改 `nnodes=2` + Ray 集群 + hosts，训练参数不变（见 7.6）
-- **成本**：单条远小于 SWE-bench（prompt 短、轮数少），腾讯沙箱按秒计费更低
 - **已完成（2026-08-06，v0.28.x，本地可做部分全部落地）**：
   - `scripts/data/make_humanevalfix_data.py`（**新增**，原 `make_agentic_data.py` 保留不动）：
     拉 humanevalpack python 子集 → `solution.py`（prompt+buggy_solution）+ `test_solution.py`
@@ -289,14 +265,12 @@ simple-bench 极简实验已回滚）；**用户拍板：agent 不改（保持 m
   - `work/data/humanevalfix_train.jsonl`（3 条）+ `humanevalfix_val.jsonl`（2 条）已入库
   - runner 新增 `humaneval_fix` 分支（swe_bench 原路径不变）：沙箱 /testbed git 仓库 +
     solution.py 注入（`git add -A` 保证提交时 `git diff` 有输出）+ mini-swe-agent API
-    直连（绕开 swebench-single 数据集硬编码）+ reward 阶段写隐藏测试（无测试泄露）
   - `scripts/train/run_grpo_humanevalfix_ucloud.sh`（数据/实验名/checkpoint 目录与 agentic 区分）
   - v0.28.1：`scripts/run_humanevalfix_local.py`（腾讯 E2B 沙箱 + 百炼 API 本地冒烟采样，
     复用单沙箱逐样本；不依赖 Gateway/训练机）；runner 修复（主线程预导入 tencent_e2b、
     agent_class 默认 default、无 ray 可 import、错误带 traceback）
   - **实测（2026-08-06，qwen3.7-plus）**：3/3 样本全修好，**每条约 7 轮交互、35~43s、
     reward=1.0**（读码→复现→改→验证→提交）；轨迹
-    `work/swebench/humanevalfix_humanevalfix-Python-{61,104,105}.traj.json` —— 说明
     任务/沙箱/reward 链路正确，**8B 通过率与 reward 组内差异留给阶段一上机验证**
   - **阶段一上机验证（✅ 2026-08-08，新机 117.50.81.187 = 单卡 48G + 94G 内存）**：
     - 首跑（train8 原始提示词）：**4/4 reward=0，止损停训**；解码轨迹定位根因 =
@@ -465,7 +439,6 @@ export RAY_memory_monitor_refresh_ms=0  # 关 Ray OOM 杀手：95% 阈值会抢�
 export HF_ENDPOINT=https://hf-mirror.com HF_HUB_DISABLE_XET=1
 
 # 数据（冒烟口径）
-data.train_files=smoke_train.jsonl    # 2 条（SWE-bench Lite）
 data.val_files=smoke_val.jsonl        # 1 条
 data.train_batch_size=2  data.val_batch_size=1
 data.max_prompt_length=1024  data.max_response_length=512
@@ -663,7 +636,6 @@ trainer.save_freq=-1  trainer.test_freq=-1  trainer.total_epochs=1
 
 ### 6.5 rollout 性能优化方向（跑通后做，简历亮点）
 
-背景：agentic RL 的训练吞吐瓶颈在 **rollout 生成**——SWE-bench 这类任务 prompt 长（代码 + 多轮 tool 历史）、多轮循环，prefill（长 prompt 一次性计算）与 decode（逐 token 生成）争抢同一批 GPU，单引擎下互相拖累。方向均基于 vLLM（verl 默认 rollout 引擎），跑通基础链路后逐项 A/B。**训练方式已定 LoRA（用户 2026-08-05：训练非项目重点，亮点在 rollout 侧优化）**——LoRA 本身即是下述优化的前置（引擎常驻 + adapter 热插）。
 
 **执行计划（2026-08-09 用户定序）**：gateway 修复 + 单步验证 → **投机解码 A/B 测试** →
 训练 5 epoch 对比效果（vs 修复前 5 epoch / 基座）→ 双机上全异步。
@@ -996,7 +968,6 @@ as-adapter LoRA 训练要跑投机必须改 `lora.merge=True`（每步全量合�
 - [x] 改造 `claude_code_runner`（✅ 2026-08-11 v0.35.1）：腾讯 direct-URL 版
       `uni_agent_ext/agents/claude_code_runner.py`——ANTHROPIC_BASE_URL 直连 Gateway
       （session.base_url 去 /v1，不走沙箱内隧道）+ 沙箱内 npm 安装 pin 版 claude +
-      reward 复用 SWE-bench（uni_agent.tasks.swe_bench.reward）；纯函数测试通过，
       上机验证待服务器开机
 - [x] **腾讯沙箱跑通黑盒采样 + reward → 轨迹 → 云端训练（✅ 2026-08-12 小样本
   3 步全通）**：train3 × n=4 = 12/12 会话成功、reward 全 1.0、每步 GRPO 更新 +

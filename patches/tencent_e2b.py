@@ -1,19 +1,14 @@
-"""Tencent Cloud Agent Runtime（腾讯云）SWE-bench 环境 for mini-SWE-agent。
+"""Tencent Cloud Agent Runtime（腾讯云）环境 for mini-SWE-agent。
 
-流程：Cloud API ``StartSandboxInstance`` 用实例镜像覆盖启动托管 ``swebench``
-工具（系统镜像仓库，无需推 TCR）→ E2B ``Sandbox.connect`` 连接 → 
-``commands.run`` 执行命令 → ``StopSandboxInstance`` 销毁。
+流程：优先 ``attach_instance_id``（runner 已建好沙箱，直接 ``Sandbox.connect`` 连接）；
+否则 E2B ``Sandbox.create(template=...)`` 创建。执行走 ``commands.run``。
 
 必需环境变量：
-    TENCENT_SECRET_ID / TENCENT_SECRET_KEY    Cloud API 密钥（起/停实例）
     E2B_DOMAIN / E2B_API_KEY                  E2B 兼容端点（默认 ap-guangzhou.tencentags.com）
-可选：
-    TENCENT_SANDBOX_REGION                    默认 ap-guangzhou
 
 配置（YAML environment 节）：
-    template        沙箱工具名（默认 swebench-v1，ToolType=swebench）
-    image           SWE-bench 镜像（get_sb_environment 注入，自动去 docker.io/ 前缀、
-                    __ → _1776_ 归一化）
+    template        沙箱工具名（默认 code-interpreter-v1）
+    image           沙箱镜像（get_sb_environment 注入）
     cwd             默认 /testbed
     timeout         命令超时（秒）
     user            root
@@ -61,7 +56,7 @@ for _sig in (signal.SIGINT, signal.SIGTERM):
 
 
 class TencentE2BEnvironmentConfig(BaseModel):
-    template: str = "swebench-v1"
+    template: str = "code-interpreter-v1"
     image: str = ""
     cwd: str = "/testbed"
     timeout: int = 60
@@ -87,8 +82,6 @@ class TencentE2BEnvironment:
         image = image.strip()
         if image.startswith("docker.io/"):
             image = image[len("docker.io/"):]
-        # SWE-bench 数据集 id 用 __ 分隔 org/repo，Docker/腾讯云命名用 _1776_
-        image = image.replace("__", "_1776_")
         return image
 
     def _create(self) -> None:
@@ -123,7 +116,7 @@ class TencentE2BEnvironment:
         resp = client.StartSandboxInstance(req)
         self._instance_id = resp.Instance.InstanceId
         self.logger.info(
-            "Tencent swebench instance started: %s image=%s", self._instance_id, image
+            "Tencent sandbox instance started: %s image=%s", self._instance_id, image
         )
         self._sandbox = Sandbox.connect(sandbox_id=self._instance_id)
         self.logger.info("E2B connected to sandbox: %s", self._instance_id)
@@ -229,7 +222,7 @@ class TencentE2BEnvironment:
                 req = models.StopSandboxInstanceRequest()
                 req.InstanceId = self._instance_id
                 client.StopSandboxInstance(req)
-                self.logger.info("Tencent swebench instance stopped: %s", self._instance_id)
+                self.logger.info("Tencent sandbox instance stopped: %s", self._instance_id)
             except Exception as e:
                 if "STOPPED state" in str(e):
                     # E2B kill 已先停实例，Cloud API stop 幂等即可
