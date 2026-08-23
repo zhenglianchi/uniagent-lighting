@@ -231,7 +231,8 @@ work/data/            # 数据集与脚本
 |---|---|
 | [docs/deployment.md](docs/deployment.md) | **从裸机到全部训练**：环境/镜像/补丁/双机/评测/FAQ |
 | [docs/architecture.md](docs/architecture.md) | 平台化架构设计（agent/Gateway/沙箱/训练分层） |
-| [docs/数据流与网关导读.md](docs/数据流与网关导读.md) | **学习主线**：数据流 + Gateway 轨迹处理 + 训练链路源码导读 |
+| [docs/任务剖析-内部形态.md](docs/任务剖析-内部形态.md) | **学习主线**：单任务全流程剖析（含附录：数据流 + Gateway 轨迹拼接 + uni-agent 源码地图） |
+| [docs/任务剖析-外部形态.md](docs/任务剖析-外部形态.md) | 外部 agent（平台本地）同任务剖析 + 平台本地流程（附录） |
 | [docs/训练评测分析.md](docs/训练评测分析.md) | 全量实验数据：baseline/spec/黑盒/双机对照、bug 根因 |
 | [docs/修改与补丁汇总.md](docs/修改与补丁汇总.md) | 23 项源码修改的完整记录（原因/影响/验证） |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | 演进规划 |
@@ -240,7 +241,7 @@ work/data/            # 数据集与脚本
 
 **推荐路径（从数据流开始，重点看 Gateway 轨迹处理）**：
 
-1. [docs/数据流与网关导读.md](docs/数据流与网关导读.md) §1 数据流图 ——
+1. [docs/任务剖析-内部形态.md](docs/任务剖析-内部形态.md) §6.5 + 附录 A 数据流图 ——
    agent → Gateway 物化轨迹 → TransferQueue → verl 训练 全链路心智模型
 2. `vendor/uni-agent/uni_agent/gateway/session/session.py` ——
    `run_generation` → `_commit_generation_to_chain` → `finalize`
