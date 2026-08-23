@@ -3,6 +3,7 @@ __pycache__/
 *.log
 *.traj.json
 !mini-swe-agent/tests/test_data/*.traj.json
+.vscode/
 /checkpoints/
 /work/
 /models/
