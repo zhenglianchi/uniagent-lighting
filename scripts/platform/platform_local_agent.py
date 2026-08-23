@@ -1,12 +1,16 @@
-"""平台化测试本地 agent（WSL 端，2026-08-12 §D P0）。
+"""平台化测试本地 agent（WSL 端，2026-08-12 §D P0；2026-08-23 支持多实例）。
 
 配合训练侧 ``uni_agent_ext.agents.external_agent_runner``：
 1. paramiko 连训练机（读 ``work/ucloud.env`` 凭据），等待/读取远程
-   ``<PLATFORM_TEST_DIR>/<session_id>.task.json``
+   ``<PLATFORM_TEST_DIR>/<session_id>.task.json``（多实例：SFTP rename 原子认领）
 2. 起 paramiko direct-tcpip 隧道（本地随机端口 → 训练机 10.60.56.10:8001）
 3. 用 task.json 生成 mini-swe config（api_base=隧道后的 Gateway session URL、
    attach 已建沙箱实例），跑 mini-swe-agent（Python API 模式，humaneval_fix 任务）
 4. 完成后经 SSH 创建远程 ``<session_id>.done`` 标记，训练侧 runner 收到后评估 reward
+
+多实例：起 N 个本脚本实例，每个实例通过 ``sftp.rename`` 把 task.json 原子改名为
+``*.claimed``——谁 rename 成功谁就拥有该任务，互不冲突；``--max-tasks`` 控制
+单个实例连续处理的任务数（默认 1）。
 
 用法（WSL，swe-rl 环境；训练先启动，等 runner 写好 task.json）：
   PYTHONPATH=$PWD/vendor/uni-agent:$PWD \
@@ -22,6 +26,7 @@ import socket
 import threading
 import time
 from pathlib import Path
+from urllib.parse import urlparse
 
 import paramiko
 import yaml
@@ -120,6 +125,11 @@ class TunnelForwarder:
 
 
 def wait_for_task(sftp: paramiko.SFTPClient, remote_dir: str, timeout: float) -> tuple[str, dict]:
+    """轮询并原子认领一个 task.json，返回 (claimed_name, payload)。
+
+    认领方式：``sftp.rename(<name>, <name>.claimed)`` 是原子的——多个本地实例
+    同时 poll 时，只有 rename 成功的那个实例拿到该任务，其余实例跳过继续找。
+    """
     deadline = time.time() + timeout
     last_note = ""
     while time.time() < deadline:
@@ -128,11 +138,15 @@ def wait_for_task(sftp: paramiko.SFTPClient, remote_dir: str, timeout: float) ->
         except FileNotFoundError:
             files = []
         tasks = [f for f in files if f.endswith(".task.json")]
-        if tasks:
-            name = tasks[0]
-            with sftp.open(f"{remote_dir}/{name}") as fh:
+        for name in tasks:
+            claimed = f"{name}.claimed"
+            try:
+                sftp.rename(f"{remote_dir}/{name}", f"{remote_dir}/{claimed}")
+            except OSError:
+                continue  # 已被其他实例认领，试下一个
+            with sftp.open(f"{remote_dir}/{claimed}") as fh:
                 payload = json.loads(fh.read().decode())
-            return name, payload
+            return claimed, payload
         note = f"[{int(time.time())}] waiting for task.json ({len(files)} files)"
         if note != last_note:
             print(note, flush=True)
@@ -147,8 +161,6 @@ def build_config(payload: dict, local_port: int, output_path: str) -> str:
 
     base_url = payload["base_url"]
     # 隧道后：http://127.0.0.1:<local_port><session path>/v1
-    from urllib.parse import urlparse
-
     parsed = urlparse(base_url)
     tunnel_url = f"http://127.0.0.1:{local_port}{parsed.path}"
     task = payload.get("task", {})
@@ -200,12 +212,52 @@ def run_local_agent(config_path: str, task: dict, timeout: int) -> int:
             return 1
 
 
+def process_one_task(
+    client: paramiko.SSHClient,
+    sftp: paramiko.SFTPClient,
+    transport: paramiko.Transport,
+    payload: dict,
+    args: argparse.Namespace,
+) -> int:
+    """处理一个已认领的 task：隧道 → 生成 config → 跑 agent → 创建 done 标记。"""
+    session_id = payload["session_id"]
+    print(f"task: {session_id} instance={payload['instance_id']}", flush=True)
+
+    parsed = urlparse(payload["base_url"])
+    forwarder = TunnelForwarder(transport, parsed.hostname, parsed.port or args.gateway_port)
+    forwarder.start()
+    print(f"tunnel up: 127.0.0.1:{forwarder.port} -> {parsed.hostname}:{parsed.port}", flush=True)
+    try:
+        config_path = f"/tmp/platform_mini_swe_{session_id[-8:]}.yaml"
+        traj_path = f"/tmp/platform_mini_swe_{session_id[-8:]}.traj.json"
+        cfg_text = build_config(payload, forwarder.port, traj_path)
+        Path(config_path).write_text(cfg_text, encoding="utf-8")
+        print(f"config written: {config_path}", flush=True)
+
+        rc = run_local_agent(config_path, payload["task"], timeout=int(args.timeout))
+        print(f"local agent rc={rc}", flush=True)
+
+        done_marker = payload["done_marker"]
+        stdin, stdout, stderr = client.exec_command(f"mkdir -p {args.remote_dir} && touch {done_marker}")
+        stdout.channel.recv_exit_status()
+        print(f"done marker created: {done_marker}", flush=True)
+        return 0 if rc == 0 else 1
+    finally:
+        forwarder.close()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--wait", action="store_true", help="轮询等待远程 task.json")
     parser.add_argument("--timeout", type=float, default=1800.0)
     parser.add_argument("--remote-dir", default="/home/ubuntu/swe-rl/platform_test")
     parser.add_argument("--gateway-port", type=int, default=8001)
+    parser.add_argument(
+        "--max-tasks",
+        type=int,
+        default=1,
+        help="单个实例最多连续处理的任务数（多实例认领时默认 1，处理完即退出）",
+    )
     args = parser.parse_args()
 
     load_sandbox_env()
@@ -224,35 +276,27 @@ def main() -> int:
     sftp = client.open_sftp()
     transport = client.get_transport()
 
-    forwarder = None
+    processed = 0
+    last_rc = 0
     try:
-        name, payload = wait_for_task(sftp, args.remote_dir, args.timeout)
-        print(f"task: {name} instance={payload['instance_id']}", flush=True)
-
-        # 隧道：本地随机端口 → 训练机内网 Gateway
-        parsed = __import__("urllib.parse", fromlist=["urlparse"]).urlparse(payload["base_url"])
-        forwarder = TunnelForwarder(transport, parsed.hostname, parsed.port or args.gateway_port)
-        forwarder.start()
-        print(f"tunnel up: 127.0.0.1:{forwarder.port} -> {parsed.hostname}:{parsed.port}", flush=True)
-
-        config_path = f"/tmp/platform_mini_swe_{payload['session_id'][-8:]}.yaml"
-        traj_path = f"/tmp/platform_mini_swe_{payload['session_id'][-8:]}.traj.json"
-        cfg_text = build_config(payload, forwarder.port, traj_path)
-        Path(config_path).write_text(cfg_text, encoding="utf-8")
-        print(f"config written: {config_path}", flush=True)
-
-        rc = run_local_agent(config_path, payload["task"], timeout=int(args.timeout))
-        print(f"local agent rc={rc}", flush=True)
-
-        # 创建远程 done 标记
-        done_marker = payload["done_marker"]
-        stdin, stdout, stderr = client.exec_command(f"mkdir -p {args.remote_dir} && touch {done_marker}")
-        stdout.channel.recv_exit_status()
-        print(f"done marker created: {done_marker}", flush=True)
-        return 0 if rc == 0 else 1
+        while processed < args.max_tasks:
+            try:
+                claimed, payload = wait_for_task(sftp, args.remote_dir, args.timeout)
+            except TimeoutError:
+                if processed == 0:
+                    raise
+                print("no more task.json; stopping", flush=True)
+                break
+            last_rc = process_one_task(client, sftp, transport, payload, args)
+            # 已认领的 claimed 文件处理完即删（训练侧只轮询 done，不需要读回 task）
+            try:
+                sftp.remove(f"{args.remote_dir}/{claimed}")
+            except OSError:
+                pass
+            processed += 1
+            print(f"[progress] processed {processed}/{args.max_tasks}", flush=True)
+        return last_rc
     finally:
-        if forwarder is not None:
-            forwarder.close()
         sftp.close()
         client.close()
 

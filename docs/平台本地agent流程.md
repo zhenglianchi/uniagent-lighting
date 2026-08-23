@@ -218,6 +218,28 @@ PYTHONPATH=$PWD/vendor/uni-agent:$PWD \
 swe-rl conda 环境（paramiko/mini-swe-agent）。训练脚本加载的是**已有权重**
 （`Qwen3-8B-final` / `final-spec`），`save_freq=-1` 不写新权重。
 
+## 6.1 多实例（多个 WSL 并行认领，2026-08-23）
+
+`wait_for_task` 已改为 **SFTP 原子认领**：把 task.json `rename` 成
+`<name>.claimed`，谁 rename 成功谁拥有该任务，其余实例跳过继续找下一个；
+处理完本地删除 claimed 文件。因此起 N 个实例即可并行消化 N 个任务：
+
+```bash
+# 每个 WSL 终端起一个实例；--max-tasks 控制单实例连续处理数（默认 1）
+PYTHONPATH=$PWD/vendor/uni-agent:$PWD \
+  python scripts/platform/platform_local_agent.py --wait --timeout 1800 --max-tasks 1
+```
+
+训练侧要让多个 task.json **并发**出现，需调整
+`run_grpo_platform_test_ucloud.sh`（当前是 n=1 / batch=1 / max_concurrent_sessions=1）：
+
+- `actor_rollout_ref.rollout.n>1` 或 `data.train_batch_size>1`；
+- `agent_runners.<name>.max_concurrent_sessions>1`（external_agent_runner 每个
+  session 写一个 task.json，framework 并发调度受此上限约束）。
+
+注意：实例认领后若崩溃，任务不会被回收——训练侧 `_wait_for_done` 会在
+`run_timeout` 后超时并继续评估（reward 可能 0），残留的 `.claimed` 文件可手工清理。
+
 ## 7. 一句话总结
 
 **训练侧 = 建沙箱 + 发任务（task.json）+ 等完成（done）+ 云侧 reward；用户侧 =
