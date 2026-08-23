@@ -129,10 +129,13 @@ def wait_for_task(sftp: paramiko.SFTPClient, remote_dir: str, timeout: float) ->
 
     认领方式：``sftp.rename(<name>, <name>.claimed)`` 是原子的——多个本地实例
     同时 poll 时，只有 rename 成功的那个实例拿到该任务，其余实例跳过继续找。
+    同时回收过期 claimed 文件（认领实例崩溃残留，mtime 超过 timeout 视为失效），
+    改回 task.json 供其他实例重新认领——与内部形态的失败重试语义一致。
     """
     deadline = time.time() + timeout
     last_note = ""
     while time.time() < deadline:
+        _recover_stale_claims(sftp, remote_dir, timeout)
         try:
             files = sorted(sftp.listdir(remote_dir), reverse=True)
         except FileNotFoundError:
@@ -153,6 +156,31 @@ def wait_for_task(sftp: paramiko.SFTPClient, remote_dir: str, timeout: float) ->
             last_note = note
         time.sleep(5)
     raise TimeoutError(f"no platform task.json within {timeout}s")
+
+
+def _recover_stale_claims(sftp: paramiko.SFTPClient, remote_dir: str, timeout: float) -> None:
+    """回收认领后未完成（实例崩溃）的 .claimed 文件，改回 .task.json 重新认领。"""
+    try:
+        files = sftp.listdir(remote_dir)
+    except FileNotFoundError:
+        return
+    now = time.time()
+    for name in files:
+        if not name.endswith(".task.json.claimed"):
+            continue
+        claimed_path = f"{remote_dir}/{name}"
+        try:
+            mtime = sftp.stat(claimed_path).st_mtime
+        except OSError:
+            continue
+        if now - mtime <= timeout:
+            continue
+        original = f"{remote_dir}/{name[: -len('.claimed')]}"
+        try:
+            sftp.rename(claimed_path, original)
+            print(f"recovered stale claim: {name}", flush=True)
+        except OSError:
+            pass
 
 
 def build_config(payload: dict, local_port: int, output_path: str) -> str:

@@ -157,8 +157,13 @@ async def external_agent_runner(
             response.raise_for_status()
     finally:
         if task_file is not None:
+            # 本地实例认领会把 task.json rename 成 .claimed，两种名字都清理
+            for path in (task_file, Path(f"{task_file}.claimed")):
+                try:
+                    path.unlink(missing_ok=True)
+                except OSError:
+                    pass
             try:
-                task_file.unlink()
                 (PLATFORM_TEST_DIR / f"{session.session_id}.done").unlink(missing_ok=True)
             except OSError:
                 pass

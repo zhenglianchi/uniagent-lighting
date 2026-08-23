@@ -39,6 +39,12 @@ VAL_FILE=${VAL_FILE:-/home/ubuntu/swe-rl/data/humanevalfix_val.jsonl}
 TOOL_PARSER=${TOOL_PARSER:-hermes}
 GATEWAY_COUNT=${GATEWAY_COUNT:-1}
 SERVED_MODEL_NAME=${SERVED_MODEL_NAME:-"$(basename "$MODEL")"}
+# 并发口径与内部形态一致（framework 的 max_concurrent_sessions 统一控制）：
+#   默认 1/1/1 = 单步验证；多实例外部 agent 时调大，例如
+#   ROLLOUT_N=4 TRAIN_BATCH_SIZE=1 CONCURRENCY=64
+ROLLOUT_N=${ROLLOUT_N:-1}
+TRAIN_BATCH_SIZE=${TRAIN_BATCH_SIZE:-1}
+CONCURRENCY=${CONCURRENCY:-1}
 RUN_NAME=${RUN_NAME:-"$(basename "$MODEL")"}          # 独立日志/checkpoint 目录后缀
 CKPT_DIR=${CKPT_DIR:-/home/ubuntu/swe-rl/checkpoints/platform_test_$RUN_NAME}
 LOG_DIR=${LOG_DIR:-/home/ubuntu/swe-rl/logs/platform_test_$RUN_NAME}
@@ -52,7 +58,7 @@ echo "== platform test: MODEL=$MODEL RUN_NAME=$RUN_NAME (save_freq=-1, no new ck
   algorithm.use_kl_in_reward=False \
   data.train_files="$TRAIN_FILE" \
   data.val_files="$VAL_FILE" \
-  data.train_batch_size=1 \
+  data.train_batch_size="$TRAIN_BATCH_SIZE" \
   data.val_batch_size=1 \
   ++data.apply_chat_template_kwargs.enable_thinking=false \
   data.max_prompt_length=8192 \
@@ -86,7 +92,7 @@ echo "== platform test: MODEL=$MODEL RUN_NAME=$RUN_NAME (save_freq=-1, no new ck
   actor_rollout_ref.rollout.gpu_memory_utilization=0.5 \
   actor_rollout_ref.rollout.max_model_len=16384 \
   actor_rollout_ref.rollout.load_format=safetensors \
-  actor_rollout_ref.rollout.n=1 \
+  actor_rollout_ref.rollout.n="$ROLLOUT_N" \
   actor_rollout_ref.rollout.enforce_eager=True \
   actor_rollout_ref.rollout.free_cache_engine=True \
   actor_rollout_ref.rollout.max_num_seqs=4 \
@@ -99,7 +105,7 @@ echo "== platform test: MODEL=$MODEL RUN_NAME=$RUN_NAME (save_freq=-1, no new ck
   ++actor_rollout_ref.rollout.custom.agent_framework.log_dir="$LOG_DIR" \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.external_agent.runner_fqn=uni_agent_ext.agents.external_agent_runner.external_agent_runner \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.external_agent.dispatch_mode=ray_task \
-  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.external_agent.max_concurrent_sessions=1 \
+  ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.external_agent.max_concurrent_sessions=${CONCURRENCY} \
   ++actor_rollout_ref.rollout.custom.agent_framework.agent_runners.external_agent.runner_kwargs.run_timeout=3600 \
   ++actor_rollout_ref.rollout.custom.agent_framework.mask_unfinished_episode=False \
   ++actor_rollout_ref.rollout.custom.agent_framework.use_reward_loop_worker=False \

@@ -231,14 +231,30 @@ PYTHONPATH=$PWD/vendor/uni-agent:$PWD \
 ```
 
 训练侧要让多个 task.json **并发**出现，需调整
-`run_grpo_platform_test_ucloud.sh`（当前是 n=1 / batch=1 / max_concurrent_sessions=1）：
+`run_grpo_platform_test_ucloud.sh`（默认 1/1/1 = 单步验证；环境变量可调，口径与
+内部形态一致，并发统一由 framework 的 `max_concurrent_sessions` 控制）：
 
-- `actor_rollout_ref.rollout.n>1` 或 `data.train_batch_size>1`；
-- `agent_runners.<name>.max_concurrent_sessions>1`（external_agent_runner 每个
-  session 写一个 task.json，framework 并发调度受此上限约束）。
+- `ROLLOUT_N>1` 或 `TRAIN_BATCH_SIZE>1`（产生多个并发 session）；
+- `CONCURRENCY>1`（= `max_concurrent_sessions`，external_agent_runner 每个 session
+  写一个 task.json，framework 并发调度受此上限约束）。
 
-注意：实例认领后若崩溃，任务不会被回收——训练侧 `_wait_for_done` 会在
-`run_timeout` 后超时并继续评估（reward 可能 0），残留的 `.claimed` 文件可手工清理。
+```bash
+# 例：与内部形态同口径的并发配置（4 组 × 并发 64）
+ROLLOUT_N=4 TRAIN_BATCH_SIZE=1 CONCURRENCY=64 \
+  bash run_grpo_platform_test_ucloud.sh
+```
+
+本地实例数 × `--max-tasks` ≥ 训练侧并发数即可消化全部任务。
+
+**清理与内部形态一致**：
+
+- 本地实例正常处理完即删 claimed 文件；**过期 claimed 自动回收**——认领后
+  mtime 超过 `--timeout` 视为实例崩溃，改回 task.json 供其他实例重新认领；
+- 训练侧 `external_agent_runner` finally 同时清理 `<id>.task.json` 与
+  `<id>.task.json.claimed` 两种名字 + done 标记，并 `sandbox.stop()`（与内部
+  形态的沙箱清理一致）；
+- 实例崩溃且无人回收时，训练侧 `_wait_for_done` 仍会在 `run_timeout` 后超时并
+  继续评估（reward 可能 0）。
 
 ## 7. 一句话总结
 
